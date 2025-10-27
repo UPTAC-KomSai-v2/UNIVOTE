@@ -11,3 +11,15 @@ def hello_world(request):
 @api_view(['POST'])
 def login_view(request):
     return Response({"message": "Login Successful!"})
+
+
+@api_view(['POST'])
+def login_view(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    #TEST DATA TO SEE IF IT GOES THROUGH
+    if email == "admin@up.edu.ph" and password == "password":
+        return Response({"message": "Login Successful!"}, status=200)
+    else:
+        return Response({"message": "Invalid credentials."}, status=401)    

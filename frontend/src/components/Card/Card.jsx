@@ -2,7 +2,7 @@ import React from "react";
 import './Card.css';
 import upSeal from "../../assets/UP-Seal.png"
 
-export default function Card({title, description}){
+export default function Card({title, description, children}){
     return (
         <div className="card">
             <div className="logo">
@@ -19,6 +19,7 @@ export default function Card({title, description}){
             <div className="card-content">
                 <div className="card-title">{title}</div>
                 <div className="card-description">{description}</div>
+                {children}
             </div>
         </div>
     );
