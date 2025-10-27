@@ -1,0 +1,73 @@
+# ---- PYTHON / DJANGO ----
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# Django migrations (optional to ignore if you keep migrations tracked)
+# **/migrations/*.py
+# !**/migrations/__init__.py
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# ---- ENVIRONMENT / SECRETS ----
+.env
+*.env
+.env.*
+.envrc
+
+# ---- FRONTEND (React / Vite) ----
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.*
+
+# Frontend lock files (optional if using only one package manager)
+# yarn.lock
+# package-lock.json
+# pnpm-lock.yaml
+
+# ---- SYSTEM ----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.bak
+*.tmp
+
+# ---- MISC ----
+# Ignore build and deployment artifacts
+build/
+tmp/
+logs/
