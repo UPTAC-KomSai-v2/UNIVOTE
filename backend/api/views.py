@@ -6,4 +6,8 @@ from rest_framework.decorators import api_view
 
 @api_view(['GET'])
 def hello_world(request):
-    return Response({"message": "Hello from Django!"})
+    return Response({"message": "UNIVOTE!"})
+
+@api_view(['POST'])
+def login_view(request):
+    return Response({"message": "Login Successful!"})
