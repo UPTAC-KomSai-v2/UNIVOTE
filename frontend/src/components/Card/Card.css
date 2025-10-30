@@ -19,7 +19,7 @@
 }
 
 .card-title {
-    margin-top: 8rem;
+    margin-top: 5rem;
     text-shadow: 3px 3px 0 #4d0013, 4px 4px 0 #4d0013;
     font-size: 6rem;
     font-weight: 800;
@@ -47,4 +47,16 @@
     padding-left: 0.5rem;
     line-height: 0.1;
     text-align: left;
+}
+
+@media only screen and (max-width: 1024px) {
+    .card {
+        /* width: 100%; */
+        height: auto;
+    }
+
+    .card-title {
+        font-size: 4rem;
+        margin-top: 2rem;
+    }
 }

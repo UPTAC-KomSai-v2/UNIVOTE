@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './pages/LoginPage/LoginPage';
 import Placeholder from './pages/Placeholder/Placeholder';
 import axios from 'axios';
+import LandingPage from './pages/LandingPage/LandingPage';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -16,18 +17,13 @@ function App() {
   return(
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<Placeholder />} />
         
       </Routes>
     </Router>
   );
-
-  // return (
-  //   <div className="App">
-  //     <h1>{message || "Loading..."}</h1>
-  //   </div>
-  // );
 }
 
 export default App;

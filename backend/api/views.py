@@ -9,8 +9,8 @@ def hello_world(request):
     return Response({"message": "UNIVOTE!"})
 
 @api_view(['POST'])
-def login_view(request):
-    return Response({"message": "Login Successful!"})
+def landing_view(request):
+    return Response({"message": "Landing Page"})
 
 
 @api_view(['POST'])
@@ -19,7 +19,7 @@ def login_view(request):
     password = request.data.get('password')
 
     #TEST DATA TO SEE IF IT GOES THROUGH
-    if email == "admin@up.edu.ph" and password == "password":
+    if email == "admin@up.edu.ph" and password == "password0123..":
         return Response({"message": "Login Successful!"}, status=200)
     else:
         return Response({"message": "Invalid credentials."}, status=401)    
