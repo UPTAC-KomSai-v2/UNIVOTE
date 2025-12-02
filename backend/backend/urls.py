@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import hello_world, landing_view, login_view
+from api.views import *
 
 
 urlpatterns = [
@@ -25,5 +25,7 @@ urlpatterns = [
     path('api/hello/', hello_world),
     path('api/login/', login_view),
     path('api/landing/', landing_view),
+    path('api/voter-dashboard/', voter_dashboard_view),
+    path('api/voting-page/', voting_page_view),
 ]
 

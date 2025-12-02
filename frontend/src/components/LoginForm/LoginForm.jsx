@@ -23,7 +23,7 @@ export default function LoginForm() {
                 
                 console.log("Login successful:", response.data);
 
-                navigate("/home");
+                navigate("/voter-dashboard");
             }
             else{
                 setError("Invalid email or password");

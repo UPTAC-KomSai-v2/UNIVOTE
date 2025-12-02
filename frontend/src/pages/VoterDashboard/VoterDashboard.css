@@ -1,0 +1,51 @@
+/* body {
+    background-image: url('../../assets/bg.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+} */
+
+body.dashboard-bg {
+  background-image: url('../../assets/dashboard-bg.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+
+.voter-dashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+@media only screen and (max-width: 1024px) {
+    .login-page {
+        padding-left: 20px;
+        padding-right: 20px;
+        justify-content: center;
+    }
+}
+
+.vote-button {
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+    padding: 45px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.vote-button img {
+    margin-right: 10px;
+}
+
+.vote-button:hover {
+    background-color: #891437;
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}

@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import Placeholder from './pages/Placeholder/Placeholder';
 import axios from 'axios';
 import LandingPage from './pages/LandingPage/LandingPage';
+import VoterDashboard from './pages/VoterDashboard/VoterDashboard';
+import VotingPage from './pages/VotingPage/VotingPage';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -17,10 +19,13 @@ function App() {
   return(
     <Router>
       <Routes>
+        
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<Placeholder />} />
-        
+        <Route path="/voter-dashboard" element={<VoterDashboard />} />
+        <Route path="/voting-page" element={<VotingPage />} />
+
       </Routes>
     </Router>
   );

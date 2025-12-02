@@ -1,9 +1,18 @@
-body {
+/* body {
     background-image: url('../../assets/bg.png');
     background-size: cover;
     background-position: center;
     height: 100vh;
+} */
+
+body.login-bg {
+  background-image: url('../../assets/bg.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
 }
+
+
 
 .login-page {
     display: flex;

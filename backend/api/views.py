@@ -22,4 +22,12 @@ def login_view(request):
     if email == "admin@up.edu.ph" and password == "password0123..":
         return Response({"message": "Login Successful!"}, status=200)
     else:
-        return Response({"message": "Invalid credentials."}, status=401)    
+        return Response({"message": "Invalid credentials."}, status=401)
+
+@api_view(['POST'])
+def voter_dashboard_view(request):
+    return Response({"message": "Voter Dashboard"})
+
+@api_view(['POST'])
+def voting_page_view(request):
+    return Response({"message": "Voting Page"})    
