@@ -2,9 +2,9 @@ import React from "react";
 import './Card.css';
 import upSeal from "../../assets/UP-Seal.png"
 
-export default function Card({title, description, children}){
+export default function Card({title, description, children, className}){
     return (
-        <div className="card">
+        <div className={`card ${className || ''}`}>
             <div className="logo">
                 <img src={upSeal} alt="UP Seal" />
                 <div className="logo-text">

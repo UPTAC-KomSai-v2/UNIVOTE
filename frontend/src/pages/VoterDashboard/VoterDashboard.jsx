@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card/Card";
-import LoginForm from "../../components/LoginForm/LoginForm";
 import "./VoterDashboard.css";
 import thumbsUp from "../../assets/thumbs-up.png";
 
@@ -16,6 +15,7 @@ export default function VoterDashboard() {
   return (
     <div className="voter-dashboard">
         <Card
+          className="voter-dashboard-card"
           title="UniVote"
           description="University-wide Student Council Election Management System"
         >
