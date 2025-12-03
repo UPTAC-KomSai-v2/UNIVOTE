@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/view-candidate/<int:id>/', view_candidate_page_view),
     path('api/admin-dashboard/', admin_dashboard_view),
     path('api/manage-candidates/', manage_candidates_view),
+    path('api/view-previous-results/', view_previous_results),
     
 ]
 

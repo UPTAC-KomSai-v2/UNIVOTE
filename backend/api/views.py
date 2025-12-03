@@ -443,3 +443,7 @@ def manage_candidates_view(request):
     elif request.method == 'POST':
         # Handle POST request
         return Response({"message": "Manage Candidates Page"})
+    
+@api_view(['GET', 'POST'])
+def view_previous_results(request):
+    return Response({"message": "View Previous Results"})
