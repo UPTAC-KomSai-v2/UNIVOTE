@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/manage-profile-page/', manage_profile_page_view),
     path('api/vote-receipt-page/', vote_receipt_page_view),
     path('api/view-candidate/<int:id>/', view_candidate_page_view),
+    path('api/admin-dashboard/', admin_dashboard_view),
     
 ]
 

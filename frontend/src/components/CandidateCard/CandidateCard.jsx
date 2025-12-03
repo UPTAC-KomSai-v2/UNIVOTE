@@ -22,12 +22,12 @@ export default function CandidateCard({
                 <div className='candidate-info-container'>
                     <img className="candidate-image" src={image || upSeal} alt="candidate Image" />
                     <div className='candidate-info'>
-                        <div className='name'>Name: {studentName}</div>
+                        <div className='name'><strong>Name:</strong> {studentName}</div>
                         {/* <div className='student-number'>Student Number: {studentNumber}</div> */}
-                        <div className='alias'>Alias: {studentAlias}</div>
-                        <div className='party'>Party: {studentParty}</div>
-                        <div className='position'>Running For: {studentPosition}</div>
-                        <div className='description'>Candidate's Description: {studentDescription}</div>
+                        <div className='alias'><strong>Alias:</strong> {studentAlias}</div>
+                        <div className='party'><strong>Party:</strong> {studentParty}</div>
+                        <div className='position'><strong>Running For:</strong> {studentPosition}</div>
+                        <div className='description'><strong>Candidate's Description:</strong> {studentDescription}</div>
 
                         <button className='view-details-button' onClick={onView}>View</button>
                     </div>

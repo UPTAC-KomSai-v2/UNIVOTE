@@ -277,3 +277,86 @@ def view_candidate_page_view(request, id):
             return Response({"error": "Candidate not found"}, status=404)
         
         return Response({"candidate": candidate})
+    
+@api_view(['GET', 'POST'])
+def admin_dashboard_view(request):
+    voter_id = 1234567890  # Hardcoded voter ID for testing
+    chairpersonCandidates = [
+        {
+            "id": 1,
+            "name": "Juan Dela Cruz",
+            "student_number": "202100123",
+            "alias": "JuanCruz",
+            "party": "Party A",
+            "position": "Chairperson",
+            "description": "A dedicated student leader committed to excellence.",
+            "image": None
+        },
+        {
+            "id": 2,
+            "name": "Maria Santos",
+            "student_number": "202100456",
+            "alias": "MariaS",
+            "party": "Party B",
+            "position": "Chairperson",
+            "description": "Focused on transparency and student welfare.",
+            "image": None
+        }
+    ]
+    viceChairpersonCandidates = [
+        {
+            "id": 3,
+            "name": "Pedro Reyes",
+            "student_number": "202100789",
+            "alias": "PedroR",
+            "party": "Party A",
+            "position": "Vice Chairperson",
+            "description": "Advocate for student rights and community engagement.",
+            "image": None
+        },
+        {
+            "id": 4,
+            "name": "Ana Lopez",
+            "student_number": "202100321",
+            "alias": "AnaL",
+            "party": "Party B",
+            "position": "Vice Chairperson",
+            "description": "Committed to fostering a supportive campus environment.",
+            "image": None
+        }
+    ]
+    counsilorCandidates = [
+        {
+            "id": 5,
+            "name": "Carlos Garcia",
+            "student_number": "202100654",
+            "alias": "CarlosG",
+            "party": "Party A",
+            "position": "Councilor",
+            "description": "Passionate about academic excellence and student services.",
+            "image": None
+        },
+        {
+            "id": 6,
+            "name": "Luisa Fernandez",
+            "student_number": "202100987",
+            "alias": "LuisaF",
+            "party": "Party B",
+            "position": "Councilor",
+            "description": "Dedicated to enhancing campus life and student engagement.",
+            "image": None
+        }
+    ]
+
+    
+    if request.method == 'GET':
+        return Response({
+            "voter_id": voter_id,
+            "chairpersons": chairpersonCandidates,
+            "vice_chairpersons": viceChairpersonCandidates,
+            "councilors": counsilorCandidates
+        })
+    
+    elif request.method == 'POST':
+        # Handle POST request
+        return Response({"message": "Voting Page"})
