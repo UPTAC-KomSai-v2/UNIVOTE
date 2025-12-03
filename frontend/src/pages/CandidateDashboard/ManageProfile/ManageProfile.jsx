@@ -11,7 +11,7 @@ export default function ManageProfile() {
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
-    document.body.classList.remove("login-bg"); // optional
+    document.body.classList.remove("login-bg");
     return () => document.body.classList.remove("dashboard-bg");
   }, []);
 
@@ -46,10 +46,6 @@ export default function ManageProfile() {
           </div>
 
         </Card>
-
-        <CandidateCard>
-          
-        </CandidateCard>
     </div>
   );
 }

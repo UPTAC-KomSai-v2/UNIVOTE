@@ -69,7 +69,30 @@ def voting_page_view(request):
     voter_id = 1234567890  # Hardcoded voter ID for testing
     
     if request.method == 'GET':
-        return Response({"voter_id": voter_id})
+        candidates = [
+            {
+                "id": 1,
+                "name": "Juan Dela Cruz",
+                "student_number": "202100123",
+                "alias": "JuanCruz",
+                "party": "Party A",
+                "position": "Chairperson",
+                "description": "A dedicated student leader committed to excellence.",
+                "image": None
+            },
+            {
+                "id": 2,
+                "name": "Maria Santos",
+                "student_number": "202100456",
+                "alias": "MariaS",
+                "party": "Party B",
+                "position": "Chairperson",
+                "description": "Focused on transparency and student welfare.",
+                "image": None
+            }
+        ]
+
+        return Response({"voter_id": voter_id, "candidates": candidates})
     elif request.method == 'POST':
         # Handle POST request
         return Response({"message": "Voting Page"})
