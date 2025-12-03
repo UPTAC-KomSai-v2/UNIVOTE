@@ -47,3 +47,7 @@ select {
     font-size: 0.7rem;
     border-radius: 45px;
 }
+.manage-candidates-button:hover {
+    background-color: white;
+    color: gray;
+}

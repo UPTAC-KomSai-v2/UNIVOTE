@@ -48,6 +48,25 @@
     background-color: #6e0f2a;
 }
 
+.remove-candidate-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 3rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    background-color: #891437;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.remove-candidate-button:hover {
+    background-color: #6e0f2a;
+}
+
+
 input[type="checkbox"], input[type="radio"] {
     position: absolute;
     width: 20px;

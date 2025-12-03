@@ -12,11 +12,13 @@ export default function CandidateCard({
     children, 
     className, 
     onView,
+    onRemove, //USE THIS TO HANDLE REMOVE CANDIDATE
     isSelected,
     onSelect,
     multiple = false, //for councilors
     showSelect = true, 
-    showView = true
+    showView = true,
+    showRemove = false
     }){
 
     return (
@@ -32,6 +34,7 @@ export default function CandidateCard({
                         <div className='description'><strong>Candidate's Description:</strong> {studentDescription}</div>
 
                         {showView && <button className='view-details-button' onClick={onView}>View</button>}
+                        {showRemove && <button className='remove-candidate-button' onClick={onRemove}>Remove Candidate</button>}
                     </div>
                 </div>
                 {

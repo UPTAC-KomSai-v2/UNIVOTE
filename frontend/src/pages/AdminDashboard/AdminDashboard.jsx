@@ -214,6 +214,8 @@ export default function AdminDashboard() {
                         studentPosition={candidate.position}
                         showSelect={false}
                         showView={false}
+                        showRemove={true}
+
 
                     />
                 ))}
@@ -228,6 +230,8 @@ export default function AdminDashboard() {
                         studentPosition={candidate.position}
                         showSelect={false}
                         showView={false}
+                        showRemove={true}
+
 
                     />
                 ))}
@@ -242,6 +246,7 @@ export default function AdminDashboard() {
                         studentPosition={candidate.position}
                         showSelect={false}
                         showView={false}
+                        showRemove={true}
                     />
                 ))}
             </div>
