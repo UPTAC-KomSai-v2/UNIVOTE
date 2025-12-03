@@ -52,8 +52,8 @@ body.dashboard-bg {
 }
 
 .confirm-button button:hover {
-    background-color: #004080;
-    color: white;
+    background-color: white;
+    color: gray;
     cursor: pointer;
 }
 
@@ -74,4 +74,33 @@ body.dashboard-bg {
     margin-top: 10rem;
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+.edit-pfp-button {
+    position: absolute;
+    top: 11rem;
+    padding: 20px;
+    width: 50%;
+    border-radius: 30px;
+
+    font-weight: bold;
+}
+
+.edit-pfp-button:hover {
+    background-color: white;
+    color: gray;
+    cursor: pointer;
+}
+
+.profile-details {
+    margin-top: 8rem;
+    text-align: left;
+    width: 80%;
+}
+
+.profile-details input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    margin-top: 0.5rem;
 }

@@ -4,10 +4,12 @@ import Card from "../../../components/Card/Card";
 import CandidateCard from "../../../components/CandidateCard/CandidateCard";
 import "./ManageProfile.css";
 import backButton from '../../../assets/back-button-white.png'
+import loi from '../../../assets/loi.jpg'
 
 export default function ManageProfile() {
   const navigate = useNavigate();
   const [voterID, setVoterID] = useState('');
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -19,7 +21,10 @@ export default function ManageProfile() {
   // GET voter data
     fetch("http://localhost:8000/api/manage-profile-page/")
       .then(res => res.json())
-      .then(data => setVoterID(data.voter_id));
+      .then(data => {
+        setVoterID(data.voter_id)
+        setProfile(data.profile[0]);
+      });
   }, []);
   
   return (
@@ -46,6 +51,29 @@ export default function ManageProfile() {
           </div>
 
         </Card>
+
+        
+        <div className="candidate-details">
+          <img className="candidate-image-single" src={loi} alt="Letter of Intent" />
+
+          <button className="edit-pfp-button" onClick={() => {}}>Edit Profile Picture</button>
+
+          <div className="profile-details">
+            <h1>{profile ? profile.name : ''}</h1>
+
+            <p>Party Name: </p>
+            <input type="text" placeholder={profile ? profile.party_name : ''}/>
+
+            <p>Alias: </p>
+            <input type="text" placeholder={profile ? profile.alias : ''}/>
+
+            <p>Position: </p>
+            <h3>{profile ? profile.position : ''}</h3>
+          </div>
+
+
+
+        </div>
     </div>
   );
 }

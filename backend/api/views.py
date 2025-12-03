@@ -159,9 +159,15 @@ def voting_page_view(request):
 @api_view(['GET', 'POST'])
 def manage_profile_page_view(request):
     voter_id = 202212345  # Hardcoded voter ID for testing
+    profile = [{
+        "name": "Richard Julius Raphael Brian Constantine De Luka Doncic",
+        "party_name": "Party A",
+        "alias": "RJRBCD",
+        "position": "Chairperson",
+    }]
     
     if request.method == 'GET':
-        return Response({"voter_id": voter_id})
+        return Response({"voter_id": voter_id, "profile": profile})
     elif request.method == 'POST':
         # Handle POST request
         return Response({"message": "Manage Profile Page"})
