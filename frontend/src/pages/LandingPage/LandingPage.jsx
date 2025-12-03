@@ -9,17 +9,19 @@ import './LandingPage.css';
 export default function LandingPage() {
   const navigate = useNavigate();
 
+  const handleRoleSelect = (role) => {
+    navigate('/login', { state: { role: role } });
+  };
+
   return (
     <div className="landing-page">
-      <Card
-        title="UniVote"
-        description="University-wide Student Council Election Management System"
-      >
+      <Card title="UniVote" description="University-wide Student Council Election Management System">
         <div className="buttons">
-            <button onClick={() => navigate('/login')}>Admin</button>
-            <button onClick={() => navigate('/login')}>Candidate</button>
-            <button onClick={() => navigate('/login')}>Voter</button>
-            <button onClick={() => navigate('/login')}>Auditor</button>
+            {/* Pass the specific role string for each button */}
+            <button onClick={() => handleRoleSelect('Admin')}>Admin</button>
+            <button onClick={() => handleRoleSelect('Candidate')}>Candidate</button>
+            <button onClick={() => handleRoleSelect('Voter')}>Voter</button>
+            <button onClick={() => handleRoleSelect('Auditor')}>Auditor</button>
         </div>
       </Card>
     </div>   

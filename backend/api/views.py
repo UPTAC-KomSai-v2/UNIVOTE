@@ -12,15 +12,47 @@ def hello_world(request):
 def landing_view(request):
     return Response({"message": "Landing Page"})
 
-
 @api_view(['POST'])
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
+    role = request.data.get('role')
 
-    #TEST DATA TO SEE IF IT GOES THROUGH
-    if email == "admin@up.edu.ph" and password == "password0123..":
-        return Response({"message": "Login Successful!"}, status=200)
+    dashboard_urls = {
+        'Admin': '/admin-dashboard',
+        'Candidate': '/candidate-dashboard',
+        'Voter': '/voter-dashboard',
+        'Auditor': '/auditor-dashboard'
+    }
+
+    if email == "voter@up.edu.ph" and password == "password0123.." and role == "Voter":
+        return Response({
+            "message": "Login Successful!",
+            "redirect_url": dashboard_urls.get(role, '/voter-dashboard'),
+            "role": role
+        }, status=200)
+    
+    if email == "admin@up.edu.ph" and password == "password0123.." and role == "Admin":
+        return Response({
+            "message": "Login Successful!",
+            "redirect_url": dashboard_urls.get(role, '/admin-dashboard'),
+            "role": role
+        }, status=200)
+    
+    if email == "candidate@up.edu.ph" and password == "password0123.." and role == "Candidate":
+        return Response({
+            "message": "Login Successful!",
+            "redirect_url": dashboard_urls.get(role, '/candidate-dashboard'),
+            "role": role
+        }, status=200)
+    
+    if email == "auditor@up.edu.ph" and password == "password0123.." and role == "Auditor":
+        return Response({
+            "message": "Login Successful!",
+            "redirect_url": dashboard_urls.get(role, '/auditor-dashboard'),
+            "role": role
+        }, status=200)
+        
     else:
         return Response({"message": "Invalid credentials."}, status=401)
 
