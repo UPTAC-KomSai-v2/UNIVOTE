@@ -212,6 +212,9 @@ export default function AdminDashboard() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        showSelect={false}
+                        showView={false}
+
                     />
                 ))}
                 {viceChairpersons.map((candidate) => (
@@ -223,6 +226,9 @@ export default function AdminDashboard() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        showSelect={false}
+                        showView={false}
+
                     />
                 ))}
                 {councilors.map((candidate) => (
@@ -234,6 +240,8 @@ export default function AdminDashboard() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        showSelect={false}
+                        showView={false}
                     />
                 ))}
             </div>

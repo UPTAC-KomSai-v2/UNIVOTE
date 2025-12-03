@@ -14,7 +14,9 @@ export default function CandidateCard({
     onView,
     isSelected,
     onSelect,
-    multiple = false //for councilors
+    multiple = false, //for councilors
+    showSelect = true, 
+    showView = true
     }){
 
     return (
@@ -29,26 +31,29 @@ export default function CandidateCard({
                         <div className='position'><strong>Running For:</strong> {studentPosition}</div>
                         <div className='description'><strong>Candidate's Description:</strong> {studentDescription}</div>
 
-                        <button className='view-details-button' onClick={onView}>View</button>
+                        {showView && <button className='view-details-button' onClick={onView}>View</button>}
                     </div>
                 </div>
+                {
+                    showSelect && (
+                        <div className="candidate-select">
+                            {multiple ? (
+                                <input 
+                                    type="checkbox" 
+                                    checked={isSelected}
+                                    onChange={onSelect}
+                                />
+                            ) : (
+                                <input
+                                    type="radio" 
+                                    checked={isSelected}
+                                    onChange={onSelect}
+                                />
+                            )}
+                        </div>
+                    )
+                }
                 
-                <div className="candidate-select">
-                    {multiple ? (
-                        <input 
-                            type="checkbox" 
-                            checked={isSelected}
-                            onChange={onSelect}
-                        />
-                    ) : (
-                        <input
-                            type="radio" 
-                            checked={isSelected}
-                            onChange={onSelect}
-                        />
-                    )}
-                </div>
-
                 {children}
 
         </div>
