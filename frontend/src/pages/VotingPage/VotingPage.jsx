@@ -21,7 +21,6 @@ export default function VotingPage() {
       .then(res => res.json())
       .then(data => setVoterID(data.voter_id));
   }, []);
-
   
   return (
     <div className="voting-page">

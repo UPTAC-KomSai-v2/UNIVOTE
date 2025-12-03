@@ -13,13 +13,30 @@ body.login-bg {
 }
 
 
-
 .login-page {
+    position: relative;
+    
     display: flex;
     justify-content: flex-start;
     align-items: center;
     height: 100vh;
-    padding-left: 200px
+    padding-left: 200px;
+}
+
+.back-button {
+    position: absolute; 
+    top: 30px;          
+    left: 30px;        
+    
+    width: 80px;        
+    cursor: pointer;
+    z-index: 100;       
+    
+    transition: transform 0.2s;
+}
+
+.back-button:hover {
+    transform: scale(1.1);
 }
 
 @media only screen and (max-width: 1024px) {
