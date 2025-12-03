@@ -161,7 +161,7 @@ export default function VotingPage() {
                       key={candidate.id}
                       image={candidate.image}
                       studentName={candidate.name}
-                      studentNumber={candidate.student_number}
+                      // studentNumber={candidate.student_number}
                       studentAlias={candidate.alias}
                       studentParty={candidate.party}
                       studentPosition={candidate.position}

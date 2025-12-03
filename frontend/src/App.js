@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './pages/LoginPage/LoginPage';
 import Placeholder from './pages/Placeholder/Placeholder';
 import axios from 'axios';

@@ -23,7 +23,7 @@ export default function CandidateCard({
                     <img className="candidate-image" src={image || upSeal} alt="candidate Image" />
                     <div className='candidate-info'>
                         <div className='name'>Name: {studentName}</div>
-                        <div className='student-number'>Student Number: {studentNumber}</div>
+                        {/* <div className='student-number'>Student Number: {studentNumber}</div> */}
                         <div className='alias'>Alias: {studentAlias}</div>
                         <div className='party'>Party: {studentParty}</div>
                         <div className='position'>Running For: {studentPosition}</div>
