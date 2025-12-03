@@ -6,6 +6,7 @@ import axios from 'axios';
 import LandingPage from './pages/LandingPage/LandingPage';
 import VoterDashboard from './pages/VoterDashboard/VoterDashboard';
 import VotingPage from './pages/VotingPage/VotingPage';
+import CandidateDashboard from './pages/CandidateDashboard/CandidateDashboard';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -25,7 +26,8 @@ function App() {
         <Route path="/home" element={<Placeholder />} />
         <Route path="/voter-dashboard" element={<VoterDashboard />} />
         <Route path="/voting-page" element={<VotingPage />} />
-
+        <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
+        
       </Routes>
     </Router>
   );

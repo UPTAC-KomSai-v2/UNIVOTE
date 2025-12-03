@@ -28,6 +28,10 @@ def login_view(request):
 def voter_dashboard_view(request):
     return Response({"message": "Voter Dashboard"})
 
+@api_view(['POST'])
+def candidate_dashboard_view(request):
+    return Response({"message": "Candidate Dashboard"})
+
 @api_view(['GET', 'POST'])
 def voting_page_view(request):
     voter_id = 1234567890  # Hardcoded voter ID for testing
