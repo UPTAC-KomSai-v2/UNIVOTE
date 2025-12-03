@@ -30,5 +30,7 @@ urlpatterns = [
     path('api/candidate-dashboard/', candidate_dashboard_view),
     path('api/manage-profile-page/', manage_profile_page_view),
     path('api/vote-receipt-page/', vote_receipt_page_view),
+    path('api/view-candidate/<int:id>/', view_candidate_page_view),
+    
 ]
 

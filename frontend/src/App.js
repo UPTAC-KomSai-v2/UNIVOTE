@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
 import LoginPage from './pages/LoginPage/LoginPage';
 import Placeholder from './pages/Placeholder/Placeholder';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import VotingPage from './pages/VotingPage/VotingPage';
 import CandidateDashboard from './pages/CandidateDashboard/CandidateDashboard';
 import ManageProfile from './pages/CandidateDashboard/ManageProfile/ManageProfile';
 import VoteReceipt from './pages/VotingPage/VoteReceipt/VoteReceipt';
+import ViewCandidate from './pages/VotingPage/ViewCandidate/ViewCandidate';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -31,6 +32,7 @@ function App() {
         <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
         <Route path="/manage-profile-page" element={<ManageProfile />} />
         <Route path="/vote-receipt-page" element={<VoteReceipt />} />
+        <Route path="/view-candidate/:id" element={<ViewCandidate />} />
         
       </Routes>
     </Router>

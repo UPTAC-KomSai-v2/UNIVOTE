@@ -13,7 +13,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 600px;
     height: 200px;
-
 }
 
 .name, .student-number, .alias, .party, .position, .description {
@@ -31,3 +30,29 @@
     display: flex;
 }
 
+.view-details-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 3rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    background-color: #891437;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-details-button:hover {
+    background-color: #6e0f2a;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    position: absolute;
+    width: 20px;
+    right: 0;
+    top: 50%;
+    right: 10%;
+    transform: translate(30%, -50%) scale(2);
+}
