@@ -28,6 +28,12 @@ def login_view(request):
 def voter_dashboard_view(request):
     return Response({"message": "Voter Dashboard"})
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def voting_page_view(request):
-    return Response({"message": "Voting Page"})    
+    voter_id = 1234567890  # Hardcoded voter ID for testing
+    
+    if request.method == 'GET':
+        return Response({"voter_id": voter_id})
+    elif request.method == 'POST':
+        # Handle POST request
+        return Response({"message": "Voting Page"})

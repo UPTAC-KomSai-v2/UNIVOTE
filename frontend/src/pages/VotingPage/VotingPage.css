@@ -1,19 +1,3 @@
-.card.voting-page{
-    display: flex;
-    flex-direction: column;      
-    align-items: center;        
-    text-align: center;         
-    padding: 1.5rem;
-
-    background-color: #891437;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 450px;
-    height: 100vh;
-}
-
 body.dashboard-bg {
   background-image: url('../../assets/dashboard-bg.png');
   background-size: cover;
@@ -25,10 +9,53 @@ body.dashboard-bg {
 .voting-page {
     display: flex;
     justify-content: cover;
-    align-items: cover;
+    align-items: center;
     height: 100vh;
+
+    color: white;
 }
 
 .voting-page-card {
     height: 100vh;
+    border-radius: 0;
+}
+
+.voting-page-card .card-title {
+    margin-top: 0;
+    font-size: 5rem;
+
+}
+
+.voting-page-card .card-description  {
+    font-size: 0.70rem;
+    margin-bottom: 4rem;
+}
+
+.voting-page-card .logo {
+    margin-top: 3rem;
+}
+
+.candidateButtons {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.candidateButtons button {
+    border-radius: 25px;
+}
+
+.candidateButtons button:hover {
+    background-color: #004080;
+    color: white;
+    cursor: pointer;
+}
+
+.back-arrow {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
 }
