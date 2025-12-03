@@ -21,7 +21,7 @@ export default function VoterDashboard() {
         >
         
         <div>
-          <button className="vote-button" onClick={() => navigate('/voting-page')}>
+          <button className="voter-vote-button" onClick={() => navigate('/voting-page')}>
             <img src={thumbsUp} alt="Vote" />
             Vote
           </button>

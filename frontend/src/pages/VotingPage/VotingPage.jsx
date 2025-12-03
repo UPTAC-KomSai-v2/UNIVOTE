@@ -8,6 +8,7 @@ import backArrow from '../../assets/arrow-back.png'
 export default function VotingPage() {
   const navigate = useNavigate();
   const [voterID, setVoterID] = useState('');
+  const [candidateNumChoice, setCandidateNumChoice] = useState(1);
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -44,15 +45,46 @@ export default function VotingPage() {
             <button>Councilors</button>
 
             
-            <button>SUBMIT</button>
+            <button className="submit-button">SUBMIT</button>
 
           </div>
 
         </Card>
 
-        <CandidateCard>
-          
-        </CandidateCard>
+        <div className="candidate-list-container">
+          <div className="candidate-list-card-content">
+              <div className="candidate-list-card-title">2025 Student Council Elections</div>
+              <div className="candidate-list-card-type">Chairperson</div>
+              <div className="candidate-list-card-number">(Choose only {candidateNumChoice})</div>
+          </div>
+          <div className="candidate-list">
+              <CandidateCard
+                studentName="Juan Dela Cruz"
+                studentNumber="202100123"
+                studentAlias="JuanCruz"
+                studentParty="Party A"
+                studentPosition="Chairperson"
+                studentDescription="A dedicated student leader committed to excellence." 
+              />
+              <CandidateCard
+                studentName="Juan Dela Cruz"
+                studentNumber="202100123"
+                studentAlias="JuanCruz"
+                studentParty="Party A"
+                studentPosition="Chairperson"
+                studentDescription="A dedicated student leader committed to excellence." 
+              />
+              <CandidateCard
+                studentName="Juan Dela Cruz"
+                studentNumber="202100123"
+                studentAlias="JuanCruz"
+                studentParty="Party A"
+                studentPosition="Chairperson"
+                studentDescription="A dedicated student leader committed to excellence." 
+              />
+          </div>
+        </div>
+
     </div>
   );
 }

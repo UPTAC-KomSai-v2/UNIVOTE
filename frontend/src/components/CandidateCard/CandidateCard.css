@@ -1,28 +1,33 @@
 .candidate-card {
     position: relative;
     display: flex;
-    flex-direction: column;      
-    align-items: center;        
-    text-align: center;         
+    flex-direction: column;
+    align-items: left;
+    text-align: left;         
     padding: 1.5rem;
-    margin-left: 10rem;
+    color: #891437;
 
-    background-color: #891437;
+    background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 550px;
-    height: 600px;
+    width: 600px;
+    height: 200px;
+
 }
 
-.change-candidate-button-back {
-    position: absolute;
-    top: 45%;
-    left: -1rem;
-    background-color: #00563E;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 0;
+.name, .student-number, .alias, .party, .position, .description {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
 }
+
+.candidate-image {
+    width: 100px;
+    height: 100px;
+}
+
+.candidate-info-container {
+    display: flex;
+}
+

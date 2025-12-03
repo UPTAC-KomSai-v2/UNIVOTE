@@ -20,7 +20,9 @@ body.dashboard-bg {
     height: 100vh;
 }
 
-.vote-button {
+
+
+.voter-vote-button {
     margin-top: 6rem;
     margin-bottom: 5rem;
     padding: 45px;
@@ -32,11 +34,11 @@ body.dashboard-bg {
     width: 100%;
 }
 
-.vote-button img {
+.voter-vote-button img {
     margin-right: 10px;
 }
 
-.vote-button:hover {
+.voter-vote-button:hover {
     background-color: #891437;
     transform: scale(1.05);
     transition: transform 0.2s;

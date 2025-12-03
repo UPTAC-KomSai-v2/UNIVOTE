@@ -1,16 +1,23 @@
 import './CandidateCard.css';
-import frontArrow from "../../assets/arrow-front.png"
-import backArrow from "../../assets/arrow-back.png"
+import upSeal from "../../assets/UP-Seal.png"
 
-
-export default function CandidateCard({title, description, children, className}){
+export default function CandidateCard({image, studentName, studentNumber, studentAlias, studentParty, studentPosition, studentDescription, children, className}){
 
     return (
-        <div className={`candidate-card ${className || ''}`}>
-            <button className='change-candidate-button-back'>
-                <img src={backArrow} alt="Back" />
-            </button>
-            {children}
+            <div className={`candidate-card ${className || ''}`}>
+                <div className='candidate-info-container'>
+                    <img className="candidate-image" src={image || upSeal} alt="candidate Image" />
+                    <div className='candidate-info'>
+                        <div className='name'>Name: {studentName}</div>
+                        <div className='student-number'>Student Number: {studentNumber}</div>
+                        <div className='alias'>Alias: {studentAlias}</div>
+                        <div className='party'>Party: {studentParty}</div>
+                        <div className='position'>Running For: {studentPosition}</div>
+                        <div className='description'>Candidate's Description: {studentDescription}</div>
+                    </div>
+                </div>
+                {children}
+
         </div>
     );
 }
