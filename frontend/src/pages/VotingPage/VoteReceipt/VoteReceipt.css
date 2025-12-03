@@ -1,0 +1,125 @@
+body.dashboard-bg {
+  background-image: url('../../../assets/dashboard-bg.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+
+.vote-receipt-page {
+    display: flex;
+    justify-content: cover;
+    align-items: center;
+    height: 100vh;
+
+    color: white;
+}
+
+.vote-receipt-page-card {
+    height: 100vh;
+    border-radius: 0;
+}
+
+.vote-receipt-page-card .card-title {
+    margin-top: 0;
+    font-size: 5rem;
+
+}
+
+.vote-receipt-page-card .card-description  {
+    font-size: 0.70rem;
+    margin-bottom: 4rem;
+}
+
+.vote-receipt-page-card .logo {
+    margin-top: 3rem;
+}
+
+.print-receipt-button {
+    margin-top: 15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100px;
+}
+
+.print-receipt-button button {
+    border-radius: 25px;
+    width: 250px;
+    height: 100%;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.print-receipt-button button:hover {
+    background-color: #004080;
+    color: white;
+    cursor: pointer;
+}
+
+.back-button {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    transform: scale(1.1);
+}
+
+.voter-id {
+    margin-top: 10rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.receipt-data-container {
+    width: fit-content;  
+    margin-top: 2rem auto;  
+    text-align: left;    
+    min-width: 300px;  
+}
+
+.selected-candidate {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 3rem; 
+    font-size: 1.2rem;
+    gap: 7rem;
+}
+
+.selected-candidate li {
+    margin-bottom: 0.8rem;
+}
+
+.receipt-data-container {
+    width: fit-content;
+    margin: 2rem auto;
+    text-align: left;
+    min-width: 300px;
+}
+
+.selected-candidate h3 {
+    width: 200px; 
+    font-weight: bold;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.selected-candidate p, 
+.selected-candidate ul {
+    margin: 0;
+    font-weight: normal;
+    padding-left: 0;
+    list-style: none;
+}
+
+.selected-candidate p, 
+.selected-candidate h3,
+.selected-candidate ul {
+    font-size: 1.4rem;
+}
+

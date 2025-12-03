@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/voting-page/', voting_page_view),
     path('api/candidate-dashboard/', candidate_dashboard_view),
     path('api/manage-profile-page/', manage_profile_page_view),
+    path('api/vote-receipt-page/', vote_receipt_page_view),
 ]
 

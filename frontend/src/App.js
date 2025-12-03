@@ -8,6 +8,7 @@ import VoterDashboard from './pages/VoterDashboard/VoterDashboard';
 import VotingPage from './pages/VotingPage/VotingPage';
 import CandidateDashboard from './pages/CandidateDashboard/CandidateDashboard';
 import ManageProfile from './pages/CandidateDashboard/ManageProfile/ManageProfile';
+import VoteReceipt from './pages/VotingPage/VoteReceipt/VoteReceipt';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -29,6 +30,7 @@ function App() {
         <Route path="/voting-page" element={<VotingPage />} />
         <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
         <Route path="/manage-profile-page" element={<ManageProfile />} />
+        <Route path="/vote-receipt-page" element={<VoteReceipt />} />
         
       </Routes>
     </Router>

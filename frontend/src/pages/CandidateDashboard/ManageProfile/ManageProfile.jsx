@@ -47,9 +47,13 @@ export default function ManageProfile() {
 
         </Card>
 
-        <CandidateCard>
+        <div className="candidate-list-container">
+          <div className="candidate-list-card-content">
+              <div className="candidate-list-card-title">2025 Student Council Elections</div>
+              <div className="candidate-list-card-type">Chairperson</div>
+          </div>
           
-        </CandidateCard>
+        </div>
     </div>
   );
 }
