@@ -9,6 +9,8 @@ export default function VotingPage() {
   const navigate = useNavigate();
   const [voterID, setVoterID] = useState('');
   const [candidateNumChoice, setCandidateNumChoice] = useState(1);
+  const [candidates, setCandidates] = useState([]);
+  const [selectedCandidates, setSelectedCandidates] = useState([]);
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -20,8 +22,12 @@ export default function VotingPage() {
   // GET voter data
     fetch("http://localhost:8000/api/voting-page/")
       .then(res => res.json())
-      .then(data => setVoterID(data.voter_id));
+      .then(data => {
+        setVoterID(data.voter_id);
+        setCandidates(data.candidates);
+      });
   }, []);
+
   
   return (
     <div className="voting-page">
@@ -58,30 +64,18 @@ export default function VotingPage() {
               <div className="candidate-list-card-number">(Choose only {candidateNumChoice})</div>
           </div>
           <div className="candidate-list">
-              <CandidateCard
-                studentName="Juan Dela Cruz"
-                studentNumber="202100123"
-                studentAlias="JuanCruz"
-                studentParty="Party A"
-                studentPosition="Chairperson"
-                studentDescription="A dedicated student leader committed to excellence." 
-              />
-              <CandidateCard
-                studentName="Juan Dela Cruz"
-                studentNumber="202100123"
-                studentAlias="JuanCruz"
-                studentParty="Party A"
-                studentPosition="Chairperson"
-                studentDescription="A dedicated student leader committed to excellence." 
-              />
-              <CandidateCard
-                studentName="Juan Dela Cruz"
-                studentNumber="202100123"
-                studentAlias="JuanCruz"
-                studentParty="Party A"
-                studentPosition="Chairperson"
-                studentDescription="A dedicated student leader committed to excellence." 
-              />
+              {candidates.map((candidate) => (
+                  <CandidateCard
+                      key={candidate.id}
+                      image={candidate.image}
+                      studentName={candidate.name}
+                      studentNumber={candidate.student_number}
+                      studentAlias={candidate.alias}
+                      studentParty={candidate.party}
+                      studentPosition={candidate.position}
+                      studentDescription={candidate.description}
+                  />
+              ))}
           </div>
         </div>
 
