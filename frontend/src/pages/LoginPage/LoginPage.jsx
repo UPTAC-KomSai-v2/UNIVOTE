@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card/Card";
 import LoginForm from "../../components/LoginForm/LoginForm";
 import "./LoginPage.css";
-import backButton from '../../assets/back-button.png'
+import backButton from '../../assets/back-button-maroon.png'
 
 export default function LoginPage() {
   const navigate = useNavigate();

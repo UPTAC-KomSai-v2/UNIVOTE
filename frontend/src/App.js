@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import VoterDashboard from './pages/VoterDashboard/VoterDashboard';
 import VotingPage from './pages/VotingPage/VotingPage';
 import CandidateDashboard from './pages/CandidateDashboard/CandidateDashboard';
+import ManageProfile from './pages/CandidateDashboard/ManageProfile/ManageProfile';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -27,6 +28,7 @@ function App() {
         <Route path="/voter-dashboard" element={<VoterDashboard />} />
         <Route path="/voting-page" element={<VotingPage />} />
         <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
+        <Route path="/manage-profile-page" element={<ManageProfile />} />
         
       </Routes>
     </Router>

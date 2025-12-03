@@ -41,3 +41,45 @@ def voting_page_view(request):
     elif request.method == 'POST':
         # Handle POST request
         return Response({"message": "Voting Page"})
+    
+@api_view(['GET', 'POST'])
+def manage_profile_page_view(request):
+    voter_id = 202212345  # Hardcoded voter ID for testing
+    
+    if request.method == 'GET':
+        return Response({"voter_id": voter_id})
+    elif request.method == 'POST':
+        # Handle POST request
+        return Response({"message": "Manage Profile Page"})
+    
+@api_view(['GET', 'POST'])
+def vote_receipt_page_view(request):
+    voter_id = 202212345
+    receipt_id = "s1Uc3K56M812Y89D163Ck"
+    chairperson = "chairperson2025"
+    vice_chairperson = "vice_chairperson2022"
+    councilor = [
+        "councilor1_2023",
+        "councilor2_2024",
+        "councilor3_2025",
+        "councilor4_2022",
+        "councilor5_2023",
+        "councilor6_2024",
+    ]
+    date = "December 25, 2025"
+    time = "10:30 AM"
+
+    
+    if request.method == 'GET':
+        return Response({
+            "voter_id": voter_id,
+            "receipt_id": receipt_id,
+            "chairperson": chairperson,
+            "vice_chairperson": vice_chairperson,
+            "councilor": councilor,
+            "date": date,
+            "time": time,
+        })
+    elif request.method == 'POST':
+        # Handle POST request
+        return Response({"message": "Manage Profile Page"})

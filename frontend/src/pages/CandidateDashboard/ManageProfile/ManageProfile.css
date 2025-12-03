@@ -1,0 +1,77 @@
+body.dashboard-bg {
+  background-image: url('../../../assets/dashboard-bg.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+
+.manage-profile-page {
+    display: flex;
+    justify-content: cover;
+    align-items: center;
+    height: 100vh;
+
+    color: white;
+}
+
+.manage-profile-page-card {
+    height: 100vh;
+    border-radius: 0;
+}
+
+.manage-profile-page-card .card-title {
+    margin-top: 0;
+    font-size: 5rem;
+
+}
+
+.manage-profile-page-card .card-description  {
+    font-size: 0.70rem;
+    margin-bottom: 4rem;
+}
+
+.manage-profile-page-card .logo {
+    margin-top: 3rem;
+}
+
+.confirm-button {
+    margin-top: 15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100px;
+}
+
+.confirm-button button {
+    border-radius: 25px;
+    width: 250px;
+    height: 100%;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.confirm-button button:hover {
+    background-color: #004080;
+    color: white;
+    cursor: pointer;
+}
+
+.back-button {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    transform: scale(1.1);
+}
+
+.voter-id {
+    margin-top: 10rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
