@@ -1,0 +1,44 @@
+/* body {
+    background-image: url('../../assets/bg.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+} */
+
+body.dashboard-bg {
+  background-image: url('../../assets/dashboard-bg.png');
+  background-size: center;
+  background-position: center;
+  height: 100vh;
+}
+
+
+.candidate-dashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.vote-button {
+    margin-top: 6rem;
+    margin-bottom: 5rem;
+    padding: 45px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.vote-button img {
+    margin-right: 10px;
+}
+
+.vote-button:hover {
+    background-color: #891437;
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
