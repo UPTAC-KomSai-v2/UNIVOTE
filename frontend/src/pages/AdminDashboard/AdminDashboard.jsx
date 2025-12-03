@@ -71,52 +71,11 @@ export default function AdminDashboard() {
             <button onClick={() => {}}>
               2023 SC ELECTIONS
             </button>
-            {/* <button className="submit-button" onClick={() => setIsSubmitted(true)}>
-              SUBMIT
-            </button> */}
 
           </div>
 
         </Card>
 
-        {
-          isSubmitted && (
-            <>
-              <div className="overlay" onClick={() => setIsSubmitted(false)}></div>
-              <div className="submission-message">
-                <p>  
-                  Have you finished voting?
-                </p>
-                <p>
-                  Tap Yes to submit.
-                </p>
-                <div>
-                  <button onClick={() => setSubmissionConfirmed(true)}>YES</button>
-                  <button onClick={() => setIsSubmitted(false)}>NO</button>
-                </div>
-              </div>
-            </>
-          )
-        }
-        {
-          submissionConfirmed && (
-            <>
-              <div className="overlay" onClick={() => setIsSubmitted(false)}></div>
-              <div className="submission-message">
-                <p>  
-                  Your ballot has been submitted successfully!
-                </p>
-                <p>
-                  Thank you for voting.
-                </p>
-                <div>
-                  <button onClick={() => navigate('/vote-receipt-page')}>View Voting Receipt</button>
-                  <button onClick={() => navigate('/')}>Logout</button>
-                </div>
-              </div>
-            </>
-          )
-        }
 
         <div className="candidate-list-container">
             <div className="candidate-list-card-content">
@@ -196,7 +155,7 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            <button className="manage-candidates-button">Manage Candidates</button>
+            <button className="manage-candidates-button" onClick={() => navigate('/manage-candidates')}>Manage Candidates</button>
 
             
             <strong>
@@ -214,7 +173,6 @@ export default function AdminDashboard() {
                         studentPosition={candidate.position}
                         showSelect={false}
                         showView={false}
-                        showRemove={true}
 
 
                     />
@@ -230,7 +188,6 @@ export default function AdminDashboard() {
                         studentPosition={candidate.position}
                         showSelect={false}
                         showView={false}
-                        showRemove={true}
 
 
                     />
@@ -246,7 +203,6 @@ export default function AdminDashboard() {
                         studentPosition={candidate.position}
                         showSelect={false}
                         showView={false}
-                        showRemove={true}
                     />
                 ))}
             </div>

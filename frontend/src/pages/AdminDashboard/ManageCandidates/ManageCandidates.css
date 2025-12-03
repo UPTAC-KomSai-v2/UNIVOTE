@@ -1,0 +1,44 @@
+.add-candidate-content input[type="text"] {
+    padding: 8px;
+    border-radius: 10px;
+    width: 200px;
+    height: 30px;
+    margin: 1rem;
+}
+
+.choose-position {
+    margin-left: 20px;
+    width: 215px;
+    height: 50px;
+
+    background-color: #FFB81C;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
+
+.add-candidate-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin-top: 20px;
+}
+
+.manage-candidates-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+    padding: 0 40px;
+}
+
+.done-manage-button, .add-candidate-button {
+    width: 47%;
+    position: relative;
+    border-radius: 25px;
+}
+.done-manage-button:hover, .add-candidate-button:hover {
+    background-color: white;
+    color: gray;
+}   

@@ -11,6 +11,7 @@ import ManageProfile from './pages/CandidateDashboard/ManageProfile/ManageProfil
 import VoteReceipt from './pages/VotingPage/VoteReceipt/VoteReceipt';
 import ViewCandidate from './pages/VotingPage/ViewCandidate/ViewCandidate';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
+import ManageCandidates from './pages/AdminDashboard/ManageCandidates/ManageCandidates';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -35,6 +36,7 @@ function App() {
         <Route path="/vote-receipt-page" element={<VoteReceipt />} />
         <Route path="/view-candidate/:id" element={<ViewCandidate />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/manage-candidates" element={<ManageCandidates />} />
         
       </Routes>
     </Router>
