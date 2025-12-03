@@ -45,7 +45,7 @@ export default function ManageProfile() {
             Voter ID: {voterID}
           </div>
 
-          <div className="confirm-button">
+          <div className="confirm-button" onClick={() => navigate('/candidate-dashboard')}>
             <button>Confirm</button>
 
           </div>
