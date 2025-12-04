@@ -8,7 +8,13 @@ import loi from '../../../assets/loi.jpg'
 export default function ManageProfile() {
   const navigate = useNavigate();
   const [voterID, setVoterID] = useState('');
-  const [profile, setProfile] = useState(null);
+
+  const [profile, setProfile] = useState({
+    name: '',
+    party_name: '',
+    alias: '',
+    position: ''
+  });
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -17,14 +23,46 @@ export default function ManageProfile() {
   }, []);
 
   useEffect(() => {
-  // GET voter data
     fetch("http://localhost:8000/api/manage-profile-page/")
       .then(res => res.json())
       .then(data => {
         setVoterID(data.voter_id)
-        setProfile(data.profile[0]);
+        if (data.profile && data.profile[0]) {
+            setProfile(data.profile[0]);
+        }
       });
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfile(prevProfile => ({
+        ...prevProfile, 
+        [name]: value  
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/manage-profile-page/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profile)
+      });
+
+      if (response.ok) {
+        console.log("Profile saved!");
+        navigate('/candidate-dashboard'); 
+      } else {
+        alert("Failed to save profile. Check console for details.");
+      }
+
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Could not connect to server.");
+    }
+  };
   
   return (
     <div className="manage-profile-page">
@@ -45,8 +83,7 @@ export default function ManageProfile() {
           </div>
 
           <div className="confirm-button" onClick={() => navigate('/candidate-dashboard')}>
-            <button>Confirm</button>
-
+            <button onClick={handleSave}>Confirm</button>
           </div>
 
         </Card>
@@ -58,19 +95,29 @@ export default function ManageProfile() {
           <button className="edit-pfp-button" onClick={() => {}}>Edit Profile Picture</button>
 
           <div className="profile-details">
-            <h1>{profile ? profile.name : ''}</h1>
+            <h1>{profile.name}</h1>
 
             <p>Party Name: </p>
-            <input type="text" placeholder={profile ? profile.party_name : ''}/>
+            <input 
+                type="text" 
+                name="party_name"
+                value={profile.party_name || ''} 
+                onChange={handleInputChange}
+                placeholder="Enter Party Name"
+            />
 
             <p>Alias: </p>
-            <input type="text" placeholder={profile ? profile.alias : ''}/>
+            <input 
+                type="text" 
+                name="alias"
+                value={profile.alias || ''} 
+                onChange={handleInputChange}
+                placeholder="Enter Alias"
+            />
 
             <p>Position: </p>
-            <h3>{profile ? profile.position : ''}</h3>
+            <h3>{profile.position}</h3>
           </div>
-
-
 
         </div>
     </div>

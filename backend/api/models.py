@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 
@@ -22,8 +23,12 @@ class User(models.Model):
     def __str__(self):
         return self.email
 
-
 class VoterProfile(models.Model):
+    voter_id = models.UUIDField( 
+        default=uuid.uuid4, 
+        unique=True, 
+        editable=False
+    )
     email = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     student_number = models.CharField(max_length=20, unique=True)
     course = models.CharField(max_length=50)

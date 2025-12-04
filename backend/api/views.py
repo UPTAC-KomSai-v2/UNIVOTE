@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import User, CandidateProfile, CandidateForPosition
+from .models import User, CandidateProfile, CandidateForPosition, VoterProfile
 
 @api_view(['GET'])
 def hello_world(request):
@@ -230,6 +230,9 @@ def manage_profile_page_view(request):
             user_obj = User.objects.get(email=target_email)
 
             candidate_profile = CandidateProfile.objects.get(email=user_obj)
+
+            voter_profile = VoterProfile.objects.get(email=user_obj)
+
             link_entry = CandidateForPosition.objects.filter(candidate_email=candidate_profile).first()
             
             if link_entry:
@@ -244,11 +247,29 @@ def manage_profile_page_view(request):
                 "position": position_name 
             }]
 
-            return Response({"voter_id": user_obj.email, "profile": profile_data})
+            return Response({"voter_id": voter_profile.voter_id, "profile": profile_data})
 
         except Exception as e:
             print(f"Error: {e}")
             return Response({"voter_id": "Error", "profile": []})
+        
+    elif request.method == 'POST':
+        try:
+            user_obj = User.objects.get(email=target_email)
+            profile = CandidateProfile.objects.get(email=user_obj)
+
+            new_party = request.data.get('party_name')
+            new_alias = request.data.get('alias')
+
+            profile.party = new_party
+            profile.alias = new_alias
+            profile.save()
+
+            return Response({"message": "Profile updated successfully!"}, status=200)
+
+        except Exception as e:
+            print(f"Error saving profile: {e}")
+            return Response({"error": "Failed to save profile"}, status=500)
     
 @api_view(['GET', 'POST'])
 def vote_receipt_page_view(request):
