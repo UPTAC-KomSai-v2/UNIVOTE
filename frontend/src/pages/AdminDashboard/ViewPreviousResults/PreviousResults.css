@@ -63,3 +63,134 @@
     flex-direction: row;
     align-items: center;
 }
+
+.print-button {
+    position: absolute;
+    right: 1rem;
+    top: 6.5rem;
+    border-radius: 25px;
+}
+.voter-chart-view {
+    background-color: #FFF0F0;
+    color: #891437;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+}
+
+.voter-chart-view h1, .chairperson-chart-container h1 {
+    margin-top: 0;
+}
+
+.voter-chart-container, .chairperson-chart-container, .vice-chairperson-chart-container{
+    margin: 10px;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+}
+
+.voter-data {
+    text-align: left;
+    padding: 10px;
+}
+
+.map-voter-data-list {
+    list-style-type: none;
+    padding: 0;
+    font-size: 0.95rem;
+}
+
+.candidates-data-chart-view {
+    background-color: #FFF0F0;
+    color: #891437;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.candidates-data-chart-view h3 {
+    margin-bottom: 0;
+}
+
+.chairperson-chart-view, .vice-chairperson-chart-view {
+    display: flex;
+    flex-direction: column;
+}
+
+.chairperson-vice-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.councilor-chart-view {
+    background-color: #FFF0F0;
+    color: #891437;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.print-button {
+    position: absolute;
+    right: 1rem;
+    top: 6.5rem;
+    border-radius: 25px;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .candidate-list-container,
+    .candidate-list-container *,
+    .candidate-list-card-content,
+    .candidate-list-card-content *,
+    .candidate-list, 
+    .candidate-list * {
+        visibility: visible;
+    }
+
+    .voting-page-card,
+    .print-button,
+    .back-arrow,
+    .candidateButtons {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .candidate-list-container {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+    }
+
+    .candidate-list {
+        position: static !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+    
+    .candidate-list > *,
+    .voter-chart-view,
+    .candidates-data-chart-view,
+    .councilor-chart-view {
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .councilor-chart-view {
+        page-break-before: always;
+    }
+}

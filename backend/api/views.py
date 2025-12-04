@@ -615,24 +615,24 @@ def manage_candidates_view(request):
 def view_previous_results(request):
 
     voter_test_data = [
-        { "program": "BS Accountancy", "votes": 52, "total_students": 120 },
+        { "program": "BS Accountancy", "votes": 90, "total_students": 100 },
         { "program": "BS Applied Mathematics", "votes": 52, "total_students": 100 },
-        { "program": "BS Biology", "votes": 45, "total_students": 90 },
-        { "program": "BS Computer Science", "votes": 38, "total_students": 80 },
-        { "program": "BS Economics", "votes": 27, "total_students": 70 },
-        { "program": "BA Literature", "votes": 27, "total_students": 60 },
-        { "program": "BS Management", "votes": 24, "total_students": 50 },   
-        { "program": "BS Media Arts", "votes": 24, "total_students": 50 },   
-        { "program": "BA Political Science", "votes": 24, "total_students": 50 },   
+        { "program": "BS Biology", "votes": 50, "total_students": 104 },
+        { "program": "BS Computer Science", "votes": 38, "total_students": 60 },
+        { "program": "BS Economics", "votes": 12, "total_students": 70 },
+        { "program": "BA Literature", "votes": 55, "total_students": 60 },
+        { "program": "BS Management", "votes": 24, "total_students": 55 },   
+        { "program": "BS Media Arts", "votes": 27, "total_students": 54 },   
+        { "program": "BA Political Science", "votes": 29, "total_students":  40},   
     ]
 
     chairperson_results = [
-        {"name": "Juan Dela Cruz", "votes": 150},
-        {"name": "Maria Santos", "votes": 120},
+        {"name": "Juan Dela Cruz", "votes": 200},
+        {"name": "Maria Santos", "votes": 40},
     ]
     vice_chairperson_results = [
-        {"name": "Pedro Reyes", "votes": 140},
-        {"name": "Ana Lopez", "votes": 130},
+        {"name": "Pedro Reyes", "votes": 150},
+        {"name": "Ana Lopez", "votes": 123},
     ]
     councilor_results = [
         {"name": "Carlos Garcia", "votes": 110},
@@ -656,4 +656,51 @@ def view_previous_results(request):
                      "chairperson_results": chairperson_results,
                      "vice_chairperson_results": vice_chairperson_results,
                      "councilor_results": councilor_results
+                     })
+
+@api_view(['GET', 'POST'])
+def aduditor_dashboard_view(request):
+
+    current_voter_test_data = [
+        { "program": "BS Accountancy", "votes": 25, "total_students": 100 },
+        { "program": "BS Applied Mathematics", "votes": 52, "total_students": 100 },
+        { "program": "BS Biology", "votes": 45, "total_students": 90 },
+        { "program": "BS Computer Science", "votes": 38, "total_students": 80 },
+        { "program": "BS Economics", "votes": 27, "total_students": 70 },
+        { "program": "BA Literature", "votes": 27, "total_students": 60 },
+        { "program": "BS Management", "votes": 24, "total_students": 50 },   
+        { "program": "BS Media Arts", "votes": 24, "total_students": 50 },   
+        { "program": "BA Political Science", "votes": 24, "total_students": 50 },   
+    ]
+
+    current_chairperson_results = [
+        { "name": "Adrian Velasco", "votes": 150 },
+        { "name": "Renee Alvarado", "votes": 120 }
+    ]
+    current_vice_chairperson_results = [
+        { "name": "Miguel Soriano", "votes": 140 },
+        { "name": "Ella Navarro", "votes": 130 }
+    ]
+    current_councilor_results = [
+        { "name": "Julian Torres", "votes": 110 },
+        { "name": "Katrina Dominguez", "votes": 100 },
+        { "name": "Noel Santiago", "votes": 90 },
+        { "name": "Isabelle Ramos", "votes": 80 },
+        { "name": "Rafael Bautista", "votes": 70 },
+        { "name": "Mira Gutierrez", "votes": 60 },
+        { "name": "Dylan Mercado", "votes": 50 },
+        { "name": "Faith Salcedo", "votes": 40 }
+    ]
+
+    
+
+    current_total_voters = sum(item['votes'] for item in current_voter_test_data) #VOTED
+    current_total_number_of_voters = sum(item['total_students'] for item in current_voter_test_data) #TOTAL
+
+    return Response({"voter_results": current_voter_test_data, 
+                     "total_voters": current_total_voters, 
+                     "total_number_of_voters": current_total_number_of_voters,
+                     "chairperson_results": current_chairperson_results,
+                     "vice_chairperson_results": current_vice_chairperson_results,
+                     "councilor_results": current_councilor_results
                      })

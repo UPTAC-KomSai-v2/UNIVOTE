@@ -62,10 +62,10 @@ export default function AdminDashboard() {
             <button onClick={() => {navigate('/admin-dashboard/')}}>
               2025 SC ELECTIONS
             </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2024')}}>
+            <button onClick={() => {navigate('/view-previous-results/?year=2024', { state: {from: "admin"}})}}>
               2024 SC ELECTIONS
             </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2023')}}>
+            <button onClick={() => {navigate('/view-previous-results/?year=2023', { state: {from: "admin"}})}}>
               2023 SC ELECTIONS
             </button>
 

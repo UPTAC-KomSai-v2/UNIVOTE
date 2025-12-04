@@ -1,17 +1,16 @@
 import React, { useState, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Card from "../../../components/Card/Card";
-import CustomPieChart from "../../../components/PieChart/CustomPieChart";
-import "./PreviousResults.css";
-import backArrow from '../../../assets/back-button-white.png'
+import Card from "../../components/Card/Card";
+import CustomPieChart from "../../components/PieChart/CustomPieChart";
+import "./AuditorDashboard.css";
+import backArrow from '../../assets/back-button-white.png'
 
-export default function PreviousResults() {
+export default function AuditorDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
   const year = queryParams.get('year') || '2024';
-  const origin = location.state?.from;
 
   const programs = ["BS Accountancy", 
     "BS Applied Mathematics", 
@@ -42,7 +41,7 @@ export default function PreviousResults() {
 
   useEffect(() => {
   // GET voter data
-    fetch(`http://localhost:8000/api/view-previous-results/`)
+    fetch(`http://localhost:8000/api/auditor-dashboard/`)
       .then(res => res.json())
       .then(data => {
         setVoterChartData(data.voter_results)
@@ -56,15 +55,15 @@ export default function PreviousResults() {
   }, []);
 
   useEffect(() => {
-    const now = new Date();
-    setTimestamp(now.toLocaleString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    }))
+      const now = new Date();
+      setTimestamp(now.toLocaleString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+      }))
   }, []);
 
   
@@ -83,23 +82,13 @@ export default function PreviousResults() {
           />
 
           <div className="candidateButtons">
-            <button 
-              onClick={() => {
-                if (origin === "auditor") {
-                  navigate('/auditor-dashboard/?year=2025');
-                } else if (origin === "admin") {
-                  navigate('/admin-dashboard');
-                } else {
-                  navigate('/auditor-dashboard/?year=2025');
-                }
-              }}
-            >
+            <button onClick={() => {navigate('/auditor-dashboard/?year=2025')}}>
               2025 SC ELECTIONS
             </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2024')}}>
+            <button onClick={() => {navigate('/view-previous-results/?year=2024', { state: {from: "auditor"}})}}>
               2024 SC ELECTIONS
             </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2023')}}>
+            <button onClick={() => {navigate('/view-previous-results/?year=2023', { state: {from: "auditor"}})}}>
               2023 SC ELECTIONS
             </button>
 
@@ -109,12 +98,13 @@ export default function PreviousResults() {
 
         
         <div className="candidate-list-container">
-          <button className="print-button" onClick={() => window.print()}>PRINT</button>
+            
+            <button className="print-button" onClick={() => window.print()}>PRINT</button>
             <div className="candidate-list-card-content">
-                <h1 className="candidate-list-card-title">{yearSelected} Student Council Elections</h1>
+                <h1 className="candidate-list-card-title">{yearSelected} Student Council Elections</h1> 
                 <h2>RESULTS</h2>
 
-                <i>(as of {timestamp})</i>                
+                <i>(as of {timestamp})</i>                     
             </div>
             
             
@@ -197,12 +187,12 @@ export default function PreviousResults() {
                 </div>
 
                 <div className="councilor-chart-view">
-                  <div className="title-chart-container">
-                    <h3>Councilors</h3>
-                    <div className="voter-chart-container">
-                      <CustomPieChart data={councilorChartData} className="councilor-chart" name="name" valueKey="votes"/>
+                    <div className="title-chart-container">
+                        <h3>Councilors</h3>
+                        <div className="voter-chart-container">
+                            <CustomPieChart data={councilorChartData} className="councilor-chart" name="name" valueKey="votes"/>
+                        </div>
                     </div>
-                  </div>
 
                   <div className="voter-data">                    
                     <ul className="map-voter-data-list">

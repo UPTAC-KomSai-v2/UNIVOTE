@@ -13,6 +13,7 @@ import ViewCandidate from './pages/VotingPage/ViewCandidate/ViewCandidate';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import ManageCandidates from './pages/AdminDashboard/ManageCandidates/ManageCandidates';
 import PreviousResults from './pages/AdminDashboard/ViewPreviousResults/PreviousResults';
+import AuditorDashboard from './pages/AuditorDashboard/AuditorDashboard';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -39,6 +40,7 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/manage-candidates" element={<ManageCandidates />} />
         <Route path="/view-previous-results" element={<PreviousResults />} />
+        <Route path="/auditor-dashboard" element={<AuditorDashboard />} />
         
       </Routes>
     </Router>
