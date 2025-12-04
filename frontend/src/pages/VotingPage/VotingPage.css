@@ -97,7 +97,7 @@ button:disabled {
     background-color: #FFC9D9;
     border-radius: 10px;
     padding: 0.25rem;
-    width:120%;
+    width:100%;
     max-width: 740px;
 }
 

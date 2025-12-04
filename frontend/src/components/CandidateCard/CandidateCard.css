@@ -11,8 +11,8 @@
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 95%;
-    height: 200px;
+    width: 89%;
+    max-height: 1000px;
 }
 
 .candidate-card:hover{
@@ -21,7 +21,7 @@
 }
 
 .name, .student-number, .alias, .party, .position, .description {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 0.5rem;
     line-height: 1.3rem;
 }
@@ -56,7 +56,7 @@
 .remove-candidate-button {
     position: absolute;
     top: 0.5rem;
-    right: 3rem;
+    right: 2rem;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 20px;
