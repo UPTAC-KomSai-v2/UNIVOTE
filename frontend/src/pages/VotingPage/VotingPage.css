@@ -80,7 +80,8 @@ button:disabled {
     max-height: 500px;
     background-color: #FFC9D9;
     border-radius: 10px;
-    width:120%;
+    padding: 0.25rem;
+    width:100%;
     max-width: 740px;
 }
 
