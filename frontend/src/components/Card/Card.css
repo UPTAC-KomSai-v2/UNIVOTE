@@ -11,8 +11,11 @@
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 450px;
+    min-width: 120px;
     height: 600px;
 }
+
+
 
 .card-content {
     padding: 1rem;
@@ -48,6 +51,7 @@
     line-height: 0.1;
     text-align: left;
 }
+
 
 @media only screen and (max-width: 1024px) {
     .card {
