@@ -7,7 +7,7 @@ import backArrow from '../../assets/back-button-white.png'
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const location = useLocation();
+//   const location = useLocation();
 
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
@@ -16,9 +16,6 @@ export default function AdminDashboard() {
   const [chairpersons, setChairpersons] = useState([]);
   const [viceChairpersons, setViceChairpersons] = useState([]);
   const [councilors, setCouncilors] = useState([]);
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submissionConfirmed, setSubmissionConfirmed] = useState(false);
 
   const [startMonth, setStartMonth] = useState('Sep');
   const [startDay, setStartDay] = useState('1');
@@ -171,6 +168,8 @@ export default function AdminDashboard() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        studentDescription={candidate.description}
+                        
                         showSelect={false}
                         showView={false}
 
@@ -186,6 +185,8 @@ export default function AdminDashboard() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        studentDescription={candidate.description}
+
                         showSelect={false}
                         showView={false}
 
@@ -201,6 +202,8 @@ export default function AdminDashboard() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        studentDescription={candidate.description}
+
                         showSelect={false}
                         showView={false}
                     />

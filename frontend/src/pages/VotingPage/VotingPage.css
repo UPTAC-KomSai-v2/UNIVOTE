@@ -67,15 +67,19 @@ button:disabled {
 }
 
 .candidate-list {
+    position: relative;
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     overflow-y: auto;
+    overflow-x: auto;
     max-height: 500px;
     background-color: #FFC9D9;
     border-radius: 10px;
     padding: 40px;
+
+    max-width: 750px;
 }
 
 .candidate-list-container {

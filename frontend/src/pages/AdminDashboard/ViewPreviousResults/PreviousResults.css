@@ -1,0 +1,20 @@
+.voter-chart-view {
+    background-color: #FFF0F0;
+    color: #891437;
+    border-radius: 15px;
+    padding: 10px;
+
+    display: flex;
+    
+}
+
+.voter-chart-container {
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;;
+}
+
+.voter-data {
+    text-align: left;
+    padding: 10px;
+}

@@ -452,4 +452,20 @@ def manage_candidates_view(request):
     
 @api_view(['GET', 'POST'])
 def view_previous_results(request):
-    return Response({"message": "View Previous Results"})
+
+    test_data = [
+        { "program": "BS Accountancy", "value": 52 },
+        { "program": "BS Applied Mathematics", "value": 52 },
+        { "program": "BS Biology", "value": 45 },
+        { "program": "BS Computer Science", "value": 38 },
+        { "program": "BS Economics", "value": 27 },
+        { "program": "BA Literature", "value": 27 },
+        { "program": "BS Management", "value": 24 },   
+        { "program": "BS Media Arts", "value": 24 },   
+        { "program": "BA Political Science", "value": 24 },   
+    ]
+
+    total_voters = sum(item['value'] for item in test_data) #VOTED
+    total_number_of_voters = 450
+
+    return Response({"results": test_data, "total_voters": total_voters, "total_number_of_voters": total_number_of_voters})

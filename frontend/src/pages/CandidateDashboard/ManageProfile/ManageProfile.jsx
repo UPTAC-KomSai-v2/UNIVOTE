@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../../components/Card/Card";
-import CandidateCard from "../../../components/CandidateCard/CandidateCard";
 import "./ManageProfile.css";
 import backButton from '../../../assets/back-button-white.png'
 import loi from '../../../assets/loi.jpg'

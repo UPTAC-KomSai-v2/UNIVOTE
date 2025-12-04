@@ -12,7 +12,7 @@ import VoteReceipt from './pages/VotingPage/VoteReceipt/VoteReceipt';
 import ViewCandidate from './pages/VotingPage/ViewCandidate/ViewCandidate';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import ManageCandidates from './pages/AdminDashboard/ManageCandidates/ManageCandidates';
-import ViewPreviousResults from './pages/AdminDashboard/ViewPreviousResults/ViewPreviousResults';
+import PreviousResults from './pages/AdminDashboard/ViewPreviousResults/PreviousResults';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -38,7 +38,7 @@ function App() {
         <Route path="/view-candidate/:id" element={<ViewCandidate />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/manage-candidates" element={<ManageCandidates />} />
-        <Route path="/view-previous-results" element={<ViewPreviousResults />} />
+        <Route path="/view-previous-results" element={<PreviousResults />} />
         
       </Routes>
     </Router>
