@@ -24,8 +24,8 @@ export default function ManageCandidates() {
   
 
   const positions = [
-    'President',
-    'Vice President',
+    'Chairperson',
+    'Vice Chairpaerson',
     'Councilor',
   ];
   
