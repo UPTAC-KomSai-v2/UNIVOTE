@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card/Card";
 import "./CandidateDashboard.css";
 import thumbsUp from "../../assets/thumbs-up.png";
+import logout from '../../assets/logout.png'
 
 export default function CandidateDashboard() {
   const navigate = useNavigate();
+  const [logoutConfirmed, setLogoutConfirmed] = useState(false);
+      
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
     document.body.classList.remove("login-bg"); // optional
@@ -14,29 +17,51 @@ export default function CandidateDashboard() {
   
   return (
     <div className="candidate-dashboard">
-        <Card
-          className="candidate-dashboard-card"
-          title="UniVote"
-          description="University-wide Student Council Election Management System"
-        >
+      <img 
+        src={logout} 
+        alt="Logout" 
+        className="logout-button" 
+        onClick={() => setLogoutConfirmed(true)} 
+      />
+      {
+        logoutConfirmed && (
+          <>
+            <div className="overlay" onClick={() => setLogoutConfirmed(false)}></div>
+            <div className="submission-message">
+              <p>  
+                Log out from your account?
+              </p>
+              <div>
+                <button onClick={() => navigate('/')}>YES</button>
+                <button onClick={() => setLogoutConfirmed(false)}>NO</button>
+              </div>
+            </div>
+          </>
+        )
+      }
+      <Card
+        className="candidate-dashboard-card"
+        title="UniVote"
+        description="University-wide Student Council Election Management System"
+      >
 
-        <div className="candidate-buttons">
-          <div>
-            <button className="manage-profile-button" onClick={() => navigate('/manage-profile-page')}>
-              <img src={thumbsUp} alt="Manage Profile" />
-              Manage Profile
-            </button>
-          </div>
-
-          <div>
-            <button className="vote-button" onClick={() => navigate('/voting-page')}>
-              <img src={thumbsUp} alt="Vote" />
-              Vote
-            </button>
-          </div>
+      <div className="candidate-buttons">
+        <div>
+          <button className="manage-profile-button" onClick={() => navigate('/manage-profile-page')}>
+            <img src={thumbsUp} alt="Manage Profile" />
+            Manage Profile
+          </button>
         </div>
 
-        </Card>
+        <div>
+          <button className="vote-button" onClick={() => navigate('/voting-page')}>
+            <img src={thumbsUp} alt="Vote" />
+            Vote
+          </button>
+        </div>
+      </div>
+
+      </Card>
     </div>
   );
 }

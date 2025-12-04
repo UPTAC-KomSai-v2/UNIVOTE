@@ -4,6 +4,7 @@ import Card from "../../components/Card/Card";
 import CandidateCard from "../../components/CandidateCard/CandidateCard";
 import "./VotingPage.css";
 import backArrow from '../../assets/back-button-white.png'
+import logout from '../../assets/logout.png'
 
 export default function VotingPage() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function VotingPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [candidateType, setCandidateType] = useState(position);
   const [submissionConfirmed, setSubmissionConfirmed] = useState(false);
+  const [logoutConfirmed, setLogoutConfirmed] = useState(false);
   
   const multiple = candidateNumChoice > 1;
 
@@ -65,6 +67,31 @@ export default function VotingPage() {
   
   return (
     <div className="voting-page">
+      
+        <img 
+          src={logout} 
+          alt="Logout" 
+          className="logout-button" 
+          onClick={() => setLogoutConfirmed(true)} 
+        />
+        {
+          logoutConfirmed && (
+            <>
+              <div className="overlay" onClick={() => setLogoutConfirmed(false)}></div>
+              <div className="submission-message">
+                <p>  
+                  Log out from your account?
+                </p>
+                <div>
+                  <button onClick={() => navigate('/')}>YES</button>
+                  <button onClick={() => setLogoutConfirmed(false)}>NO</button>
+                </div>
+              </div>
+            </>
+          )
+        }
+
+
         <Card
           className="voting-page-card"
           title="UniVote"
@@ -76,6 +103,7 @@ export default function VotingPage() {
             className="back-arrow" 
             onClick={() => navigate(-1)} 
           />
+
 
           Voter ID: {voterID}
 

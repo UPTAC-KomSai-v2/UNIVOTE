@@ -4,6 +4,7 @@ import Card from "../../../components/Card/Card";
 import CustomPieChart from "../../../components/PieChart/CustomPieChart";
 import "./PreviousResults.css";
 import backArrow from '../../../assets/back-button-white.png'
+import logout from '../../../assets/logout.png'
 
 export default function PreviousResults() {
   const navigate = useNavigate();
@@ -32,6 +33,8 @@ export default function PreviousResults() {
   const [councilorChartData, setCouncilorChartData] = useState([]);
   const [yearSelected, setYearSelected] = useState(year || '2024');
   const [timestamp, setTimestamp] = useState('');
+  const [logoutConfirmed, setLogoutConfirmed] = useState(false);
+    
   
   useEffect(() => {
     setYearSelected(year);
@@ -70,6 +73,28 @@ export default function PreviousResults() {
   
   return (
     <div className="voting-page">
+        <img 
+          src={logout} 
+          alt="Logout" 
+          className="logout-button" 
+          onClick={() => setLogoutConfirmed(true)} 
+        />
+        {
+          logoutConfirmed && (
+            <>
+              <div className="overlay" onClick={() => setLogoutConfirmed(false)}></div>
+              <div className="submission-message">
+                <p>  
+                  Log out from your account?
+                </p>
+                <div>
+                  <button onClick={() => navigate('/')}>YES</button>
+                  <button onClick={() => setLogoutConfirmed(false)}>NO</button>
+                </div>
+              </div>
+            </>
+          )
+        }
         <Card
           className="voting-page-card"
           title="UniVote"
@@ -96,10 +121,18 @@ export default function PreviousResults() {
             >
               2025 SC ELECTIONS
             </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2024')}}>
+            <button onClick={() => {
+              navigate('/view-previous-results/?year=2024', { 
+                state: { from: origin } 
+              })
+            }}>
               2024 SC ELECTIONS
             </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2023')}}>
+            <button onClick={() => {
+              navigate('/view-previous-results/?year=2023', { 
+                state: { from: origin } 
+              })
+            }}>
               2023 SC ELECTIONS
             </button>
 

@@ -4,13 +4,14 @@ import Card from "../../components/Card/Card";
 import CustomPieChart from "../../components/PieChart/CustomPieChart";
 import "./AuditorDashboard.css";
 import backArrow from '../../assets/back-button-white.png'
+import logout from '../../assets/logout.png'
 
 export default function AuditorDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
-  const year = queryParams.get('year') || '2024';
+  const year = queryParams.get('year') || '2025';
 
   const programs = ["BS Accountancy", 
     "BS Applied Mathematics", 
@@ -29,8 +30,10 @@ export default function AuditorDashboard() {
   const [chairpersonChartData, setChairpersonChartData] = useState([]);
   const [viceChairpersonChartData, setViceChairpersonChartData] = useState([]);
   const [councilorChartData, setCouncilorChartData] = useState([]);
-  const [yearSelected, setYearSelected] = useState(year || '2024');
+  const [yearSelected, setYearSelected] = useState(year || '2025');
   const [timestamp, setTimestamp] = useState('');
+  const [logoutConfirmed, setLogoutConfirmed] = useState(false);
+    
   
   useEffect(() => {
     setYearSelected(year);
@@ -69,6 +72,29 @@ export default function AuditorDashboard() {
   
   return (
     <div className="voting-page">
+        <img 
+          src={logout} 
+          alt="Logout" 
+          className="logout-button" 
+          onClick={() => setLogoutConfirmed(true)} 
+        />
+        {
+          logoutConfirmed && (
+            <>
+              <div className="overlay" onClick={() => setLogoutConfirmed(false)}></div>
+              <div className="submission-message">
+                <p>  
+                  Log out from your account?
+                </p>
+                <div>
+                  <button onClick={() => navigate('/')}>YES</button>
+                  <button onClick={() => setLogoutConfirmed(false)}>NO</button>
+                </div>
+              </div>
+            </>
+          )
+        }
+        
         <Card
           className="voting-page-card"
           title="UniVote"

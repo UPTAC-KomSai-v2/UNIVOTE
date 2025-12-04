@@ -66,6 +66,22 @@ button:disabled {
     cursor: pointer;
 }
 
+.logout-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+
+
 .candidate-list {
     position: relative;
     margin-top: 1rem;
@@ -81,7 +97,7 @@ button:disabled {
     background-color: #FFC9D9;
     border-radius: 10px;
     padding: 0.25rem;
-    width:100%;
+    width:120%;
     max-width: 740px;
 }
 

@@ -4,6 +4,7 @@ import Card from "../../components/Card/Card";
 import CandidateCard from "../../components/CandidateCard/CandidateCard";
 import "./AdminDashboard.css";
 import backArrow from '../../assets/back-button-white.png'
+import logout from '../../assets/logout.png'
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ export default function AdminDashboard() {
   const [endMonth, setEndMonth] = useState('Sep');
   const [endDay, setEndDay] = useState('10');
   const [endYear, setEndYear] = useState('2025');
+  const [logoutConfirmed, setLogoutConfirmed] = useState(false);
+      
   
 
 
@@ -46,6 +49,28 @@ export default function AdminDashboard() {
   
   return (
     <div className="voting-page">
+      <img 
+        src={logout} 
+        alt="Logout" 
+        className="logout-button" 
+        onClick={() => setLogoutConfirmed(true)} 
+      />
+      {
+        logoutConfirmed && (
+          <>
+            <div className="overlay" onClick={() => setLogoutConfirmed(false)}></div>
+            <div className="submission-message">
+              <p>  
+                Log out from your account?
+              </p>
+              <div>
+                <button onClick={() => navigate('/')}>YES</button>
+                <button onClick={() => setLogoutConfirmed(false)}>NO</button>
+              </div>
+            </div>
+          </>
+        )
+      }
         <Card
           className="voting-page-card"
           title="UniVote"
