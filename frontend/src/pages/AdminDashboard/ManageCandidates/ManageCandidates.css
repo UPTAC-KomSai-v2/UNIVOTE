@@ -1,14 +1,14 @@
 .add-candidate-content input[type="text"] {
     padding: 8px;
     border-radius: 10px;
-    width: 200px;
-    height: 30px;
+    width: 15rem;
+    height: 2rem;
     margin: 1rem;
 }
 
 .choose-position {
-    margin-left: 20px;
-    width: 215px;
+    margin-left: 1rem;
+    width: 260px;
     height: 50px;
 
     background-color: #FFB81C;
