@@ -173,9 +173,7 @@ export default function PreviousResults() {
                     <CustomPieChart data={councilorChartData} className="councilor-chart" name="name" valueKey="votes"/>
                   </div>
 
-                  <div className="voter-data">
-                    <p>{totalVoters} out of {totalNumberOfVoters} ({((totalVoters / totalNumberOfVoters) * 100).toFixed(2)}%)</p>
-                    
+                  <div className="voter-data">                    
                     <ul className="map-voter-data-list">
                         {
                           councilorChartData.map((candidate, index) => {
