@@ -37,6 +37,7 @@
     border-radius: 15px;
     padding: 10px;
     display: flex;
+    flex-direction: column;
 }
 
 .candidates-data-chart-view h3 {
@@ -46,4 +47,19 @@
 .chairperson-chart-view, .vice-chairperson-chart-view {
     display: flex;
     flex-direction: column;
+}
+
+.chairperson-vice-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.councilor-chart-view {
+    background-color: #FFF0F0;
+    color: #891437;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

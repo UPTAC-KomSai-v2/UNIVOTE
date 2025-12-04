@@ -134,7 +134,69 @@ def voting_page_view(request):
             "position": "Councilor",
             "description": "Dedicated to enhancing campus life and student engagement.",
             "image": None
+        },
+        {
+            "id": 7,
+            "name": "Mark Rivera",
+            "student_number": "202100456",
+            "alias": "MarkR",
+            "party": "Party A",
+            "position": "Councilor",
+            "description": "Passionate about empowering student voices through representation.",
+            "image": None
+        },
+        {
+            "id": 8,
+            "name": "Sofia Santos",
+            "student_number": "202100567",
+            "alias": "SofiS",
+            "party": "Party C",
+            "position": "Councilor",
+            "description": "Dedicated to transparency and efficient administrative processes.",
+            "image": None
+        },
+        {
+            "id": 9,
+            "name": "Carlos Mendoza",
+            "student_number": "202100678",
+            "alias": "CarlM",
+            "party": "Party B",
+            "position": "Councilor",
+            "description": "Focused on responsible budgeting and financial accessibility.",
+            "image": None
+        },
+        {
+            "id": 10,
+            "name": "Lea Fernandez",
+            "student_number": "202100789",
+            "alias": "LeaF",
+            "party": "Independent",
+            "position": "Councilor",
+            "description": "Committed to ensuring accountability and fair reporting.",
+            "image": None
+        },
+        {
+            "id": 11,
+            "name": "Jasper Cruz",
+            "student_number": "202100890",
+            "alias": "JasC",
+            "party": "Party A",
+            "position": "Councilor",
+            "description": "Aims to strengthen campus communication and community engagement.",
+            "image": None
+        },
+        {
+            "id": 12,
+            "name": "Bianca Flores",
+            "student_number": "202100912",
+            "alias": "BianF",
+            "party": "Party C",
+            "position": "Councilor",
+            "description": "Advocates for inclusive programs that support student well-being.",
+            "image": None
         }
+
+
     ]
 
     
@@ -272,7 +334,69 @@ def view_candidate_page_view(request, id):
             "position": "Councilor",
             "description": "Dedicated to enhancing campus life and student engagement.",
             "image": None
+        },
+        {
+            "id": 7,
+            "name": "Mark Rivera",
+            "student_number": "202100456",
+            "alias": "MarkR",
+            "party": "Party A",
+            "position": "Councilor",
+            "description": "Passionate about empowering student voices through representation.",
+            "image": None
+        },
+        {
+            "id": 8,
+            "name": "Sofia Santos",
+            "student_number": "202100567",
+            "alias": "SofiS",
+            "party": "Party C",
+            "position": "Councilor",
+            "description": "Dedicated to transparency and efficient administrative processes.",
+            "image": None
+        },
+        {
+            "id": 9,
+            "name": "Carlos Mendoza",
+            "student_number": "202100678",
+            "alias": "CarlM",
+            "party": "Party B",
+            "position": "Councilor",
+            "description": "Focused on responsible budgeting and financial accessibility.",
+            "image": None
+        },
+        {
+            "id": 10,
+            "name": "Lea Fernandez",
+            "student_number": "202100789",
+            "alias": "LeaF",
+            "party": "Independent",
+            "position": "Councilor",
+            "description": "Committed to ensuring accountability and fair reporting.",
+            "image": None
+        },
+        {
+            "id": 11,
+            "name": "Jasper Cruz",
+            "student_number": "202100890",
+            "alias": "JasC",
+            "party": "Party A",
+            "position": "Councilor",
+            "description": "Aims to strengthen campus communication and community engagement.",
+            "image": None
+        },
+        {
+            "id": 12,
+            "name": "Bianca Flores",
+            "student_number": "202100912",
+            "alias": "BianF",
+            "party": "Party C",
+            "position": "Councilor",
+            "description": "Advocates for inclusive programs that support student well-being.",
+            "image": None
         }
+
+
     ]
 
     all_candidates = chairpersonCandidates + viceChairpersonCandidates + councilorCandidates
@@ -474,9 +598,17 @@ def view_previous_results(request):
         {"name": "Ana Lopez", "votes": 130},
     ]
     councilor_results = [
-        {"name": "Carlos Garcia", "votes": 160},
-        {"name": "Luisa Fernandez", "votes": 110},
+        {"name": "Carlos Garcia", "votes": 110},
+        {"name": "Luisa Fernandez", "votes": 100},
+        {"name": "Mark Rivera", "votes": 90},
+        {"name": "Sofia Santos", "votes": 80},
+        {"name": "Carlos Mendoza", "votes": 70},
+        {"name": "Lea Fernandez", "votes": 60},
+        {"name": "Jasper Cruz", "votes": 50},
+        {"name": "Bianca Flores", "votes": 40},
     ]
+
+    
 
     total_voters = sum(item['votes'] for item in voter_test_data) #VOTED
     total_number_of_voters = sum(item['total_students'] for item in voter_test_data) #TOTAL
@@ -486,5 +618,5 @@ def view_previous_results(request):
                      "total_number_of_voters": total_number_of_voters,
                      "chairperson_results": chairperson_results,
                      "vice_chairperson_results": vice_chairperson_results,
-                     "councilor_results": councilor_results,
-    })
+                     "councilor_results": councilor_results
+                     })

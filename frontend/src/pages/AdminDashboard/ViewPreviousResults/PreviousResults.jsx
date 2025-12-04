@@ -121,52 +121,76 @@ export default function PreviousResults() {
               </div>
 
               <div className="candidates-data-chart-view">
-                <div className="chairperson-chart-view">
-                  <h3>Chairperson</h3>
-                  <div className="chairperson-chart-container">
-                    <CustomPieChart data={chairpersonChartData} className="chairperson-chart" name="name" valueKey="votes"/>
+                <div className="chairperson-vice-container">
+
+                  <div className="chairperson-chart-view">
+                    <h3>Chairperson</h3>
+                    <div className="chairperson-chart-container">
+                      <CustomPieChart data={chairpersonChartData} className="chairperson-chart" name="name" valueKey="votes"/>
+                    </div>
+
+                    <div className="candidates-data">                  
+                      <ul className="map-voter-data-list">
+                        {
+                          chairpersonChartData.map((candidate, index) => {
+                            const percentage = totalVoters > 0 ? ((candidate.votes / totalVoters) * 100).toFixed(2) : 0;
+                            return (
+                              <li key={index}>
+                                <strong>{candidate.name}:</strong> {candidate.votes} votes ({percentage}%)
+                              </li>
+                            );
+                          })
+                        }
+                      </ul>
+                    </div>
                   </div>
 
-                  <div className="candidates-data">                  
-                    <ul className="map-voter-data-list">
-                      {
-                        chairpersonChartData.map((candidate, index) => {
-                          const percentage = totalVoters > 0 ? ((candidate.votes / totalVoters) * 100).toFixed(2) : 0;
-                          return (
-                            <li key={index}>
-                              <strong>{candidate.name}:</strong> {candidate.votes} votes ({percentage}%)
-                            </li>
-                          );
-                        })
-                      }
-                    </ul>
+                  <div className="vice-chairperson-chart-view">
+                    <h3>Vice Chairperson</h3>
+                    <div className="vice-chairperson-chart-container">
+                      <CustomPieChart data={viceChairpersonChartData} className="vice-chairperson-chart" name="name" valueKey="votes"/>
+                    </div>
+
+                    <div className="candidates-data">                  
+                      <ul className="map-voter-data-list">
+                        {
+                          viceChairpersonChartData.map((candidate, index) => {
+                            const percentage = totalVoters > 0 ? ((candidate.votes / totalVoters) * 100).toFixed(2) : 0;
+                            return (
+                              <li key={index}>
+                                <strong>{candidate.name}:</strong> {candidate.votes} votes ({percentage}%)
+                              </li>
+                            );
+                          })
+                        }
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
-                <div className="vice-chairperson-chart-view">
-                  <h3>Vice Chairperson</h3>
-                  <div className="vice-chairperson-chart-container">
-                    <CustomPieChart data={viceChairpersonChartData} className="vice-chairperson-chart" name="name" valueKey="votes"/>
+                <div className="councilor-chart-view">
+                  <div className="voter-chart-container">
+                    <CustomPieChart data={councilorChartData} className="councilor-chart" name="name" valueKey="votes"/>
                   </div>
 
-                  <div className="candidates-data">                  
+                  <div className="voter-data">
+                    <p>{totalVoters} out of {totalNumberOfVoters} ({((totalVoters / totalNumberOfVoters) * 100).toFixed(2)}%)</p>
+                    
                     <ul className="map-voter-data-list">
-                      {
-                        chairpersonChartData.map((candidate, index) => {
-                          const percentage = totalVoters > 0 ? ((candidate.votes / totalVoters) * 100).toFixed(2) : 0;
-                          return (
-                            <li key={index}>
-                              <strong>{candidate.name}:</strong> {candidate.votes} votes ({percentage}%)
-                            </li>
-                          );
-                        })
-                      }
+                        {
+                          councilorChartData.map((candidate, index) => {
+                            const percentage = totalVoters > 0 ? ((candidate.votes / totalVoters) * 100).toFixed(2) : 0;
+                            return (
+                              <li key={index}>
+                                <strong>{candidate.name}:</strong> {candidate.votes} votes ({percentage}%)
+                              </li>
+                            );
+                          })
+                        }
                     </ul>
                   </div>
                 </div>
-
               </div>
-                
             </div>
         </div>
 
