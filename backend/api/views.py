@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
+from .models import User, CandidateProfile, CandidateForPosition
+
 @api_view(['GET'])
 def hello_world(request):
     return Response({"message": "UNIVOTE!"})
@@ -220,19 +222,33 @@ def voting_page_view(request):
     
 @api_view(['GET', 'POST'])
 def manage_profile_page_view(request):
-    voter_id = 202212345  # Hardcoded voter ID for testing
-    profile = [{
-        "name": "Richard Julius Raphael Brian Constantine De Luka Doncic",
-        "party_name": "Party A",
-        "alias": "RJRBCD",
-        "position": "Chairperson",
-    }]
+    
+    target_email = "candidate@up.edu.ph" 
     
     if request.method == 'GET':
-        return Response({"voter_id": voter_id, "profile": profile})
-    elif request.method == 'POST':
-        # Handle POST request
-        return Response({"message": "Manage Profile Page"})
+        try:
+            user_obj = User.objects.get(email=target_email)
+
+            candidate_profile = CandidateProfile.objects.get(email=user_obj)
+            link_entry = CandidateForPosition.objects.filter(candidate_email=candidate_profile).first()
+            
+            if link_entry:
+                position_name = link_entry.position.name
+            else:
+                position_name = "No Position Assigned"
+
+            profile_data = [{
+                "name": user_obj.name,
+                "party_name": candidate_profile.party,
+                "alias": candidate_profile.alias,
+                "position": position_name 
+            }]
+
+            return Response({"voter_id": user_obj.email, "profile": profile_data})
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return Response({"voter_id": "Error", "profile": []})
     
 @api_view(['GET', 'POST'])
 def vote_receipt_page_view(request):

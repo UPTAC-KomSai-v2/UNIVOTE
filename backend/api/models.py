@@ -34,6 +34,7 @@ class VoterProfile(models.Model):
 class CandidateProfile(models.Model):
     email = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     party = models.CharField(max_length=100, blank=True, null=True)
+    alias = models.CharField(max_length=100, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
