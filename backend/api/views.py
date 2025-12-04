@@ -453,19 +453,19 @@ def manage_candidates_view(request):
 @api_view(['GET', 'POST'])
 def view_previous_results(request):
 
-    test_data = [
-        { "program": "BS Accountancy", "value": 52 },
-        { "program": "BS Applied Mathematics", "value": 52 },
-        { "program": "BS Biology", "value": 45 },
-        { "program": "BS Computer Science", "value": 38 },
-        { "program": "BS Economics", "value": 27 },
-        { "program": "BA Literature", "value": 27 },
-        { "program": "BS Management", "value": 24 },   
-        { "program": "BS Media Arts", "value": 24 },   
-        { "program": "BA Political Science", "value": 24 },   
+    voter_test_data = [
+        { "program": "BS Accountancy", "value": 52, "total_students": 120 },
+        { "program": "BS Applied Mathematics", "value": 52, "total_students": 100 },
+        { "program": "BS Biology", "value": 45, "total_students": 90 },
+        { "program": "BS Computer Science", "value": 38, "total_students": 80 },
+        { "program": "BS Economics", "value": 27, "total_students": 70 },
+        { "program": "BA Literature", "value": 27, "total_students": 60 },
+        { "program": "BS Management", "value": 24, "total_students": 50 },   
+        { "program": "BS Media Arts", "value": 24, "total_students": 50 },   
+        { "program": "BA Political Science", "value": 24, "total_students": 50 },   
     ]
 
-    total_voters = sum(item['value'] for item in test_data) #VOTED
-    total_number_of_voters = 450
+    total_voters = sum(item['value'] for item in voter_test_data) #VOTED
+    total_number_of_voters = sum(item['total_students'] for item in voter_test_data) #TOTAL
 
-    return Response({"results": test_data, "total_voters": total_voters, "total_number_of_voters": total_number_of_voters})
+    return Response({"voter_results": voter_test_data, "total_voters": total_voters, "total_number_of_voters": total_number_of_voters})

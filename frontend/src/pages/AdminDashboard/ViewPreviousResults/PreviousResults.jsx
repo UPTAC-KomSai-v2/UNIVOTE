@@ -19,7 +19,7 @@ export default function PreviousResults() {
     "BA Political Science",
   ];
 
-  const [chartData, setChartData] = useState([]);
+  const [voterChartData, setVoterChartData] = useState([]);
   const [totalVoters, setTotalVoters] = useState(0);
   const [totalNumberOfVoters, setTotalNumberOfVoters] = useState(0);
   
@@ -34,7 +34,7 @@ export default function PreviousResults() {
     fetch(`http://localhost:8000/api/view-previous-results/`)
       .then(res => res.json())
       .then(data => {
-        setChartData(data.results)
+        setVoterChartData(data.voter_results)
         setTotalVoters(data.total_voters);
         setTotalNumberOfVoters(data.total_number_of_voters);
       });
@@ -83,7 +83,7 @@ export default function PreviousResults() {
 
               <div className="voter-chart-view">
                 <div className="voter-chart-container">
-                  <CustomPieChart data={chartData} className="voter-chart" name="program"/>
+                  <CustomPieChart data={voterChartData} className="voter-chart" name="program"/>
                 </div>
 
                 <div className="voter-data">
@@ -91,6 +91,19 @@ export default function PreviousResults() {
                   <p>{totalVoters} out of {totalNumberOfVoters} ({((totalVoters / totalNumberOfVoters) * 100).toFixed(2)}%)</p>
                   
                   <h2>Voters per Degree Program</h2>
+                  <ul className="map-voter-data-list">
+                    {programs.map((program, index) => {
+                      const programData = voterChartData.find(item => item.program === program);
+                      const totalNumberOfStudents = programData ? programData.total_students : 0;
+                      const votersCount = programData ? programData.value : 0;
+                      const percentage = totalVoters > 0 ? ((votersCount / totalVoters) * 100).toFixed(2) : 0;
+                      return (
+                        <li key={index}>
+                          <strong>{program}:</strong> {votersCount} out of {totalNumberOfStudents} ({percentage}%)
+                        </li>
+                      );
+                    })}
+                  </ul>
                   
 
                 </div>

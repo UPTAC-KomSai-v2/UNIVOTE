@@ -1,11 +1,16 @@
 .voter-chart-view {
+
     background-color: #FFF0F0;
     color: #891437;
     border-radius: 15px;
     padding: 10px;
-
     display: flex;
     
+    
+}
+
+.voter-chart-view h1 {
+    margin-top: 0;
 }
 
 .voter-chart-container {
@@ -17,4 +22,10 @@
 .voter-data {
     text-align: left;
     padding: 10px;
+}
+
+.map-voter-data-list {
+    list-style-type: none;
+    padding: 0;
+    font-size: 0.95rem;
 }

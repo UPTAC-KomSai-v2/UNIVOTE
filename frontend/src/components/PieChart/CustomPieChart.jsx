@@ -20,7 +20,6 @@ export default function CustomPieChart({data, name}) {
                 fill="#8884d8"
                 stroke="none"
                 // label={renderLabel}
-                label={renderLabel}
                 labelLine={false}
             >
                 {data.map((entry, index) => (
@@ -30,7 +29,7 @@ export default function CustomPieChart({data, name}) {
                 ))}
             </Pie>
             <Tooltip/>
-            {/* <Legend/> */}
+            <Legend/>
         </PieChart>
     )
 }
