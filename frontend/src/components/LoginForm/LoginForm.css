@@ -29,3 +29,9 @@ button {
     margin-top: 1rem;
     transition: background-color 0.3s ease;
 }
+
+button:hover {
+    background-color: #891437;
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
