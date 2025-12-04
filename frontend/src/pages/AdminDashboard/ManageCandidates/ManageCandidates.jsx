@@ -71,10 +71,10 @@ export default function ManageCandidates() {
             <button onClick={() => {}}>
               2025 SC ELECTIONS
             </button>
-            <button onClick={() => {}}>
+            <button onClick={() => {navigate('/view-previous-results/?year=2024')}}>
               2024 SC ELECTIONS
             </button>
-            <button onClick={() => {}}>
+            <button onClick={() => {navigate('/view-previous-results/?year=2023')}}>
               2023 SC ELECTIONS
             </button>
             {/* <button className="submit-button" onClick={() => setIsSubmitted(true)}>
