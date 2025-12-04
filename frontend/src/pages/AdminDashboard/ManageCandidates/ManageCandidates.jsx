@@ -183,6 +183,7 @@ export default function ManageCandidates() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        studentDescription={candidate.description}
                         showSelect={false}
                         showView={false}
                         showRemove={true}
@@ -201,6 +202,7 @@ export default function ManageCandidates() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        studentDescription={candidate.description}
                         showSelect={false}
                         showView={false}
                         showRemove={true}
@@ -217,6 +219,8 @@ export default function ManageCandidates() {
                         studentAlias={candidate.alias}
                         studentParty={candidate.party}
                         studentPosition={candidate.position}
+                        studentDescription={candidate.description}
+
                         showSelect={false}
                         showView={false}
                         showRemove={true}
