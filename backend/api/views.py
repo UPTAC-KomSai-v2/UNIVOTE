@@ -454,18 +454,37 @@ def manage_candidates_view(request):
 def view_previous_results(request):
 
     voter_test_data = [
-        { "program": "BS Accountancy", "value": 52, "total_students": 120 },
-        { "program": "BS Applied Mathematics", "value": 52, "total_students": 100 },
-        { "program": "BS Biology", "value": 45, "total_students": 90 },
-        { "program": "BS Computer Science", "value": 38, "total_students": 80 },
-        { "program": "BS Economics", "value": 27, "total_students": 70 },
-        { "program": "BA Literature", "value": 27, "total_students": 60 },
-        { "program": "BS Management", "value": 24, "total_students": 50 },   
-        { "program": "BS Media Arts", "value": 24, "total_students": 50 },   
-        { "program": "BA Political Science", "value": 24, "total_students": 50 },   
+        { "program": "BS Accountancy", "votes": 52, "total_students": 120 },
+        { "program": "BS Applied Mathematics", "votes": 52, "total_students": 100 },
+        { "program": "BS Biology", "votes": 45, "total_students": 90 },
+        { "program": "BS Computer Science", "votes": 38, "total_students": 80 },
+        { "program": "BS Economics", "votes": 27, "total_students": 70 },
+        { "program": "BA Literature", "votes": 27, "total_students": 60 },
+        { "program": "BS Management", "votes": 24, "total_students": 50 },   
+        { "program": "BS Media Arts", "votes": 24, "total_students": 50 },   
+        { "program": "BA Political Science", "votes": 24, "total_students": 50 },   
     ]
 
-    total_voters = sum(item['value'] for item in voter_test_data) #VOTED
+    chairperson_results = [
+        {"name": "Juan Dela Cruz", "votes": 150},
+        {"name": "Maria Santos", "votes": 120},
+    ]
+    vice_chairperson_results = [
+        {"name": "Pedro Reyes", "votes": 140},
+        {"name": "Ana Lopez", "votes": 130},
+    ]
+    councilor_results = [
+        {"name": "Carlos Garcia", "votes": 160},
+        {"name": "Luisa Fernandez", "votes": 110},
+    ]
+
+    total_voters = sum(item['votes'] for item in voter_test_data) #VOTED
     total_number_of_voters = sum(item['total_students'] for item in voter_test_data) #TOTAL
 
-    return Response({"voter_results": voter_test_data, "total_voters": total_voters, "total_number_of_voters": total_number_of_voters})
+    return Response({"voter_results": voter_test_data, 
+                     "total_voters": total_voters, 
+                     "total_number_of_voters": total_number_of_voters,
+                     "chairperson_results": chairperson_results,
+                     "vice_chairperson_results": vice_chairperson_results,
+                     "councilor_results": councilor_results,
+    })
