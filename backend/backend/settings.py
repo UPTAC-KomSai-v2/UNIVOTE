@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api'
+    'api',
+    'corsheaders'
 ]
-INSTALLED_APPS += ['corsheaders']
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
