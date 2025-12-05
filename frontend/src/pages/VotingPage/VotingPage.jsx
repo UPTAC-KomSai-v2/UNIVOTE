@@ -94,10 +94,11 @@ export default function VotingPage() {
   const handleAbstain = () => {
     if (!abstainedPositions.includes(candidateType)) {
       setAbstainedPositions([...abstainedPositions, candidateType]);
-      setSelectedCandidates(selectedCandidates.filter(id => {
-        const candidate = candidates.find(c => c.id === id);
-        return candidate && candidate.position !== candidateType;
-      }));
+      
+      // Only remove candidates from the CURRENT position/page
+      const currentPageCandidateIDs = candidates.map(c => c.id);
+      setSelectedCandidates(selectedCandidates.filter(id => !currentPageCandidateIDs.includes(id)));
+      
       alert(`You have chosen to abstain from voting for ${candidateType}.`);
     }
   }
