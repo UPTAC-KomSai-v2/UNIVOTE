@@ -608,7 +608,7 @@ def view_previous_results(request):
         "councilor_results": councilor_results
     })
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def auditor_dashboard_view(request):
     
     try:
@@ -702,6 +702,7 @@ def auditor_dashboard_view(request):
         total_voters = sum(item['votes'] for item in voter_test_data)
         total_number_of_voters = sum(item['total_students'] for item in voter_test_data)
         
+
         return Response({
             "voter_results": voter_test_data,
             "total_voters": total_voters,
