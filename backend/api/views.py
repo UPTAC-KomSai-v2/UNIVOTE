@@ -257,145 +257,40 @@ def vote_receipt_page_view(request):
     
 @api_view(['GET'])
 def view_candidate_page_view(request, id):
-    chairpersonCandidates = [
-        {
-            "id": 1,
-            "name": "Juan Dela Cruz",
-            "student_number": "202100123",
-            "alias": "JuanCruz",
-            "party": "Party A",
-            "position": "Chairperson",
-            "description": "A dedicated student leader committed to excellence.",
-            "image": None
-        },
-        {
-            "id": 2,
-            "name": "Maria Santos",
-            "student_number": "202100456",
-            "alias": "MariaS",
-            "party": "Party B",
-            "position": "Chairperson",
-            "description": "Focused on transparency and student welfare.",
-            "image": None
-        }
-    ]
+    target_email = id 
 
-    viceChairpersonCandidates = [
-        {
-            "id": 3,
-            "name": "Pedro Reyes",
-            "student_number": "202100789",
-            "alias": "PedroR",
-            "party": "Party A",
-            "position": "Vice Chairperson",
-            "description": "Advocate for student rights and community engagement.",
-            "image": None
-        },
-        {
-            "id": 4,
-            "name": "Ana Lopez",
-            "student_number": "202100321",
-            "alias": "AnaL",
-            "party": "Party B",
-            "position": "Vice Chairperson",
-            "description": "Committed to fostering a supportive campus environment.",
-            "image": None
-        }
-    ]
+    try:
+        candidate = CandidateProfile.objects.select_related('email').get(email=target_email)
+        user = candidate.email 
 
-    councilorCandidates = [
-        {
-            "id": 5,
-            "name": "Carlos Garcia",
-            "student_number": "202100654",
-            "alias": "CarlosG",
-            "party": "Party A",
-            "position": "Councilor",
-            "description": "Passionate about academic excellence and student services.",
-            "image": None
-        },
-        {
-            "id": 6,
-            "name": "Luisa Fernandez",
-            "student_number": "202100987",
-            "alias": "LuisaF",
-            "party": "Party B",
-            "position": "Councilor",
-            "description": "Dedicated to enhancing campus life and student engagement.",
-            "image": None
-        },
-        {
-            "id": 7,
-            "name": "Mark Rivera",
-            "student_number": "202100456",
-            "alias": "MarkR",
-            "party": "Party A",
-            "position": "Councilor",
-            "description": "Passionate about empowering student voices through representation.",
-            "image": None
-        },
-        {
-            "id": 8,
-            "name": "Sofia Santos",
-            "student_number": "202100567",
-            "alias": "SofiS",
-            "party": "Party C",
-            "position": "Councilor",
-            "description": "Dedicated to transparency and efficient administrative processes.",
-            "image": None
-        },
-        {
-            "id": 9,
-            "name": "Carlos Mendoza",
-            "student_number": "202100678",
-            "alias": "CarlM",
-            "party": "Party B",
-            "position": "Councilor",
-            "description": "Focused on responsible budgeting and financial accessibility.",
-            "image": None
-        },
-        {
-            "id": 10,
-            "name": "Lea Fernandez",
-            "student_number": "202100789",
-            "alias": "LeaF",
-            "party": "Independent",
-            "position": "Councilor",
-            "description": "Committed to ensuring accountability and fair reporting.",
-            "image": None
-        },
-        {
-            "id": 11,
-            "name": "Jasper Cruz",
-            "student_number": "202100890",
-            "alias": "JasC",
-            "party": "Party A",
-            "position": "Councilor",
-            "description": "Aims to strengthen campus communication and community engagement.",
-            "image": None
-        },
-        {
-            "id": 12,
-            "name": "Bianca Flores",
-            "student_number": "202100912",
-            "alias": "BianF",
-            "party": "Party C",
-            "position": "Councilor",
-            "description": "Advocates for inclusive programs that support student well-being.",
-            "image": None
+        pos_link = CandidateForPosition.objects.filter(candidate_email=candidate).select_related('position').first()
+        position_name = pos_link.position.name if pos_link else "Unassigned"
+
+        student_number = "N/A"
+        try:
+            voter_profile = VoterProfile.objects.get(email=user)
+            student_number = voter_profile.student_number
+        except VoterProfile.DoesNotExist:
+            pass
+
+        candidate_data = {
+            "id": user.email,
+            "name": user.name,
+            "student_number": student_number,
+            "alias": candidate.alias if candidate.alias else "",
+            "party": candidate.party,
+            "position": position_name,
+            "description": candidate.bio if candidate.bio else "No description provided.",
+            "image": candidate.image_url
         }
 
+        return Response({"candidate": candidate_data})
 
-    ]
-
-    all_candidates = chairpersonCandidates + viceChairpersonCandidates + councilorCandidates
-    candidate = next((c for c in all_candidates if c["id"] == int(id)), None)
-
-    if request.method == 'GET':
-        if not candidate:
-            return Response({"error": "Candidate not found"}, status=404)
-        
-        return Response({"candidate": candidate})
+    except CandidateProfile.DoesNotExist:
+        return Response({"error": "Candidate not found"}, status=404)
+    except Exception as e:
+        print(f"Error fetching candidate details: {e}")
+        return Response({"error": "Internal Server Error"}, status=500)
     
 @api_view(['GET', 'POST'])
 def admin_dashboard_view(request):
