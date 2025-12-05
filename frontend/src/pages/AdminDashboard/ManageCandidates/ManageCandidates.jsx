@@ -172,8 +172,9 @@ export default function ManageCandidates() {
         </>
       )}
 
-      <div className="candidate-list-container">
-        <div className="candidate-list-card-content">
+      <div className="admin-dashboard-candidate-list-container">
+
+        <div className="-admin-dashboard-candidate-list-card-content">
           <h1 className="candidate-list-card-title">2025 Student Council Elections</h1>
 
           <div className="add-candidate-content">
@@ -237,7 +238,7 @@ export default function ManageCandidates() {
             <button className="done-manage-button" onClick={() => navigate('/admin-dashboard')}>Done</button>
           </div>
 
-          <div className="candidate-list">
+          <div className="admin-dashboard-candidate-list">
             {chairpersons.map((candidate) => (
               <CandidateCard
                 key={candidate.id}

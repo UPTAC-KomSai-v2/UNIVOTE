@@ -106,7 +106,6 @@ button:disabled {
 
 .candidate-list-container {
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;      
     align-items: center;        
@@ -216,22 +215,22 @@ button:disabled {
     margin: 0;
 }
 
-.candidate-list::-webkit-scrollbar {
+.candidate-list::-webkit-scrollbar, .admin-dashboard-candidate-list::-webkit-scrollbar {
     width: 10px;       /* scrollbar thickness */
 }
 
-.candidate-list::-webkit-scrollbar-track {
+.candidate-list::-webkit-scrollbar-track, .admin-dashboard-candidate-list::-webkit-scrollbar-track {
     background: #ffdce6;   /* lighter pink track */
     border-radius: 10px;
 }
 
-.candidate-list::-webkit-scrollbar-thumb {
+.candidate-list::-webkit-scrollbar-thumb, .admin-dashboard-candidate-list::-webkit-scrollbar-thumb {
     background: #900028;   /* UP maroon thumb */
     border-radius: 10px;
     border: 2px solid #ffdce6; /* gives a gap effect */
 }
 
-.candidate-list::-webkit-scrollbar-thumb:hover {
+.candidate-list::-webkit-scrollbar-thumb:hover, .admin-dashboard-candidate-list::-webkit-scrollbar-thumb:hover {
     background: #b3003c;   /* brighter maroon on hover */
 }
 
