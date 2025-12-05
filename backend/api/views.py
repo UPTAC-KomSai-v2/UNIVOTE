@@ -299,7 +299,17 @@ def view_candidate_page_view(request, id):
 @api_view(['GET', 'POST'])
 def admin_dashboard_view(request):
     if request.method == 'GET':
-        positions = Position.objects.select_related('election').all()
+        year = request.GET.get('year', '2025')
+        
+        try:
+            election = Election.objects.get(title__icontains=year)
+            positions = Position.objects.filter(election=election).select_related('election')
+        except Election.DoesNotExist:
+            return Response({"error": f"{year} election not found"}, status=404)
+        except Election.MultipleObjectsReturned:
+            election = Election.objects.filter(title__icontains=year).order_by('-start_datetime').first()
+            positions = Position.objects.filter(election=election).select_related('election')
+        
         response_data = {}
 
         for pos in positions:
@@ -326,7 +336,6 @@ def admin_dashboard_view(request):
                     "image": cand.image_url
                 })
             
-            # Use lowercase keys for response
             key = pos.name.lower().replace(" ", "_") + "s"
             response_data[key] = candidates_list
 
