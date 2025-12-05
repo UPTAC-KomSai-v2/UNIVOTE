@@ -3,7 +3,6 @@ from django.urls import path
 
 from api.views import *
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/hello/', hello_world),
@@ -17,8 +16,7 @@ urlpatterns = [
     path('api/view-candidate/<str:id>/', view_candidate_page_view),
     path('api/admin-dashboard/', admin_dashboard_view),
     path('api/manage-candidates/', manage_candidates_view),
+    path('api/manage-candidates/<str:id>/', manage_candidates_view),  # ✅ add this line
     path('api/view-previous-results/', view_previous_results),
     path('api/auditor-dashboard/', aduditor_dashboard_view),
-    
 ]
-

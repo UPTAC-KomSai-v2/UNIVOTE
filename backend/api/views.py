@@ -334,10 +334,15 @@ def admin_dashboard_view(request):
     elif request.method == 'POST':
         return Response({"message": "Admin Dashboard Page"})
 
-@api_view(['GET', 'POST'])
-def manage_candidates_view(request):
+@api_view(['GET', 'POST', 'DELETE'])
+def manage_candidates_view(request, id=None):
+    """
+    GET: Return list of candidates by position.
+    POST: Add a new candidate.
+    DELETE: Remove a candidate by email (id parameter).
+    """
+    # ------------------- GET ------------------- #
     if request.method == 'GET':
-        # Existing GET code to fetch candidates
         chairpersons = []
         vice_chairpersons = []
         councilors = []
@@ -369,29 +374,33 @@ def manage_candidates_view(request):
             "councilors": councilors
         })
 
+    # ------------------- POST ------------------- #
     elif request.method == 'POST':
         data = request.data
         email = data.get("email")
         name = data.get("name")
         student_number = data.get("student_number")
         position_name = data.get("position")
+        alias = data.get("alias", "")
+        party = data.get("party", "")
+        description = data.get("description", "")
 
         if not email or not name or not position_name:
             return Response({"error": "Email, name, and position are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             with transaction.atomic():
-                # 1. Create User if not exists
+                # Create User if not exists
                 user, created = User.objects.get_or_create(
                     email=email,
                     defaults={
                         "name": name,
-                        "password": "defaultpassword",  # Change or hash properly in real app
+                        "password": "defaultpassword",
                         "role": "candidate"
                     }
                 )
 
-                # 2. Create VoterProfile if needed (optional)
+                # Create VoterProfile if not exists
                 if not VoterProfile.objects.filter(email=user).exists():
                     VoterProfile.objects.create(
                         email=user,
@@ -400,7 +409,7 @@ def manage_candidates_view(request):
                         year_level=1
                     )
 
-                # 3. Create CandidateProfile if not exists
+                # Create or get CandidateProfile
                 candidate_profile, created = CandidateProfile.objects.get_or_create(
                     email=user,
                     defaults={
@@ -411,10 +420,16 @@ def manage_candidates_view(request):
                     }
                 )
 
-                # 4. Assign candidate to position
+                # Update alias, party, description
+                candidate_profile.alias = alias
+                candidate_profile.party = party
+                candidate_profile.bio = description
+                candidate_profile.save()
+
+                # Assign candidate to position
                 position_obj, created = Position.objects.get_or_create(
                     name=position_name,
-                    defaults={"max_winners": 1, "choice_type": "single", "election_id": 1}  # adjust election
+                    defaults={"max_winners": 1, "choice_type": "single", "election_id": 1}
                 )
 
                 CandidateForPosition.objects.create(
@@ -426,7 +441,35 @@ def manage_candidates_view(request):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
+    # ------------------- DELETE ------------------- #
+    elif request.method == 'DELETE':
+        if not id:
+            return Response({"error": "Candidate ID (email) is required."}, status=400)
+
+        try:
+            # id is candidate's email
+            user = User.objects.get(email=id)
+            candidate_profile = CandidateProfile.objects.get(email=user)
+
+            # Delete CandidateForPosition links first
+            CandidateForPosition.objects.filter(candidate_email=candidate_profile).delete()
+            # Delete CandidateProfile
+            candidate_profile.delete()
+            # Optional: delete VoterProfile
+            # VoterProfile.objects.filter(email=user).delete()
+            # Optional: delete User
+            # user.delete()
+
+            return Response({"message": f"Candidate {user.name} removed successfully."}, status=200)
+
+        except User.DoesNotExist:
+            return Response({"error": "Candidate user not found."}, status=404)
+        except CandidateProfile.DoesNotExist:
+            return Response({"error": "Candidate profile not found."}, status=404)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+        
 @api_view(['GET', 'POST'])
 def view_previous_results(request):
 

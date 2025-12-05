@@ -13,8 +13,7 @@ export default function ManageCandidates() {
   const [councilors, setCouncilors] = useState([]);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submissionConfirmed, setSubmissionConfirmed] = useState(false);
-  const [candidateName, setCandidateName] = useState('');
+  const [candidateToRemove, setCandidateToRemove] = useState(null);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -24,11 +23,7 @@ export default function ManageCandidates() {
   const [party, setParty] = useState('');
   const [description, setDescription] = useState('');
 
-  const positions = [
-    'Chairperson',
-    'Vice Chairperson',
-    'Councilor',
-  ];
+  const positions = ['Chairperson', 'Vice Chairperson', 'Councilor'];
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -73,7 +68,10 @@ export default function ManageCandidates() {
           email: email,
           name: fullName,
           position: position,
-          student_number: studentNumber
+          student_number: studentNumber,
+          alias: alias,
+          party: party,
+          description: description
         })
       });
 
@@ -85,6 +83,9 @@ export default function ManageCandidates() {
         setLastName("");
         setStudentNumber("");
         setPosition("");
+        setAlias("");
+        setParty("");
+        setDescription("");
         fetchCandidates(); // Refresh list
       } else {
         alert(data.error || "Failed to add candidate.");
@@ -96,11 +97,39 @@ export default function ManageCandidates() {
     }
   };
 
-  const handleRemove = (candidateID) => {
-    // TODO: Implement backend delete
-    setIsSubmitted(false);
-    alert(`Remove candidate ${candidateID} functionality not yet implemented.`);
-  }
+  // Remove candidate handler
+  const handleRemove = async () => {
+    if (!candidateToRemove) return;
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/manage-candidates/${candidateToRemove.id}/`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        alert(`Candidate ${candidateToRemove.name} removed successfully!`);
+
+        // Remove from state
+        const { id, position } = candidateToRemove;
+        if (position === "Chairperson") {
+          setChairpersons(chairpersons.filter(c => c.id !== id));
+        } else if (position === "Vice Chairperson") {
+          setViceChairpersons(viceChairpersons.filter(c => c.id !== id));
+        } else if (position === "Councilor") {
+          setCouncilors(councilors.filter(c => c.id !== id));
+        }
+      } else {
+        const data = await response.json();
+        alert(data.error || "Failed to remove candidate.");
+      }
+    } catch (error) {
+      console.error("Remove candidate error:", error);
+      alert("An error occurred while removing the candidate.");
+    } finally {
+      setIsSubmitted(false);
+      setCandidateToRemove(null);
+    }
+  };
 
   return (
     <div className="voting-page">
@@ -116,46 +145,28 @@ export default function ManageCandidates() {
           onClick={() => navigate(-1)} 
         />
 
-          <div className="candidateButtons">
-            <button onClick={() => {navigate('/admin-dashboard/')}}>
-              2025 SC ELECTIONS
-            </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2024', { state: {from: "admin"}})}}>
-              2024 SC ELECTIONS
-            </button>
-            <button onClick={() => {navigate('/view-previous-results/?year=2023', { state: {from: "admin"}})}}>
-              2023 SC ELECTIONS
-            </button>
-            {/* <button className="submit-button" onClick={() => setIsSubmitted(true)}>
-              SUBMIT
-            </button> */}
+        <div className="candidateButtons">
+          <button onClick={() => {navigate('/admin-dashboard/')}}>
+            2025 SC ELECTIONS
+          </button>
+          <button onClick={() => {navigate('/view-previous-results/?year=2024', { state: {from: "admin"}})}}>
+            2024 SC ELECTIONS
+          </button>
+          <button onClick={() => {navigate('/view-previous-results/?year=2023', { state: {from: "admin"}})}}>
+            2023 SC ELECTIONS
+          </button>
+        </div>
 
-          </div>
+      </Card>
 
-        </Card>
-
-      {isSubmitted && (
+      {isSubmitted && candidateToRemove && (
         <>
           <div className="overlay" onClick={() => setIsSubmitted(false)}></div>
           <div className="submission-message">
-            <p>Remove {candidateName} from the list of candidates?</p>
+            <p>Remove {candidateToRemove.name} from the list of candidates?</p>
             <div>
-              <button onClick={() => handleRemove(candidateName)}>YES</button>
+              <button onClick={handleRemove}>YES</button>
               <button onClick={() => setIsSubmitted(false)}>NO</button>
-            </div>
-          </div>
-        </>
-      )}
-
-      {submissionConfirmed && (
-        <>
-          <div className="overlay" onClick={() => setSubmissionConfirmed(false)}></div>
-          <div className="submission-message">
-            <p>Your ballot has been submitted successfully!</p>
-            <p>Thank you for voting.</p>
-            <div>
-              <button onClick={() => navigate('/vote-receipt-page')}>View Voting Receipt</button>
-              <button onClick={() => navigate('/')}>Logout</button>
             </div>
           </div>
         </>
@@ -241,8 +252,8 @@ export default function ManageCandidates() {
                 showView={false}
                 showRemove={true}
                 onRemove={() => {
+                  setCandidateToRemove(candidate);
                   setIsSubmitted(true);
-                  setCandidateName(candidate.name);
                 }}
               />
             ))}
@@ -260,8 +271,8 @@ export default function ManageCandidates() {
                 showView={false}
                 showRemove={true}
                 onRemove={() => {
+                  setCandidateToRemove(candidate);
                   setIsSubmitted(true);
-                  setCandidateName(candidate.name);
                 }}
               />
             ))}
@@ -279,8 +290,8 @@ export default function ManageCandidates() {
                 showView={false}
                 showRemove={true}
                 onRemove={() => {
+                  setCandidateToRemove(candidate);
                   setIsSubmitted(true);
-                  setCandidateName(candidate.name);
                 }}
               />
             ))}
