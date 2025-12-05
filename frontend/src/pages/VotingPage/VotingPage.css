@@ -103,8 +103,10 @@ button:disabled {
 }
 
 
+
 .candidate-list-container {
     position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;      
     align-items: center;        
