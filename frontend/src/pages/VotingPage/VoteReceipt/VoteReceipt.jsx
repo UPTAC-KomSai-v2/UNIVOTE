@@ -25,6 +25,73 @@ export default function VoteReceipt() {
       .catch(err => console.error("Error fetching receipt:", err));
   }, []);
 
+  // Format time to Philippine Time (UTC+8)
+  const formatTime = (timeString) => {
+    if (!timeString) return 'N/A';
+    
+    try {
+      // Convert to string in case it's not
+      const timeStr = String(timeString);
+      
+      // If it contains AM/PM, parse it and add 8 hours
+      if (timeStr.includes('AM') || timeStr.includes('PM')) {
+        const isPM = timeStr.includes('PM');
+        const timeOnly = timeStr.replace(/AM|PM/g, '').trim();
+        const parts = timeOnly.split(':');
+        
+        let hour = parseInt(parts[0]);
+        const minutes = parts[1] || '00';
+        const seconds = parts[2] || '00';
+        
+        // Convert to 24-hour format first
+        if (isPM && hour !== 12) {
+          hour += 12;
+        } else if (!isPM && hour === 12) {
+          hour = 0;
+        }
+        
+        // Add 8 hours for UTC+8
+        hour = hour + 8;
+        
+        // Handle day overflow
+        if (hour >= 24) {
+          hour = hour - 24;
+        }
+        
+        // Convert back to 12-hour format
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12;
+        
+        return `${hour12}:${minutes}:${seconds} ${ampm}`;
+      }
+      
+      // If backend sends time string like "HH:MM:SS"
+      const parts = timeStr.split(':');
+      if (parts.length < 2) return timeStr;
+      
+      let hour = parseInt(parts[0]);
+      const minutes = parts[1];
+      const seconds = parts[2] || '00';
+      
+      // Add 8 hours for UTC+8
+      hour = hour + 8;
+      
+      // Handle day overflow
+      if (hour >= 24) {
+        hour = hour - 24;
+      }
+      
+      // Convert to 12-hour format
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour % 12 || 12;
+      
+      return `${hour12}:${minutes}:${seconds} ${ampm}`;
+    } catch (e) {
+      console.error("Error formatting time:", e);
+      return timeString;
+    }
+  };
+
   if (!receipt) {
     return <div>Loading receipt...</div>;
   }
@@ -55,7 +122,7 @@ export default function VoteReceipt() {
           <div className="candidate-list-card-title">2025 Student Council Elections</div>
           <div className="candidate-list-card-type">Voting Receipt</div>
           <div className="receipt-details">
-            <p><strong>Date:</strong> {receipt.date} | <strong>Time:</strong> {receipt.time}</p>
+            <p><strong>Date:</strong> {receipt.date} | <strong>Time:</strong> {formatTime(receipt.time)}</p>
             <p className="receipt-ref">Receipt ID: <strong>{receipt.receipt_id}</strong></p>
             <hr/>
             <div className="receipt-data-container">

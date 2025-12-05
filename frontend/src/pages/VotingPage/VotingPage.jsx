@@ -115,7 +115,32 @@ export default function VotingPage() {
     }
   }
 
+  const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  };
+
   const submitBallot = async () => {
+    // Check if user has made any choices (voted or abstained)
+    const hasVoted = selectedCandidates.length > 0;
+    const hasAbstained = abstainedPositions.length > 0;
+    
+    if (!hasVoted && !hasAbstained) {
+        alert("Please vote for at least one position or choose to abstain.");
+        setIsSubmitted(false);
+        return;
+    }
+
     try {
         const response = await fetch("http://localhost:8000/api/voting-page/", {
             method: "POST",
@@ -123,12 +148,12 @@ export default function VotingPage() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ 
-              candidates: selectedCandidates,
-              abstained_positions: abstainedPositions 
+              candidates: selectedCandidates.length > 0 ? selectedCandidates : [],
+              abstained_positions: abstainedPositions
             }) 
         });
 
-        // 1. Check for success
+        // Check for success
         if (response.ok) {
             setIsSubmitted(false); 
             setVotingComplete(true);
@@ -136,7 +161,14 @@ export default function VotingPage() {
             sessionStorage.removeItem("currentVotes");
         } else {
             const errorData = await response.json();
-            alert(errorData.error || "Error submitting votes.");
+            
+            // Check if error is "already voted"
+            if (errorData.error && errorData.error.includes('You have already cast your votes!')) {
+                alert(errorData.error + "\n\nYou can now logout.");
+                setVotingComplete(true); // Allow logout
+            } else {
+                alert(errorData.error || "Error submitting votes.");
+            }
             setIsSubmitted(false);
         }
     } catch (error) {
