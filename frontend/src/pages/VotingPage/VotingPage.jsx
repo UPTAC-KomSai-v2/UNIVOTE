@@ -22,14 +22,21 @@ export default function VotingPage() {
   const [voterID, setVoterID] = useState('');
   const [candidateNumChoice, setCandidateNumChoice] = useState(candidateChoices[position]);
   const [candidates, setCandidates] = useState([]);
-  const [selectedCandidates, setSelectedCandidates] = useState([]); //THIS IS WHERE SELECTED CANDIDATES ARE STORED
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [candidateType, setCandidateType] = useState(position);
   const [submissionConfirmed, setSubmissionConfirmed] = useState(false);
   const [logoutConfirmed, setLogoutConfirmed] = useState(false);
+
+  const [selectedCandidates, setSelectedCandidates] = useState(() => {
+    const saved = sessionStorage.getItem("currentVotes");
+    return saved ? JSON.parse(saved) : [];
+  });
   
   const multiple = candidateNumChoice > 1;
 
+  useEffect(() => {
+    sessionStorage.setItem("currentVotes", JSON.stringify(selectedCandidates));
+  }, [selectedCandidates]);
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -38,32 +45,70 @@ export default function VotingPage() {
   }, []);
 
   useEffect(() => {
-  // GET voter data
     fetch(`http://localhost:8000/api/voting-page/?position=${candidateType}`)
       .then(res => res.json())
       .then(data => {
         setVoterID(data.voter_id);
         setCandidates(data.candidates);
-
+        
+        if (data.max_votes) {
+            setCandidateNumChoice(data.max_votes);
+        }
       });
   }, [candidateType]);
 
   const handleSelect = (candidateID) => {
+    // 1. If it's a multiple choice position (Councilors)
     if (multiple) {
       if (selectedCandidates.includes(candidateID)) {
         setSelectedCandidates(selectedCandidates.filter(id => id !== candidateID));
       } else {
-        if (selectedCandidates.length < candidateNumChoice) {
-          setSelectedCandidates([...selectedCandidates, candidateID]);
-        } else {
-          alert(`You can only select up to ${candidateNumChoice} candidates.`);
+        if (selectedCandidates.length < candidateNumChoice) { // Note: This check logic needs to count only current position candidates
+            // Ideally, you filter selectedCandidates to count only those in the current list
+            const currentPositionCount = selectedCandidates.filter(id => candidates.some(c => c.id === id)).length;
+            
+            if (currentPositionCount < candidateNumChoice) {
+                setSelectedCandidates([...selectedCandidates, candidateID]);
+            } else {
+                alert(`You can only select up to ${candidateNumChoice} candidates.`);
+            }
         }
       }
-    } else {
-      setSelectedCandidates([candidateID]);
+    } 
+    else {
+      const currentPageCandidateIDs = candidates.map(c => c.id);
+      
+      const otherVotes = selectedCandidates.filter(id => !currentPageCandidateIDs.includes(id));
+      
+      setSelectedCandidates([...otherVotes, candidateID]);
     }
   }
 
+  const submitBallot = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/api/voting-page/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ candidates: selectedCandidates }) 
+        });
+
+        // 1. Check for success
+        if (response.ok) {
+            setIsSubmitted(false); 
+            setSubmissionConfirmed(true); 
+            sessionStorage.removeItem("currentVotes");
+            navigate('/vote-receipt-page');
+        } else {
+            const errorData = await response.json();
+            alert(errorData.error || "Error submitting votes.");
+            setIsSubmitted(false);
+        }
+    } catch (error) {
+        console.error("Network error:", error);
+    }
+  };
   
   return (
     <div className="voting-page">
@@ -83,7 +128,10 @@ export default function VotingPage() {
                   Log out from your account?
                 </p>
                 <div>
-                  <button onClick={() => navigate('/')}>YES</button>
+                  <button onClick={() => {
+                      sessionStorage.removeItem("currentVotes"); // Clear votes on logout
+                      navigate('/');
+                  }}>YES</button>
                   <button onClick={() => setLogoutConfirmed(false)}>NO</button>
                 </div>
               </div>
@@ -121,10 +169,10 @@ export default function VotingPage() {
               Vice Chairperson
             </button>
             <button onClick={() => {
-                setCandidateType('Councilors')
-                setCandidateNumChoice(candidateChoices['Councilors'])}
+                setCandidateType('Councilor')
+                setCandidateNumChoice(candidateChoices['Councilor'])}
               } 
-              disabled={candidateType === 'Councilors'}>
+              disabled={candidateType === 'Councilor'}>
               Councilors
             </button>
             <button className="submit-button" onClick={() => setIsSubmitted(true)}>
@@ -140,14 +188,12 @@ export default function VotingPage() {
             <>
               <div className="overlay" onClick={() => setIsSubmitted(false)}></div>
               <div className="submission-message">
-                <p>  
-                  Have you finished voting?
-                </p>
-                <p>
-                  Tap Yes to submit.
-                </p>
+                <p>Have you finished voting?</p>
+                <p>Tap Yes to submit.</p>
                 <div>
-                  <button onClick={() => setSubmissionConfirmed(true)}>YES</button>
+                  {/* CHANGE THIS LINE: Call the function instead of just setting state */}
+                  <button onClick={submitBallot}>YES</button> 
+                  
                   <button onClick={() => setIsSubmitted(false)}>NO</button>
                 </div>
               </div>
@@ -189,7 +235,6 @@ export default function VotingPage() {
                       key={candidate.id}
                       image={candidate.image}
                       studentName={candidate.name}
-                      // studentNumber={candidate.student_number}
                       studentAlias={candidate.alias}
                       studentParty={candidate.party}
                       studentPosition={candidate.position}
