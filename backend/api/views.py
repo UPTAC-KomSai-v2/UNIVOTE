@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Prefetch
 from django.db import transaction
+from django.db.models import Count, Q
 from rest_framework import status
 import uuid
 
@@ -10,7 +11,7 @@ import uuid
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import User, Vote, Election, CandidateProfile, Position, VoterProfile, CandidateForPosition
+from .models import User, Vote, Election, CandidateProfile, Position, VoterProfile, CandidateForPosition, TallyResult
 
 @api_view(['GET'])
 def hello_world(request):
@@ -470,56 +471,103 @@ def manage_candidates_view(request, id=None):
         except Exception as e:
             return Response({"error": str(e)}, status=500)
         
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def view_previous_results(request):
-
-    voter_test_data = [
-        { "program": "BS Accountancy", "votes": 90, "total_students": 100 },
-        { "program": "BS Applied Mathematics", "votes": 52, "total_students": 100 },
-        { "program": "BS Biology", "votes": 50, "total_students": 104 },
-        { "program": "BS Computer Science", "votes": 38, "total_students": 60 },
-        { "program": "BS Economics", "votes": 12, "total_students": 70 },
-        { "program": "BA Literature", "votes": 55, "total_students": 60 },
-        { "program": "BS Management", "votes": 24, "total_students": 55 },   
-        { "program": "BS Media Arts", "votes": 27, "total_students": 54 },   
-        { "program": "BA Political Science", "votes": 29, "total_students":  40},   
-    ]
-
-    chairperson_results = [
-        {"name": "Juan Dela Cruz", "votes": 200},
-        {"name": "Maria Santos", "votes": 40},
-    ]
-    vice_chairperson_results = [
-        {"name": "Pedro Reyes", "votes": 150},
-        {"name": "Ana Lopez", "votes": 123},
-    ]
-    councilor_results = [
-        {"name": "Carlos Garcia", "votes": 110},
-        {"name": "Luisa Fernandez", "votes": 100},
-        {"name": "Mark Rivera", "votes": 90},
-        {"name": "Sofia Santos", "votes": 80},
-        {"name": "Carlos Mendoza", "votes": 70},
-        {"name": "Lea Fernandez", "votes": 60},
-        {"name": "Jasper Cruz", "votes": 50},
-        {"name": "Bianca Flores", "votes": 40},
-    ]
-
+    year = request.GET.get('year', '2024')
     
-
-    total_voters = sum(item['votes'] for item in voter_test_data) #VOTED
-    total_number_of_voters = sum(item['total_students'] for item in voter_test_data) #TOTAL
-
-    return Response({"voter_results": voter_test_data, 
-                     "total_voters": total_voters, 
-                     "total_number_of_voters": total_number_of_voters,
-                     "chairperson_results": chairperson_results,
-                     "vice_chairperson_results": vice_chairperson_results,
-                     "councilor_results": councilor_results
-                     })
+    # Get the election for the specified year
+    try:
+        election = Election.objects.get(
+            start_datetime__year=year,
+            is_active=True
+        )
+    except Election.DoesNotExist:
+        # Return empty/test data if election doesn't exist
+        return Response({
+            "voter_results": [],
+            "total_voters": 0,
+            "total_number_of_voters": 0,
+            "chairperson_results": [],
+            "vice_chairperson_results": [],
+            "councilor_results": []
+        })
+    
+    # Get voter turnout by course
+    voter_results = []
+    courses = VoterProfile.objects.values_list('course', flat=True).distinct()
+    
+    for course in courses:
+        total_students = VoterProfile.objects.filter(course=course).count()
+        votes = Vote.objects.filter(
+            election=election,
+            voter_email__voterprofile__course=course
+        ).values('voter_email').distinct().count()
+        
+        voter_results.append({
+            "program": course,
+            "votes": votes,
+            "total_students": total_students
+        })
+    
+    # Calculate totals
+    total_voters = Vote.objects.filter(election=election).values('voter_email').distinct().count()
+    total_number_of_voters = VoterProfile.objects.filter(is_eligible=True).count()
+    
+    # Helper function to get results for a position
+    def get_position_results(position_name):
+        try:
+            position = Position.objects.get(election=election, name=position_name)
+            
+            # Try to get from TallyResult first (official results)
+            tally_results = TallyResult.objects.filter(
+                election=election,
+                position=position
+            ).select_related('candidate_email', 'candidate_email__email')
+            
+            if tally_results.exists():
+                return [
+                    {
+                        "name": tr.candidate_email.email.name,
+                        "votes": tr.vote_count
+                    }
+                    for tr in tally_results
+                ]
+            
+            # If no tally results, count from Vote table
+            votes = Vote.objects.filter(
+                election=election,
+                position=position
+            ).values('candidate_email__email__name').annotate(
+                vote_count=Count('id')
+            ).order_by('-vote_count')
+            
+            return [
+                {
+                    "name": vote['candidate_email__email__name'],
+                    "votes": vote['vote_count']
+                }
+                for vote in votes
+            ]
+            
+        except Position.DoesNotExist:
+            return []
+    
+    # Get results for each position
+    chairperson_results = get_position_results("Chairperson")
+    vice_chairperson_results = get_position_results("Vice Chairperson")
+    councilor_results = get_position_results("Councilor")
+    
+    return Response({
+        "voter_results": voter_results,
+        "total_voters": total_voters,
+        "total_number_of_voters": total_number_of_voters,
+        "chairperson_results": chairperson_results,
+        "vice_chairperson_results": vice_chairperson_results,
+        "councilor_results": councilor_results
+    })
 
 @api_view(['GET', 'POST'])
 def auditor_dashboard_view(request):
-    from django.db.models import Count, Q
     
     try:
         current_election = Election.objects.filter(is_active=True).first()

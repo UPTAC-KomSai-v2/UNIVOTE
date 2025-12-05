@@ -45,7 +45,7 @@ export default function PreviousResults() {
 
   useEffect(() => {
   // GET voter data
-    fetch(`http://localhost:8000/api/view-previous-results/`)
+    fetch(`http://localhost:8000/api/view-previous-results/?year=${yearSelected}`)
       .then(res => res.json())
       .then(data => {
         setVoterChartData(data.voter_results)
@@ -56,7 +56,7 @@ export default function PreviousResults() {
         setCouncilorChartData(data.councilor_results)
 
       });
-  }, []);
+  }, [yearSelected]);
 
   useEffect(() => {
     const now = new Date();
