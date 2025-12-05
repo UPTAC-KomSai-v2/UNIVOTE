@@ -116,6 +116,7 @@
 .chairperson-chart-view, .vice-chairperson-chart-view {
     display: flex;
     flex-direction: column;
+    width: 50%;
 }
 
 .chairperson-vice-container {
