@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Prefetch
+from django.db import transaction
+from rest_framework import status
 import uuid
 
 # Create your views here.
@@ -335,11 +337,95 @@ def admin_dashboard_view(request):
 @api_view(['GET', 'POST'])
 def manage_candidates_view(request):
     if request.method == 'GET':
-        return admin_dashboard_view(request)  # reuse the admin dashboard logic
+        # Existing GET code to fetch candidates
+        chairpersons = []
+        vice_chairpersons = []
+        councilors = []
+
+        for link in CandidateForPosition.objects.select_related('candidate_email', 'position'):
+            candidate = link.candidate_email
+            pos_name = link.position.name
+            cand_data = {
+                "id": candidate.email.email,
+                "name": candidate.email.name,
+                "student_number": getattr(candidate.email, "student_number", "N/A"),
+                "alias": candidate.alias or "",
+                "party": candidate.party or "",
+                "position": pos_name,
+                "description": candidate.bio or "No description provided.",
+                "image": candidate.image_url or None
+            }
+
+            if pos_name.lower() == "chairperson":
+                chairpersons.append(cand_data)
+            elif pos_name.lower() == "vice chairperson":
+                vice_chairpersons.append(cand_data)
+            elif "councilor" in pos_name.lower():
+                councilors.append(cand_data)
+
+        return Response({
+            "chairpersons": chairpersons,
+            "vice_chairpersons": vice_chairpersons,
+            "councilors": councilors
+        })
 
     elif request.method == 'POST':
-        return Response({"message": "Manage Candidates Page"})
+        data = request.data
+        email = data.get("email")
+        name = data.get("name")
+        student_number = data.get("student_number")
+        position_name = data.get("position")
 
+        if not email or not name or not position_name:
+            return Response({"error": "Email, name, and position are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            with transaction.atomic():
+                # 1. Create User if not exists
+                user, created = User.objects.get_or_create(
+                    email=email,
+                    defaults={
+                        "name": name,
+                        "password": "defaultpassword",  # Change or hash properly in real app
+                        "role": "candidate"
+                    }
+                )
+
+                # 2. Create VoterProfile if needed (optional)
+                if not VoterProfile.objects.filter(email=user).exists():
+                    VoterProfile.objects.create(
+                        email=user,
+                        student_number=student_number or "N/A",
+                        course="N/A",
+                        year_level=1
+                    )
+
+                # 3. Create CandidateProfile if not exists
+                candidate_profile, created = CandidateProfile.objects.get_or_create(
+                    email=user,
+                    defaults={
+                        "party": "",
+                        "alias": "",
+                        "bio": "",
+                        "image_url": ""
+                    }
+                )
+
+                # 4. Assign candidate to position
+                position_obj, created = Position.objects.get_or_create(
+                    name=position_name,
+                    defaults={"max_winners": 1, "choice_type": "single", "election_id": 1}  # adjust election
+                )
+
+                CandidateForPosition.objects.create(
+                    position=position_obj,
+                    candidate_email=candidate_profile
+                )
+
+            return Response({"message": f"{name} added successfully as {position_name}."})
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @api_view(['GET', 'POST'])
 def view_previous_results(request):
