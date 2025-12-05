@@ -25,6 +25,20 @@
     margin-top: 20px;
 }
 
+.top-row, .bottom-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 600px;
+}
+.select-position {
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .manage-candidates-buttons {
     display: flex;
     justify-content: space-between;

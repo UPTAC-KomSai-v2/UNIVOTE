@@ -20,6 +20,9 @@ export default function ManageCandidates() {
   const [lastName, setLastName] = useState('');
   const [studentNumber, setStudentNumber] = useState('');
   const [position, setPosition] = useState('');
+  const [alias, setAlias] = useState('');
+  const [party, setParty] = useState('');
+  const [description, setDescription] = useState('');
 
   const positions = [
     'Chairperson',
@@ -176,6 +179,12 @@ export default function ManageCandidates() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
+              <input 
+                type="text" 
+                placeholder="Alias"
+                value={alias}
+                onChange={(e) => setAlias(e.target.value)}
+              />
             </div>
 
             <div className="bottom-row">
@@ -185,6 +194,20 @@ export default function ManageCandidates() {
                 value={studentNumber}
                 onChange={(e) => setStudentNumber(e.target.value)}
               />
+              <input 
+                type="text" 
+                placeholder="Party"
+                value={party}
+                onChange={(e) => setParty(e.target.value)}
+              />
+              <input 
+                type="text" 
+                placeholder="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <div className="select-position">
               <select
                 className="choose-position"
                 value={position} 
