@@ -518,7 +518,7 @@ def view_previous_results(request):
                      })
 
 @api_view(['GET', 'POST'])
-def aduditor_dashboard_view(request):
+def auditor_dashboard_view(request):
 
     current_voter_test_data = [
         { "program": "BS Accountancy", "votes": 25, "total_students": 100 },
