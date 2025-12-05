@@ -353,17 +353,36 @@ def manage_candidates_view(request, id=None):
     """
     # ------------------- GET ------------------- #
     if request.method == 'GET':
+        try:
+            election = Election.objects.get(title__icontains='2025')
+        except Election.DoesNotExist:
+            return Response({"error": "election not found"}, status=404)
+        except Election.MultipleObjectsReturned:
+            election = Election.objects.filter(title__icontains='2025').order_by('-start_datetime').first()
+
         chairpersons = []
         vice_chairpersons = []
         councilors = []
 
-        for link in CandidateForPosition.objects.select_related('candidate_email', 'position'):
+        # Filter CandidateForPosition by positions
+        for link in CandidateForPosition.objects.filter(
+            position__election=election
+        ).select_related('candidate_email', 'candidate_email__email', 'position'):
             candidate = link.candidate_email
             pos_name = link.position.name
+            
+            # Get student number from VoterProfile
+            student_number = "N/A"
+            try:
+                voter_profile = VoterProfile.objects.get(email=candidate.email)
+                student_number = voter_profile.student_number
+            except VoterProfile.DoesNotExist:
+                pass
+            
             cand_data = {
                 "id": candidate.email.email,
                 "name": candidate.email.name,
-                "student_number": getattr(candidate.email, "student_number", "N/A"),
+                "student_number": student_number,
                 "alias": candidate.alias or "",
                 "party": candidate.party or "",
                 "position": pos_name,
@@ -397,6 +416,14 @@ def manage_candidates_view(request, id=None):
 
         if not email or not name or not position_name:
             return Response({"error": "Email, name, and position are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Get the 2025 election
+            election = Election.objects.get(title__icontains='2025')
+        except Election.DoesNotExist:
+            return Response({"error": "2025 election not found"}, status=404)
+        except Election.MultipleObjectsReturned:
+            election = Election.objects.filter(title__icontains='2025').order_by('-start_datetime').first()
 
         try:
             with transaction.atomic():
@@ -436,16 +463,22 @@ def manage_candidates_view(request, id=None):
                 candidate_profile.bio = description
                 candidate_profile.save()
 
-                # Assign candidate to position
+                # Get or create position for the 2025 election
                 position_obj, created = Position.objects.get_or_create(
                     name=position_name,
-                    defaults={"max_winners": 1, "choice_type": "single", "election_id": 1}
+                    election=election,
+                    defaults={"max_winners": 1, "choice_type": "single"}
                 )
 
-                CandidateForPosition.objects.create(
+                # Check if candidate is already assigned to this position
+                if not CandidateForPosition.objects.filter(
                     position=position_obj,
                     candidate_email=candidate_profile
-                )
+                ).exists():
+                    CandidateForPosition.objects.create(
+                        position=position_obj,
+                        candidate_email=candidate_profile
+                    )
 
             return Response({"message": f"{name} added successfully as {position_name}."})
 
