@@ -17,22 +17,14 @@ export default function LoginForm({ role }) {
 
         try {
             const response = await axios.post("http://localhost:8000/api/login/", {
-                email, 
+                email,
                 password,
                 role
             });
-
-            if(response.status === 200){
-                console.log("Login successful:", response.data);
-
-                const destination = response.data.redirect_url; 
-                
-                navigate(destination);
-            }
-            else{
-                setError("Invalid email or password");
-            }
-
+            
+            console.log("Login successful:", response.data);
+            const destination = response.data.redirect_url; 
+            navigate(destination);
         } catch (error) {
             console.error(error); // Helpful for debugging
             setError("Invalid email or password");
