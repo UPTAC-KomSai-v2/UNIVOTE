@@ -99,7 +99,7 @@ class Vote(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('voter_email', 'position')
+        pass
 
 
 class VoteReceipt(models.Model):
