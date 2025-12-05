@@ -16,7 +16,7 @@ export default function VotingPage() {
   const candidateChoices = {
     'Chairperson': 1,
     'Vice Chairperson': 1,
-    'Councilors': 7
+    'Councilor': 7
   };
 
   const [voterID, setVoterID] = useState('');
@@ -26,6 +26,8 @@ export default function VotingPage() {
   const [candidateType, setCandidateType] = useState(position);
   const [submissionConfirmed, setSubmissionConfirmed] = useState(false);
   const [logoutConfirmed, setLogoutConfirmed] = useState(false);
+  const [votingComplete, setVotingComplete] = useState(false);
+  const [abstainedPositions, setAbstainedPositions] = useState([]);
 
   const [selectedCandidates, setSelectedCandidates] = useState(() => {
     const saved = sessionStorage.getItem("currentVotes");
@@ -58,6 +60,11 @@ export default function VotingPage() {
   }, [candidateType]);
 
   const handleSelect = (candidateID) => {
+    if (abstainedPositions.includes(candidateType)) {
+      alert(`You have abstained from voting for ${candidateType}. Remove abstention to vote.`);
+      return;
+    }
+    
     // 1. If it's a multiple choice position (Councilors)
     if (multiple) {
       if (selectedCandidates.includes(candidateID)) {
@@ -84,6 +91,30 @@ export default function VotingPage() {
     }
   }
 
+  const handleAbstain = () => {
+    if (!abstainedPositions.includes(candidateType)) {
+      setAbstainedPositions([...abstainedPositions, candidateType]);
+      setSelectedCandidates(selectedCandidates.filter(id => {
+        const candidate = candidates.find(c => c.id === id);
+        return candidate && candidate.position !== candidateType;
+      }));
+      alert(`You have chosen to abstain from voting for ${candidateType}.`);
+    }
+  }
+
+  const handleRemoveAbstain = () => {
+    setAbstainedPositions(abstainedPositions.filter(pos => pos !== candidateType));
+    alert(`Abstention removed for ${candidateType}. You can now vote.`);
+  }
+
+  const handleLogoutClick = () => {
+    if (!votingComplete) {
+      alert("Please complete your voting before logging out. Click SUBMIT to finish voting.");
+    } else {
+      setLogoutConfirmed(true);
+    }
+  }
+
   const submitBallot = async () => {
     try {
         const response = await fetch("http://localhost:8000/api/voting-page/", {
@@ -91,15 +122,18 @@ export default function VotingPage() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ candidates: selectedCandidates }) 
+            body: JSON.stringify({ 
+              candidates: selectedCandidates,
+              abstained_positions: abstainedPositions 
+            }) 
         });
 
         // 1. Check for success
         if (response.ok) {
             setIsSubmitted(false); 
+            setVotingComplete(true);
             setSubmissionConfirmed(true); 
             sessionStorage.removeItem("currentVotes");
-            navigate('/vote-receipt-page');
         } else {
             const errorData = await response.json();
             alert(errorData.error || "Error submitting votes.");
@@ -107,6 +141,8 @@ export default function VotingPage() {
         }
     } catch (error) {
         console.error("Network error:", error);
+        alert("Network error. Please try again.");
+        setIsSubmitted(false);
     }
   };
   
@@ -117,7 +153,7 @@ export default function VotingPage() {
           src={logout} 
           alt="Logout" 
           className="logout-button" 
-          onClick={() => setLogoutConfirmed(true)} 
+          onClick={handleLogoutClick} 
         />
         {
           logoutConfirmed && (
@@ -175,6 +211,17 @@ export default function VotingPage() {
               disabled={candidateType === 'Councilor'}>
               Councilors
             </button>
+            
+            {!abstainedPositions.includes(candidateType) ? (
+              <button className="abstain-button" onClick={handleAbstain}>
+                ABSTAIN FROM {candidateType.toUpperCase()}
+              </button>
+            ) : (
+              <button className="remove-abstain-button" onClick={handleRemoveAbstain}>
+                REMOVE ABSTENTION
+              </button>
+            )}
+            
             <button className="submit-button" onClick={() => setIsSubmitted(true)}>
               SUBMIT
             </button>
@@ -224,7 +271,13 @@ export default function VotingPage() {
           <div className="candidate-list-card-content">
               <div className="candidate-list-card-title">2025 Student Council Elections</div>
               <div className="candidate-list-card-type">{candidateType}</div>
-              <div className="candidate-list-card-number">(Choose only {candidateNumChoice})</div>
+              {abstainedPositions.includes(candidateType) ? (
+                <div className="candidate-list-card-number" style={{color: '#ff6b6b'}}>
+                  (ABSTAINED - Not voting for this position)
+                </div>
+              ) : (
+                <div className="candidate-list-card-number">(Choose only {candidateNumChoice})</div>
+              )}
           </div>
         <strong>
           List of Candidates
