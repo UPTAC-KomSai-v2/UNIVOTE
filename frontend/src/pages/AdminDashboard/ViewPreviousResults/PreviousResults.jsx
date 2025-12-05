@@ -21,7 +21,7 @@ export default function PreviousResults() {
     "BS Economics",
     "BA Literature",
     "BS Management", 
-    "BS Media Arts",
+    "BA Media Arts",
     "BA Political Science",
   ];
 

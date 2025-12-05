@@ -519,47 +519,108 @@ def view_previous_results(request):
 
 @api_view(['GET', 'POST'])
 def auditor_dashboard_view(request):
-
-    current_voter_test_data = [
-        { "program": "BS Accountancy", "votes": 25, "total_students": 100 },
-        { "program": "BS Applied Mathematics", "votes": 52, "total_students": 100 },
-        { "program": "BS Biology", "votes": 45, "total_students": 90 },
-        { "program": "BS Computer Science", "votes": 38, "total_students": 80 },
-        { "program": "BS Economics", "votes": 27, "total_students": 70 },
-        { "program": "BA Literature", "votes": 27, "total_students": 60 },
-        { "program": "BS Management", "votes": 24, "total_students": 50 },   
-        { "program": "BS Media Arts", "votes": 24, "total_students": 50 },   
-        { "program": "BA Political Science", "votes": 24, "total_students": 50 },   
-    ]
-
-    current_chairperson_results = [
-        { "name": "Adrian Velasco", "votes": 150 },
-        { "name": "Renee Alvarado", "votes": 120 }
-    ]
-    current_vice_chairperson_results = [
-        { "name": "Miguel Soriano", "votes": 140 },
-        { "name": "Ella Navarro", "votes": 130 }
-    ]
-    current_councilor_results = [
-        { "name": "Julian Torres", "votes": 110 },
-        { "name": "Katrina Dominguez", "votes": 100 },
-        { "name": "Noel Santiago", "votes": 90 },
-        { "name": "Isabelle Ramos", "votes": 80 },
-        { "name": "Rafael Bautista", "votes": 70 },
-        { "name": "Mira Gutierrez", "votes": 60 },
-        { "name": "Dylan Mercado", "votes": 50 },
-        { "name": "Faith Salcedo", "votes": 40 }
-    ]
-
+    from django.db.models import Count, Q
     
+    try:
+        current_election = Election.objects.filter(is_active=True).first()
+        
+        if not current_election:
+            return Response({"error": "No active election found"}, status=404)
+        
+        # Get all programs
+        all_courses = VoterProfile.objects.values_list('course', flat=True).distinct()
+        
+        voter_test_data = []
+        for course in all_courses:
+            total_students = VoterProfile.objects.filter(course=course).count()
 
-    current_total_voters = sum(item['votes'] for item in current_voter_test_data) #VOTED
-    current_total_number_of_voters = sum(item['total_students'] for item in current_voter_test_data) #TOTAL
-
-    return Response({"voter_results": current_voter_test_data, 
-                     "total_voters": current_total_voters, 
-                     "total_number_of_voters": current_total_number_of_voters,
-                     "chairperson_results": current_chairperson_results,
-                     "vice_chairperson_results": current_vice_chairperson_results,
-                     "councilor_results": current_councilor_results
-                     })
+            #Get unique emails from voters and count            
+            voted_count = Vote.objects.filter(
+                election=current_election,
+                voter_email__voterprofile__course=course
+            ).values('voter_email').distinct().count()
+            
+            voter_test_data.append({
+                "program": course,
+                "votes": voted_count,
+                "total_students": total_students
+            })
+        
+        voter_test_data.sort(key=lambda x: x['program'])
+        
+        # chairperson results
+        chairperson_position = Position.objects.filter(
+            election=current_election,
+            name__iexact="Chairperson"
+        ).first()
+        
+        chairperson_results = []
+        if chairperson_position:
+            chairperson_votes = Vote.objects.filter(
+                election=current_election,
+                position=chairperson_position
+            ).values('candidate_email__email__name').annotate(
+                vote_count=Count('id')
+            ).order_by('-vote_count')
+            
+            chairperson_results = [
+                {"name": item['candidate_email__email__name'], "votes": item['vote_count']}
+                for item in chairperson_votes
+            ]
+        
+        # vice chairperson results
+        vice_position = Position.objects.filter(
+            election=current_election,
+            name__iexact="Vice Chairperson"
+        ).first()
+        
+        vice_chairperson_results = []
+        if vice_position:
+            vice_votes = Vote.objects.filter(
+                election=current_election,
+                position=vice_position
+            ).values('candidate_email__email__name').annotate(
+                vote_count=Count('id')
+            ).order_by('-vote_count')
+            
+            vice_chairperson_results = [
+                {"name": item['candidate_email__email__name'], "votes": item['vote_count']}
+                for item in vice_votes
+            ]
+        
+        # councilor results
+        councilor_position = Position.objects.filter(
+            election=current_election,
+            name__icontains="Councilor"
+        ).first()
+        
+        councilor_results = []
+        if councilor_position:
+            councilor_votes = Vote.objects.filter(
+                election=current_election,
+                position=councilor_position
+            ).values('candidate_email__email__name').annotate(
+                vote_count=Count('id')
+            ).order_by('-vote_count')
+            
+            councilor_results = [
+                {"name": item['candidate_email__email__name'], "votes": item['vote_count']}
+                for item in councilor_votes
+            ]
+        
+        # total voters
+        total_voters = sum(item['votes'] for item in voter_test_data)
+        total_number_of_voters = sum(item['total_students'] for item in voter_test_data)
+        
+        return Response({
+            "voter_results": voter_test_data,
+            "total_voters": total_voters,
+            "total_number_of_voters": total_number_of_voters,
+            "chairperson_results": chairperson_results,
+            "vice_chairperson_results": vice_chairperson_results,
+            "councilor_results": councilor_results
+        })
+        
+    except Exception as e:
+        print(f"Error in auditor dashboard: {e}")
+        return Response({"error": str(e)}, status=500)

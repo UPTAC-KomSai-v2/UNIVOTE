@@ -20,7 +20,7 @@ export default function AuditorDashboard() {
     "BS Economics",
     "BA Literature",
     "BS Management", 
-    "BS Media Arts",
+    "BA Media Arts",
     "BA Political Science",
   ];
 
