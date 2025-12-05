@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
         pos_chair = Position.objects.create(election=election, name="Chairperson", max_winners=1, choice_type='single')
         pos_vice = Position.objects.create(election=election, name="Vice Chairperson", max_winners=1, choice_type='single')
-        pos_coun = Position.objects.create(election=election, name="Councilors", max_winners=7, choice_type='multiple')
+        pos_coun = Position.objects.create(election=election, name="Councilor", max_winners=7, choice_type='multiple')
 
         # ==========================================
         # 3. USERS (ADMIN)
