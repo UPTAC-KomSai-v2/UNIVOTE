@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db.models import Prefetch
 import uuid
 
 # Create your views here.
@@ -294,169 +295,51 @@ def view_candidate_page_view(request, id):
     
 @api_view(['GET', 'POST'])
 def admin_dashboard_view(request):
-    voter_id = 1234567890  # Hardcoded voter ID for testing
-    chairpersonCandidates = [
-        {
-            "id": 1,
-            "name": "Juan Dela Cruz",
-            "student_number": "202100123",
-            "alias": "JuanCruz",
-            "party": "Party A",
-            "position": "Chairperson",
-            "description": "A dedicated student leader committed to excellence.",
-            "image": None
-        },
-        {
-            "id": 2,
-            "name": "Maria Santos",
-            "student_number": "202100456",
-            "alias": "MariaS",
-            "party": "Party B",
-            "position": "Chairperson",
-            "description": "Focused on transparency and student welfare.",
-            "image": None
-        }
-    ]
-    viceChairpersonCandidates = [
-        {
-            "id": 3,
-            "name": "Pedro Reyes",
-            "student_number": "202100789",
-            "alias": "PedroR",
-            "party": "Party A",
-            "position": "Vice Chairperson",
-            "description": "Advocate for student rights and community engagement.",
-            "image": None
-        },
-        {
-            "id": 4,
-            "name": "Ana Lopez",
-            "student_number": "202100321",
-            "alias": "AnaL",
-            "party": "Party B",
-            "position": "Vice Chairperson",
-            "description": "Committed to fostering a supportive campus environment.",
-            "image": None
-        }
-    ]
-    counsilorCandidates = [
-        {
-            "id": 5,
-            "name": "Carlos Garcia",
-            "student_number": "202100654",
-            "alias": "CarlosG",
-            "party": "Party A",
-            "position": "Councilor",
-            "description": "Passionate about academic excellence and student services.",
-            "image": None
-        },
-        {
-            "id": 6,
-            "name": "Luisa Fernandez",
-            "student_number": "202100987",
-            "alias": "LuisaF",
-            "party": "Party B",
-            "position": "Councilor",
-            "description": "Dedicated to enhancing campus life and student engagement.",
-            "image": None
-        }
-    ]
-
-    
     if request.method == 'GET':
-        return Response({
-            "voter_id": voter_id,
-            "chairpersons": chairpersonCandidates,
-            "vice_chairpersons": viceChairpersonCandidates,
-            "councilors": counsilorCandidates
-        })
-    
+        positions = Position.objects.select_related('election').all()
+        response_data = {}
+
+        for pos in positions:
+            candidates_links = CandidateForPosition.objects.filter(position=pos).select_related('candidate_email', 'candidate_email__email')
+            candidates_list = []
+            for link in candidates_links:
+                cand = link.candidate_email
+                user = cand.email
+                student_number = "N/A"
+                try:
+                    voter_profile = VoterProfile.objects.get(email=user)
+                    student_number = voter_profile.student_number
+                except VoterProfile.DoesNotExist:
+                    pass
+
+                candidates_list.append({
+                    "id": user.email,
+                    "name": user.name,
+                    "student_number": student_number,
+                    "alias": cand.alias if cand.alias else "",
+                    "party": cand.party,
+                    "position": pos.name,
+                    "description": cand.bio if cand.bio else "No description provided.",
+                    "image": cand.image_url
+                })
+            
+            # Use lowercase keys for response
+            key = pos.name.lower().replace(" ", "_") + "s"
+            response_data[key] = candidates_list
+
+        return Response(response_data)
+
     elif request.method == 'POST':
-        # Handle POST request
         return Response({"message": "Admin Dashboard Page"})
 
 @api_view(['GET', 'POST'])
 def manage_candidates_view(request):
-    voter_id = 1234567890  # Hardcoded voter ID for testing
-    chairpersonCandidates = [
-        {
-            "id": 1,
-            "name": "Juan Dela Cruz",
-            "student_number": "202100123",
-            "alias": "JuanCruz",
-            "party": "Party A",
-            "position": "Chairperson",
-            "description": "A dedicated student leader committed to excellence.",
-            "image": None
-        },
-        {
-            "id": 2,
-            "name": "Maria Santos",
-            "student_number": "202100456",
-            "alias": "MariaS",
-            "party": "Party B",
-            "position": "Chairperson",
-            "description": "Focused on transparency and student welfare.",
-            "image": None
-        }
-    ]
-    viceChairpersonCandidates = [
-        {
-            "id": 3,
-            "name": "Pedro Reyes",
-            "student_number": "202100789",
-            "alias": "PedroR",
-            "party": "Party A",
-            "position": "Vice Chairperson",
-            "description": "Advocate for student rights and community engagement.",
-            "image": None
-        },
-        {
-            "id": 4,
-            "name": "Ana Lopez",
-            "student_number": "202100321",
-            "alias": "AnaL",
-            "party": "Party B",
-            "position": "Vice Chairperson",
-            "description": "Committed to fostering a supportive campus environment.",
-            "image": None
-        }
-    ]
-    counsilorCandidates = [
-        {
-            "id": 5,
-            "name": "Carlos Garcia",
-            "student_number": "202100654",
-            "alias": "CarlosG",
-            "party": "Party A",
-            "position": "Councilor",
-            "description": "Passionate about academic excellence and student services.",
-            "image": None
-        },
-        {
-            "id": 6,
-            "name": "Luisa Fernandez",
-            "student_number": "202100987",
-            "alias": "LuisaF",
-            "party": "Party B",
-            "position": "Councilor",
-            "description": "Dedicated to enhancing campus life and student engagement.",
-            "image": None
-        }
-    ]
-
-    
     if request.method == 'GET':
-        return Response({
-            "voter_id": voter_id,
-            "chairpersons": chairpersonCandidates,
-            "vice_chairpersons": viceChairpersonCandidates,
-            "councilors": counsilorCandidates
-        })
-    
+        return admin_dashboard_view(request)  # reuse the admin dashboard logic
+
     elif request.method == 'POST':
-        # Handle POST request
         return Response({"message": "Manage Candidates Page"})
+
     
 @api_view(['GET', 'POST'])
 def view_previous_results(request):
