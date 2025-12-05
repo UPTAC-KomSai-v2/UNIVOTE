@@ -151,14 +151,18 @@
     .candidate-list-card-content,
     .candidate-list-card-content *,
     .candidate-list, 
-    .candidate-list * {
+    .candidate-list * 
+    {
         visibility: visible;
     }
 
     .voting-page-card,
     .print-button,
     .back-arrow,
-    .candidateButtons {
+    .candidateButtons,
+    .overlay,
+    .overlay *,
+    .recharts-default-legend {
         display: none !important;
         visibility: hidden !important;
     }
