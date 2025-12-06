@@ -299,26 +299,60 @@ def view_candidate_page_view(request, id):
 @api_view(['GET', 'POST'])
 def admin_dashboard_view(request):
     if request.method == 'GET':
-        year = request.GET.get('year', '2025')
+        year = request.GET.get('year')
         
-        try:
-            election = Election.objects.get(title__icontains=year)
-            positions = Position.objects.filter(election=election).select_related('election')
-        except Election.DoesNotExist:
-            return Response({"error": f"{year} election not found"}, status=404)
-        except Election.MultipleObjectsReturned:
-            election = Election.objects.filter(title__icontains=year).order_by('-start_datetime').first()
-            positions = Position.objects.filter(election=election).select_related('election')
+        if year:
+            # Filter by specific year and get the latest election in that year
+            try:
+                year_int = int(year)
+                election = Election.objects.filter(
+                    start_datetime__year=year_int
+                ).order_by('-start_datetime').first()
+                
+                if not election:
+                    return Response({"error": f"{year} election not found"}, status=404)
+            except ValueError:
+                return Response({"error": "Invalid year format"}, status=400)
+        else:
+            # Get the currently active election, or the most recent one
+            from django.utils import timezone
+            now = timezone.now()
+            
+            # First, try to get the active election that's currently running
+            election = Election.objects.filter(
+                is_active=True,
+                start_datetime__lte=now,
+                end_datetime__gte=now
+            ).order_by('-start_datetime').first()
+            
+            # If no currently running election, get the most recent active election
+            if not election:
+                election = Election.objects.filter(
+                    is_active=True
+                ).order_by('-start_datetime').first()
+            
+            # If still no election, get ANY most recent election (even inactive)
+            if not election:
+                election = Election.objects.order_by('-start_datetime').first()
+            
+            if not election:
+                return Response({"error": "No elections found"}, status=404)
+        
+        positions = Position.objects.filter(election=election).select_related('election')
         
         response_data = {}
 
         for pos in positions:
-            candidates_links = CandidateForPosition.objects.filter(position=pos).select_related('candidate_email', 'candidate_email__email')
+            candidates_links = CandidateForPosition.objects.filter(
+                position=pos
+            ).select_related('candidate_email', 'candidate_email__email')
+            
             candidates_list = []
             for link in candidates_links:
                 cand = link.candidate_email
                 user = cand.email
                 student_number = "N/A"
+                
                 try:
                     voter_profile = VoterProfile.objects.get(email=user)
                     student_number = voter_profile.student_number
@@ -521,7 +555,7 @@ def view_previous_results(request):
     try:
         election = Election.objects.get(
             start_datetime__year=year,
-            is_active=True
+            # is_active=True
         )
     except Election.DoesNotExist:
         # Return empty/test data if election doesn't exist
