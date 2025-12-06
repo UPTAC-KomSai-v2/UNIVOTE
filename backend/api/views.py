@@ -528,7 +528,7 @@ def view_previous_results(request):
     try:
         election = Election.objects.get(
             start_datetime__year=year,
-            is_active=True
+            # is_active=False
         )
     except Election.DoesNotExist:
         # Return empty/test data if election doesn't exist

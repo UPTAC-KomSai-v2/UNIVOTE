@@ -230,22 +230,25 @@ export default function AdminDashboard() {
                     </div>
                 </div>
             </div>
+            
+            <div className="admin-buttons">
+              <button className="publish-date">Publish Date</button>
+              <button className="manage-candidates-button" onClick={() => navigate('/manage-candidates')}>
+                  Manage Candidates
+              </button>
 
-            <button className="manage-candidates-button" onClick={() => navigate('/manage-candidates')}>
-                Manage Candidates
-            </button>
+              <button className="create-voter-accounts" onClick={handleButtonClick}>
+                  Upload CSV
+              </button>
 
-            <button className="create-voter-accounts" onClick={handleButtonClick}>
-                Upload CSV
-            </button>
-
-            <input 
-                type="file" 
-                accept=".csv"
-                ref={fileInputRef} 
-                onChange={handleFileSelect} 
-                style={{ display: "none" }} 
-            />
+              <input 
+                  type="file" 
+                  accept=".csv"
+                  ref={fileInputRef} 
+                  onChange={handleFileSelect} 
+                  style={{ display: "none" }} 
+              />
+            </div>
 
             {message && (
                 <p style={{

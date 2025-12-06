@@ -36,27 +36,18 @@ select {
     margin-right: 1.3rem;
 }
 
-.manage-candidates-button {
-    position: absolute;
-    right: 0.5%;
-    top: 25%;
+.admin-buttons {
+    display: flex;
+    gap: 1rem;
+}
 
+.manage-candidates-button, .create-voter-accounts, .publish-date {
     line-height: 0.3rem;
     font-size: 0.7rem;
     border-radius: 45px;
     cursor: pointer;
 }
 
-.create-voter-accounts {
-    position: absolute;
-    right: 0.5%;
-    top: 31%;
-
-    line-height: 0.3rem;
-    font-size: 0.7rem;
-    border-radius: 45px;
-    cursor: pointer;
-}
 
 /* Hover effects for both buttons */
 .manage-candidates-button:hover, 
