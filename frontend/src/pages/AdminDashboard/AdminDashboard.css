@@ -1,4 +1,3 @@
-
 select {
     padding: 8px;
     border-radius: 10px;
@@ -37,17 +36,23 @@ select {
     margin-right: 1.3rem;
 }
 
-.manage-candidates-button {
-    position: absolute;
-    right: 5%;
-    top: 31%;
+.admin-buttons {
+    display: flex;
+    gap: 1rem;
+}
 
+.manage-candidates-button, .create-voter-accounts, .publish-date {
     line-height: 0.3rem;
-
     font-size: 0.7rem;
     border-radius: 45px;
+    cursor: pointer;
 }
-.manage-candidates-button:hover {
+
+
+/* Hover effects for both buttons */
+.manage-candidates-button:hover, 
+.create-voter-accounts:hover {
     background-color: white;
     color: gray;
+    transition: 0.2s;
 }

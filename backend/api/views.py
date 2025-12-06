@@ -4,12 +4,25 @@ from django.utils import timezone
 from django.db.models import Prefetch
 from django.db import transaction
 from django.db.models import Count, Q
+import uuid
+
+import csv
+import io
+import random
+import string
+from django.contrib.auth.hashers import make_password
+
+# Create your views here.
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import status
+
 from django.middleware.csrf import get_token
 from django.contrib.auth.hashers import check_password
 import uuid
@@ -541,7 +554,7 @@ def view_previous_results(request):
     try:
         election = Election.objects.get(
             start_datetime__year=year,
-            is_active=True
+            # is_active=False
         )
     except Election.DoesNotExist:
         # Return empty/test data if election doesn't exist
@@ -735,3 +748,84 @@ def auditor_dashboard_view(request):
     except Exception as e:
         print(f"Error in auditor dashboard: {e}")
         return Response({"error": str(e)}, status=500)
+
+@api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])
+def upload_voters_view(request):
+    if 'file' not in request.FILES:
+        return Response({"error": "No file uploaded"}, status=400)
+
+    file_obj = request.FILES['file']
+    decoded_file = file_obj.read().decode('utf-8')
+    io_string = io.StringIO(decoded_file)
+    reader = csv.DictReader(io_string)
+    
+    created_count = 0
+    errors = []
+    
+    generated_credentials = [] 
+
+    for row in reader:
+        try:
+            student_no = row.get('student_number')
+            name = row.get('name')
+            program = row.get('program')
+            email = row.get('email')
+            year_level = row.get('year_level', 1)
+
+            if User.objects.filter(email=email).exists():
+                errors.append(f"Skipped {email}: Already exists")
+                continue
+
+            plain_password = generate_password() 
+
+            user = User.objects.create(
+                email=email,
+                name=name,
+                password=make_password(plain_password), 
+                role="voter"
+            )
+
+            VoterProfile.objects.create(
+                email=user,
+                student_number=student_no,
+                course=program,
+                year_level=int(year_level)
+            )
+            
+            generated_credentials.append({
+                "name": name,
+                "email": email,
+                "password": plain_password
+            })
+            
+            created_count += 1
+
+        except Exception as e:
+            errors.append(f"Error on row {row}: {str(e)}")
+
+    return Response({
+        "message": f"Successfully created {created_count} voters.",
+        "errors": errors,
+        "credentials": generated_credentials
+    }, status=200)
+
+def generate_password(length=10):
+    upper = string.ascii_uppercase
+    lower = string.ascii_lowercase
+    digits = string.digits
+    
+    password_chars = [
+        random.choice(upper),
+        random.choice(lower),
+        random.choice(digits)
+    ]
+
+    all_chars = upper + lower + digits
+    for _ in range(length - 3):
+        password_chars.append(random.choice(all_chars))
+        
+    random.shuffle(password_chars)
+    
+    return "".join(password_chars)
+

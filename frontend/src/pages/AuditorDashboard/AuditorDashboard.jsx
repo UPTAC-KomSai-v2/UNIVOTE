@@ -22,6 +22,7 @@ export default function AuditorDashboard() {
     "BS Management", 
     "BA Media Arts",
     "BA Political Science",
+    "BA Psychology",
   ];
 
   const [voterChartData, setVoterChartData] = useState([]);

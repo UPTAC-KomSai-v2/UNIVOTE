@@ -23,6 +23,7 @@ export default function PreviousResults() {
     "BS Management", 
     "BA Media Arts",
     "BA Political Science",
+    "BA Psychology",
   ];
 
   const [voterChartData, setVoterChartData] = useState([]);

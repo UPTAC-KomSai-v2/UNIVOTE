@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react"; // Added useRef
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../../components/Card/Card";
 import CandidateCard from "../../components/CandidateCard/CandidateCard";
@@ -25,10 +25,16 @@ export default function AdminDashboard() {
   const [endDay, setEndDay] = useState('10');
   const [endYear, setEndYear] = useState('2025');
   const [logoutConfirmed, setLogoutConfirmed] = useState(false);
-      
+    
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const [message, setMessage] = useState("");
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click(); // Opens the file explorer
+  };
   
-
-
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
     document.body.classList.remove("login-bg"); // optional
@@ -36,7 +42,6 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-  // GET voter data
     fetch(`http://localhost:8000/api/admin-dashboard/`)
       .then(res => res.json())
       .then(data => {
@@ -45,6 +50,55 @@ export default function AdminDashboard() {
         setCouncilors(data.councilors);
       });
   }, []);
+
+  const handleFileSelect = async (e) => {
+    const selectedFile = e.target.files[0];
+    
+    if (!selectedFile) return;
+
+    // Proceed directly to upload logic (No need to set state first)
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+        setMessage("Uploading...");
+        
+        const response = await fetch("http://localhost:8000/api/upload-voters/", {
+            method: "POST",
+            body: formData 
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            setMessage(data.message);
+            
+            // Handle Credentials / Success
+            if (data.credentials && data.credentials.length > 0) {
+                console.table(data.credentials);
+                let credsString = "ACCOUNTS CREATED:\n\n";
+                data.credentials.forEach(user => {
+                    credsString += `Name: ${user.name}\nEmail: ${user.email}\nPass: ${user.password}\n\n`;
+                });
+                alert("Upload Success! Check console for full list.\n\n" + credsString);
+            } else if (data.errors && data.errors.length > 0) {
+                alert("Upload complete with skips. Check console.");
+                console.log(data.errors);
+            } else {
+                alert("All users created successfully!");
+            }
+        } else {
+            setMessage("Upload failed.");
+            alert(data.error || "Upload failed");
+        }
+
+    } catch (error) {
+        console.error(error);
+        setMessage("Network Error");
+    }
+    
+    e.target.value = null; 
+  };
 
   
   return (
@@ -176,10 +230,38 @@ export default function AdminDashboard() {
                     </div>
                 </div>
             </div>
-
-            <button className="manage-candidates-button" onClick={() => navigate('/manage-candidates')}>Manage Candidates</button>
-
             
+            <div className="admin-buttons">
+              <button className="publish-date">Publish Date</button>
+              <button className="manage-candidates-button" onClick={() => navigate('/manage-candidates')}>
+                  Manage Candidates
+              </button>
+
+              <button className="create-voter-accounts" onClick={handleButtonClick}>
+                  Upload CSV
+              </button>
+
+              <input 
+                  type="file" 
+                  accept=".csv"
+                  ref={fileInputRef} 
+                  onChange={handleFileSelect} 
+                  style={{ display: "none" }} 
+              />
+            </div>
+
+            {message && (
+                <p style={{
+                    position: 'absolute', 
+                    right: '5%', 
+                    top: '43%', 
+                    fontSize: '0.8rem', 
+                    color: 'white'
+                }}>
+                    {message}
+                </p>
+            )}
+
             <strong>
             List of Candidates
             </strong>
