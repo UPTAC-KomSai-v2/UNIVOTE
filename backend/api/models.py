@@ -6,6 +6,23 @@ from django.db import models
 # USERS & PROFILES
 # ---------------------------
 
+# class User(models.Model):
+#     email = models.EmailField(primary_key=True)
+#     name = models.CharField(max_length=150)
+#     password = models.CharField(max_length=255)
+#     role = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('admin', 'Admin'),
+#             ('voter', 'Voter'),
+#             ('candidate', 'Candidate'),
+#             ('auditor', 'Auditor'),
+#         ]
+#     )
+
+#     def __str__(self):
+#         return self.email
+
 class User(models.Model):
     email = models.EmailField(primary_key=True)
     name = models.CharField(max_length=150)
@@ -22,6 +39,22 @@ class User(models.Model):
 
     def __str__(self):
         return self.email
+    
+    # Add these properties to make it compatible with Django auth
+    @property
+    def is_authenticated(self):
+        """Always return True for authenticated users"""
+        return True
+    
+    @property
+    def is_anonymous(self):
+        """Always return False - this is a real user"""
+        return False
+    
+    @property
+    def is_active(self):
+        """You can add a field for this or just return True"""
+        return True
 
 class VoterProfile(models.Model):
     voter_id = models.UUIDField( 
