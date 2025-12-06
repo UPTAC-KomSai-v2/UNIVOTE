@@ -179,6 +179,7 @@ export default function VotingPage() {
                 <div>
                   <button onClick={() => {
                       sessionStorage.removeItem("currentVotes"); // Clear votes on logout
+                      localStorage.removeItem("userRole");
                       api.post("/api/logout/");
                       navigate('/');
                   }}>YES</button>

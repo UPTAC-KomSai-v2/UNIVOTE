@@ -36,6 +36,7 @@ export default function VoterDashboard() {
               <div>
                 <button onClick={() => {
                     api.post("/api/logout/");
+                    localStorage.removeItem("userRole");
                     navigate('/');
                 }}>YES</button>
                 <button onClick={() => setLogoutConfirmed(false)}>NO</button>
