@@ -110,10 +110,11 @@ def candidate_dashboard_view(request):
     return Response({"message": "Candidate Dashboard"})
 
 @api_view(['GET', 'POST'])
+@authentication_classes([CookieJWTAuthentication])
+@permission_classes([IsAuthenticated])
 def voting_page_view(request):
-    current_user_email = "voter1@up.edu.ph" 
-    
-    voter_uuid = "NOT_FOUND"
+
+    current_user_email = request.user.email
     try:
         voter_profile = VoterProfile.objects.get(email=current_user_email)
         voter_uuid = voter_profile.voter_id
@@ -123,24 +124,19 @@ def voting_page_view(request):
     if request.method == 'GET':
         requested_position_name = request.GET.get('position', 'Chairperson')
         candidates_data = []
-        
-        max_votes_allowed = 1 
+        max_votes_allowed = 1
 
         try:
             position_obj = Position.objects.filter(name__iexact=requested_position_name).first()
-
             if position_obj:
                 max_votes_allowed = position_obj.max_winners
-
                 candidate_links = CandidateForPosition.objects.filter(position=position_obj).select_related(
-                    'candidate_email',         
+                    'candidate_email',        
                     'candidate_email__email'  
                 )
-
                 for link in candidate_links:
                     cand_profile = link.candidate_email
-                    user = cand_profile.email 
-                    
+                    user = cand_profile.email
                     student_no = "N/A"
                     try:
                         cand_voter_profile = VoterProfile.objects.get(email=user)
@@ -161,36 +157,43 @@ def voting_page_view(request):
 
         except Exception as e:
             print(f"Error fetching candidates: {e}")
-
         return Response({
-            "voter_id": voter_uuid, 
+            "voter_id": voter_uuid,
             "max_votes": max_votes_allowed,
             "candidates": candidates_data
         })
-
     elif request.method == 'POST':
+        idempotency_key = request.data.get('idempotency_key') 
+        
+        if not idempotency_key:
+             idempotency_key = str(uuid.uuid4()) 
+
+        if Vote.objects.filter(idempotency_key=idempotency_key).exists():
+             return Response({"message": "Vote already processed."}, status=200)
+
         try:
             user = User.objects.get(email=current_user_email)
-            selected_candidate_ids = request.data.get('candidates', []) 
-            election = Election.objects.first()
+            
+            with transaction.atomic():
+                if Vote.objects.filter(voter_email=user).exists():
+                     return Response({"error": "You have already cast your votes!"}, status=400)
 
-            if Vote.objects.filter(voter_email=user).exists():
-                 return Response({"error": "You have already cast your votes!"}, status=400)
+                selected_candidate_ids = request.data.get('candidates', []) 
+                election = Election.objects.first()
 
-            for cand_email in selected_candidate_ids:
-                candidate = CandidateProfile.objects.get(email=cand_email)
-                
-                link = CandidateForPosition.objects.filter(candidate_email=candidate).first()
-                
-                if link:
-                    Vote.objects.create(
-                        election=election,
-                        voter_email=user,
-                        position=link.position,
-                        candidate_email=candidate,
-                        encrypted_vote="encrypted_dummy_string",
-                        idempotency_key=str(uuid.uuid4()), 
-                    )
+                for cand_email in selected_candidate_ids:
+                    candidate = CandidateProfile.objects.get(email=cand_email)
+                    link = CandidateForPosition.objects.filter(candidate_email=candidate).first()
+                    
+                    if link:
+                        Vote.objects.create(
+                            election=election,
+                            voter_email=user,
+                            position=link.position,
+                            candidate_email=candidate,
+                            encrypted_vote="encrypted_dummy_string",
+                            idempotency_key=idempotency_key, 
+                        )
 
             return Response({"message": "Votes submitted successfully!"}, status=200)
 
@@ -238,6 +241,9 @@ def manage_profile_page_view(request):
         
     elif request.method == 'POST':
         try:
+            if Vote.objects.filter(voter_email=target_email).exists():
+                return Response({"error": "You have already cast your votes!"}, status=400)
+            
             user_obj = User.objects.get(email=target_email)
             profile = CandidateProfile.objects.get(email=user_obj)
 

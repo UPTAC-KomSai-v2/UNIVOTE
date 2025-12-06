@@ -6,6 +6,7 @@ import "./VotingPage.css";
 import backArrow from '../../assets/back-button-white.png'
 import logout from '../../assets/logout.png'
 import api from "../../api";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function VotingPage() {
   const navigate = useNavigate();
@@ -127,7 +128,6 @@ export default function VotingPage() {
   };
 
   const submitBallot = async () => {
-    // Check if user has made any choices (voted or abstained)
     const hasVoted = selectedCandidates.length > 0;
     const hasAbstained = abstainedPositions.length > 0;
     
@@ -137,16 +137,27 @@ export default function VotingPage() {
         return;
     }
 
+    const idempotencyKey = uuidv4();
+
     try {
         const response = await api.post("/api/voting-page/", {
           candidates: selectedCandidates.length > 0 ? selectedCandidates : [],
-          abstained_positions: abstainedPositions
+          abstained_positions: abstainedPositions,
+          idempotency_key: idempotencyKey
         });
 
-        setIsSubmitted(false); 
-        setVotingComplete(true);
-        setSubmissionConfirmed(true); 
+        alert("Vote Submitted Successfully! You will now be logged out.");
+
         sessionStorage.removeItem("currentVotes");
+        localStorage.removeItem("userRole"); 
+
+        try {
+            await api.post("/api/logout/");
+        } catch (logoutError) {
+            console.error("Logout failed but redirecting anyway", logoutError);
+        }
+
+        navigate('/');
 
     } catch (error) {
         console.error("Submit error:", error);

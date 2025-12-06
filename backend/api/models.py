@@ -127,7 +127,7 @@ class Vote(models.Model):
     position = models.ForeignKey(Position, on_delete=models.CASCADE)
     candidate_email = models.ForeignKey(CandidateProfile, on_delete=models.CASCADE)
     encrypted_vote = models.TextField()
-    idempotency_key = models.CharField(max_length=64, unique=True)
+    idempotency_key = models.CharField(max_length=64, unique=False)
     submission_latency_ms = models.IntegerField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
