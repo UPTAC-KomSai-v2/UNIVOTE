@@ -17,7 +17,7 @@ from django.http import HttpResponse
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, parser_classes
@@ -28,6 +28,8 @@ from django.middleware.csrf import get_token
 from django.contrib.auth.hashers import check_password
 import uuid
 from .models import User, Vote, Election, CandidateProfile, Position, VoterProfile, CandidateForPosition, TallyResult
+from .authentication import CookieJWTAuthentication 
+from django.http import JsonResponse
 
 @api_view(['GET'])
 def hello_world(request):
@@ -44,53 +46,53 @@ def login_view(request):
     password = request.data.get('password')
 
     if not email or not password:
-        return Response({"error": "Email and password are required"}, status = 400)
+        return JsonResponse({"error": "Email and password are required"}, status = 400)
     
     try:
         user = User.objects.get(email=email)
 
-        if check_password(password, user.password):
-
-            # Generate Tokens
-            refresh = RefreshToken.for_user(user)
-
-            # Map roles to dashboards
-            role_dashboard_map = {
-                'admin': '/admin-dashboard',
-                'voter': '/voter-dashboard',
-                'candidate': '/candidate-dashboard',
-                'auditor': '/auditor-dashboard'
-            }
-            destination = role_dashboard_map.get(user.role, '/voter-dashboard')
-
-            response = Response({
-                "message": "Login Successful",
-                "role": user.role,
-                "redirect_url": destination
-            })
-
-            # Set HttpOnly Cookies
-            response.set_cookie(
-                'access_token',
-                str(refresh.access_token),
-                httponly=True,
-                samesite='Lax',
-                secure='False', # set True in production (HTTPS)
-            )
-            response.set_cookie(
-                'refresh_token',
-                str(refresh),
-                httponly=True,
-                samesite='Lax',
-                secure=False,
-            )
-            return response
+        if not check_password(password, user.password):
+            return JsonResponse({"error": "Invalid Password"}, status=401)
         
-        else:
-            return Response({"error": "Invalid Password"}, status=401)
+        # Generate tokens
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        # Map roles to dashboards
+        role_dashboard_map = {
+            'admin': '/admin-dashboard',
+            'voter': '/voter-dashboard',
+            'candidate': '/candidate-dashboard',
+            'auditor': '/auditor-dashboard'
+        }
+        destination = role_dashboard_map.get(user.role, '/voter-dashboard')
+
+        response = Response({
+            "message": "Login Successful",
+            "role": user.role,
+            "redirect_url": destination
+        })
+
+        # Set HttpOnly Cookies
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            secure=False,
+            samesite='Lax'
+        )
+        response.set_cookie(
+            key='refresh_token',
+            value=str(refresh),
+            httponly=True,
+            secure=False,
+            samesite='Lax' 
+        )
+            
+        return response
         
     except User.DoesNotExist:
-        return Response({"error": "Invalid Credentials"}, status=401)
+        return JsonResponse({"error": "Invalid Credentials"}, status=401)
         
 @api_view(['POST'])
 def logout_view(request):
@@ -331,6 +333,8 @@ def view_candidate_page_view(request, id):
         return Response({"error": "Internal Server Error"}, status=500)
     
 @api_view(['GET', 'POST'])
+@authentication_classes([CookieJWTAuthentication])
+@permission_classes([IsAuthenticated])
 def admin_dashboard_view(request):
     if request.method == 'GET':
         year = request.GET.get('year', '2025')
