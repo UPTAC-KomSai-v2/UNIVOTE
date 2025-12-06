@@ -201,6 +201,7 @@ def voting_page_view(request):
 @api_view(['GET', 'POST'])
 @authentication_classes([CookieJWTAuthentication])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def manage_profile_page_view(request):
     # Use the authenticated user instead of hardcoded email
     current_user = request.user
@@ -225,7 +226,8 @@ def manage_profile_page_view(request):
                 "name": user_obj.name,
                 "party_name": candidate_profile.party,
                 "alias": candidate_profile.alias,
-                "position": position_name 
+                "position": position_name,
+                "image_url": candidate_profile.image_url
             }]
 
             return Response({"voter_id": voter_profile.voter_id, "profile": profile_data})
@@ -239,11 +241,23 @@ def manage_profile_page_view(request):
             user_obj = User.objects.get(email=target_email)
             profile = CandidateProfile.objects.get(email=user_obj)
 
+            # Check if an image file was uploaded
+            if 'image' in request.FILES:
+                image_file = request.FILES['image']
+                # Save the file and store the URL/path
+                # For now, we'll store a placeholder URL
+                # In production, you'd upload to cloud storage (AWS S3, Azure Blob, etc.)
+                profile.image_url = f"/media/candidate_images/{image_file.name}"
+                # TODO: Actually save the file to filesystem or cloud storage
+
             new_party = request.data.get('party_name')
             new_alias = request.data.get('alias')
 
-            profile.party = new_party
-            profile.alias = new_alias
+            if new_party:
+                profile.party = new_party
+            if new_alias:
+                profile.alias = new_alias
+            
             profile.save()
 
             return Response({"message": "Profile updated successfully!"}, status=200)
