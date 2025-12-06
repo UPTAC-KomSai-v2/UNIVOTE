@@ -1,0 +1,39 @@
+
+.container{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.2rem;
+    margin-top: 15%;
+    margin-left: 33%;
+    height: 25%;
+    width: 30%;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    background-color: #891437;
+}
+
+.container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    
+}
+
+.error_404_message{
+    color: white;
+    font-size: 1rem;
+}
+
+.error_404_message h2{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.error_404_message h2:hover{
+    color: #FFB81C;
+}
