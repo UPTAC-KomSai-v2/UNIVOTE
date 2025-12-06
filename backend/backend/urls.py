@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/hello/', hello_world),
     path('api/login/', login_view),
+    path('api/logout/', logout_view),
     path('api/landing/', landing_view),
     path('api/voter-dashboard/', voter_dashboard_view),
     path('api/voting-page/', voting_page_view),

@@ -15,6 +15,7 @@ import PreviousResults from './pages/AdminDashboard/ViewPreviousResults/Previous
 import AuditorDashboard from './pages/AuditorDashboard/AuditorDashboard';
 import RequireAuth from './components/RequireAuth';
 
+
 function App() {
   // const [message, setMessage] = useState('');
 

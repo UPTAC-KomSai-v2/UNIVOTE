@@ -12,4 +12,9 @@ class CookieJWTAuthentication(JWTAuthentication):
         except Exception:
             return None
         
-        return self.get_user(validated_token), validated_token
+        user = self.get_user(validated_token)
+        
+        if user is None:
+            raise AuthenticationFailed("User not found")
+        
+        return (user, validated_token)
