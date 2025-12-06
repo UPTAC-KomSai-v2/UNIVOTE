@@ -18,7 +18,7 @@ export default function LoginForm({ role }) {
         try {
             console.log(email)
             console.log(password)
-            const response = await api.post("/api/login", { email, password });
+            const response = await api.post("/api/login/", { email, password });
 
             localStorage.setItem('userRole', response.data.role);
             navigate(response.data.redirect_url);

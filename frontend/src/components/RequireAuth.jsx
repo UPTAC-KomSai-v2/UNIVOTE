@@ -6,13 +6,16 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 const RequireAuth = ({ allowedRoles }) => {
     const location = useLocation();
     const userRole = localStorage.getItem('userRole');
+    
+    console.log("Allowed roles: ", allowedRoles);
+    console.log("User Role: ", userRole)
 
     // if no role found, kick to login
     if (!userRole) {
         return <Navigate to="/" state={{ from: location }} replace />;
     }
 
-    if (!allowedRoles.includes(userRole)) {
+    if (!allowedRoles.map(r => r.toLowerCase()).includes(userRole.toLowerCase())) {
         return <Navigate to="/unauthorized" replace />;
     }
 
