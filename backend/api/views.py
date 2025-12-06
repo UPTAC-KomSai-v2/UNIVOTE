@@ -5,12 +5,14 @@ from django.db.models import Prefetch
 from django.db import transaction
 from django.db.models import Count, Q
 from rest_framework import status
-import uuid
-
-# Create your views here.
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-
+from django.middleware.csrf import get_token
+from django.contrib.auth.hashers import check_password
+import uuid
 from .models import User, Vote, Election, CandidateProfile, Position, VoterProfile, CandidateForPosition, TallyResult
 
 @api_view(['GET'])
@@ -22,48 +24,66 @@ def landing_view(request):
     return Response({"message": "Landing Page"})
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
-    role = request.data.get('role')
 
-    dashboard_urls = {
-        'Admin': '/admin-dashboard',
-        'Candidate': '/candidate-dashboard',
-        'Voter': '/voter-dashboard',
-        'Auditor': '/auditor-dashboard'
-    }
+    if not email or not password:
+        return Response({"error": "Email and password are required"}, status = 400)
+    
+    try:
+        user = User.objects.get(email=email)
 
-    if email == "voter@up.edu.ph" and password == "password0123.." and role == "Voter":
-        return Response({
-            "message": "Login Successful!",
-            "redirect_url": dashboard_urls.get(role, '/voter-dashboard'),
-            "role": role
-        }, status=200)
-    
-    if email == "admin@up.edu.ph" and password == "password0123.." and role == "Admin":
-        return Response({
-            "message": "Login Successful!",
-            "redirect_url": dashboard_urls.get(role, '/admin-dashboard'),
-            "role": role
-        }, status=200)
-    
-    if email == "candidate@up.edu.ph" and password == "password0123.." and role == "Candidate":
-        return Response({
-            "message": "Login Successful!",
-            "redirect_url": dashboard_urls.get(role, '/candidate-dashboard'),
-            "role": role
-        }, status=200)
-    
-    if email == "auditor@up.edu.ph" and password == "password0123.." and role == "Auditor":
-        return Response({
-            "message": "Login Successful!",
-            "redirect_url": dashboard_urls.get(role, '/auditor-dashboard'),
-            "role": role
-        }, status=200)
+        if check_password(password, user.password):
+
+            # Generate Tokens
+            refresh = RefreshToken.for_user(user)
+
+            # Map roles to dashboards
+            role_dashboard_map = {
+                'admin': '/admin-dashboard',
+                'voter': '/voter-dashboard',
+                'candidate': '/candidate-dashboard',
+                'auditor': '/auditor-dashboard'
+            }
+            destination = role_dashboard_map.get(user.role, '/voter-dashboard')
+
+            response = Response({
+                "message": "Login Successful",
+                "role": user.role,
+                "redirect_url": destination
+            })
+
+            # Set HttpOnly Cookies
+            response.set_cookie(
+                'access_token',
+                str(refresh.access_token),
+                httponly=True,
+                samesite='Lax',
+                secure='False', # set True in production (HTTPS)
+            )
+            response.set_cookie(
+                'refresh_token',
+                str(refresh),
+                httponly=True,
+                samesite='Lax',
+                secure=False,
+            )
+            return response
         
-    else:
-        return Response({"message": "Invalid credentials."}, status=401)
+        else:
+            return Response({"error": "Invalid Password"}, status=401)
+        
+    except User.DoesNotExist:
+        return Response({"error": "Invalid Credentials"}, status=401)
+        
+@api_view(['POST'])
+def logout_view(request):
+    response = Response({"message": "Logged out successfully"})
+    response.delete_cookie('access_token')
+    response.delete_cookie('refresh_token')
+    return response
 
 @api_view(['POST'])
 def voter_dashboard_view(request):

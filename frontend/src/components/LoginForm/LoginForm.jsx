@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from "../../api";
 
 import './LoginForm.css';
 
@@ -16,18 +16,14 @@ export default function LoginForm({ role }) {
         setError("");
 
         try {
-            const response = await axios.post("http://localhost:8000/api/login/", {
-                email,
-                password,
-                role
-            });
-            
-            console.log("Login successful:", response.data);
-            const destination = response.data.redirect_url; 
-            navigate(destination);
+            console.log(email)
+            console.log(password)
+            const response = await api.post("/api/login", { email, password });
+
+            localStorage.setItem('userRole', response.data.role);
+            navigate(response.data.redirect_url);
         } catch (error) {
-            console.error(error); // Helpful for debugging
-            setError("Invalid email or password");
+            setError("Invalid credentials");
         }
     };
 

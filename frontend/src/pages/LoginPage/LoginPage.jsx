@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useLocation} from "react-router-dom";
 import Card from "../../components/Card/Card";
 import LoginForm from "../../components/LoginForm/LoginForm";
@@ -10,7 +10,7 @@ export default function LoginPage() {
   const location = useLocation();
 
   const userRole = location.state?.role || 'Voter';
-
+  
   useEffect(() => {
     document.body.classList.add("login-bg");
     document.body.classList.remove("dashboard-bg"); // optional
