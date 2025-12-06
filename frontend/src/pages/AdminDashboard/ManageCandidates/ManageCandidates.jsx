@@ -16,8 +16,8 @@ export default function ManageCandidates() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [candidateToRemove, setCandidateToRemove] = useState(null);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [candidateName, setCandidateName] = useState('');
+  const [degreeProgram, setDegreeProgram] = useState('');
   const [studentNumber, setStudentNumber] = useState('');
   const [position, setPosition] = useState('');
   const [alias, setAlias] = useState('');
@@ -25,6 +25,17 @@ export default function ManageCandidates() {
   const [description, setDescription] = useState('');
 
   const positions = ['Chairperson', 'Vice Chairperson', 'Councilor'];
+  const programs = ["BS Accountancy", 
+    "BS Applied Mathematics", 
+    "BS Biology", 
+    "BS Computer Science", 
+    "BS Economics",
+    "BA Literature",
+    "BS Management", 
+    "BA Media Arts",
+    "BA Political Science",
+    "BA Psychology",
+  ];
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -50,19 +61,20 @@ export default function ManageCandidates() {
 
   // Add candidate handler
   const handleAddCandidate = async () => {
-    if (!firstName || !lastName || !position) {
-      alert("Please fill in First Name, Last Name, and Position.");
+    if (!candidateName || !degreeProgram || !position) {
+      alert("Please fill in Candidate Name, Degree Program, and Position.");
       return;
     }
 
-    const fullName = `${firstName} ${lastName}`;
-    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@up.edu.ph`;
+    const fullName = `${candidateName}`;
+    const email = `${candidateName.replace(/\s+/g, '').toLowerCase()}@up.edu.ph`;
 
     try {
       const { data } = await api.post("/api/manage-candidates/", {
         email: email,
         name: fullName,
         position: position,
+        course: degreeProgram,
         student_number: studentNumber,
         alias: alias,
         party: party,
@@ -70,10 +82,10 @@ export default function ManageCandidates() {
       });
 
       alert("Candidate added successfully!");
-      setFirstName("");
-      setLastName("");
+      setCandidateName("");
       setStudentNumber("");
       setPosition("");
+      setDegreeProgram("");
       setAlias("");
       setParty("");
       setDescription("");
@@ -159,15 +171,9 @@ export default function ManageCandidates() {
             <div className="top-row">
               <input 
                 type="text" 
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              <input 
-                type="text" 
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Candidate Name"
+                value={candidateName}
+                onChange={(e) => setCandidateName(e.target.value)}
               />
               <input 
                 type="text" 
@@ -175,6 +181,16 @@ export default function ManageCandidates() {
                 value={alias}
                 onChange={(e) => setAlias(e.target.value)}
               />
+              <select
+                className="choose-course"
+                value={degreeProgram} 
+                onChange={(e) => setDegreeProgram(e.target.value)}
+              >
+                <option value="" disabled>Degree Program</option>
+                {programs.map((program) => (
+                  <option key={program} value={program}>{program}</option>
+                ))}
+              </select>
             </div>
 
             <div className="bottom-row">

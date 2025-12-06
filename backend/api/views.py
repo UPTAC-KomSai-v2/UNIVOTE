@@ -465,6 +465,7 @@ def manage_candidates_view(request, id=None):
         data = request.data
         email = data.get("email")
         name = data.get("name")
+        course = data.get("course", "N/A")
         student_number = data.get("student_number")
         position_name = data.get("position")
         alias = data.get("alias", "")
@@ -499,7 +500,7 @@ def manage_candidates_view(request, id=None):
                     VoterProfile.objects.create(
                         email=user,
                         student_number=student_number or "N/A",
-                        course="N/A",
+                        course= course,
                         year_level=1
                     )
 
