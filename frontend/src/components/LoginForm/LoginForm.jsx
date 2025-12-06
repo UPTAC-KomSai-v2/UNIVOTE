@@ -20,6 +20,8 @@ export default function LoginForm({ role }) {
             console.log(password)
             const response = await api.post("/api/login/", { email, password });
 
+            localStorage.setItem('access_token', response.data.access_token);
+            localStorage.setItem('refresh_token', response.data.refresh_token);
             localStorage.setItem('userRole', response.data.role);
             navigate(response.data.redirect_url);
         } catch (error) {

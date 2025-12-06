@@ -111,7 +111,11 @@ export default function AdminDashboard() {
                 Log out from your account?
               </p>
               <div>
-                <button onClick={() => navigate('/')}>YES</button>
+                <button onClick={() => {
+                  localStorage.removeItem('access_token');
+                  localStorage.removeItem('refresh_token');
+                  navigate('/');
+                  }}>YES</button>
                 <button onClick={() => setLogoutConfirmed(false)}>NO</button>
               </div>
             </div>
