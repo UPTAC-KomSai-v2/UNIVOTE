@@ -48,7 +48,7 @@ export default function VotingPage() {
   }, []);
 
   useEffect(() => {
-    api.get(`/voting-page/?position=${candidateType}`)
+    api.get(`/api/voting-page/?position=${candidateType}`)
       .then((res) => {
         const data = res.data;
         setVoterID(data.voter_id);
@@ -192,6 +192,7 @@ export default function VotingPage() {
                 <div>
                   <button onClick={() => {
                       sessionStorage.removeItem("currentVotes"); // Clear votes on logout
+                      api.post("/api/logout/");
                       navigate('/');
                   }}>YES</button>
                   <button onClick={() => setLogoutConfirmed(false)}>NO</button>
