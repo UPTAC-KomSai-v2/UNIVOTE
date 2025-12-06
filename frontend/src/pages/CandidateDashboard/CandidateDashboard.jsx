@@ -4,6 +4,7 @@ import Card from "../../components/Card/Card";
 import "./CandidateDashboard.css";
 import thumbsUp from "../../assets/thumbs-up.png";
 import logout from '../../assets/logout.png'
+import api from '../../api';
 
 export default function CandidateDashboard() {
   const navigate = useNavigate();
@@ -32,7 +33,10 @@ export default function CandidateDashboard() {
                 Log out from your account?
               </p>
               <div>
-                <button onClick={() => navigate('/')}>YES</button>
+                <button onClick={() => {
+                  api.post("/api/logout/");
+                  navigate('/')}}
+                  >YES</button>
                 <button onClick={() => setLogoutConfirmed(false)}>NO</button>
               </div>
             </div>

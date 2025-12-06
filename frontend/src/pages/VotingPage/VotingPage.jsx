@@ -48,7 +48,7 @@ export default function VotingPage() {
   }, []);
 
   useEffect(() => {
-    api.get(`/voting-page/?position=${candidateType}`)
+    api.get(`/api/voting-page/?position=${candidateType}`)
       .then((res) => {
         const data = res.data;
         setVoterID(data.voter_id);
@@ -111,14 +111,6 @@ export default function VotingPage() {
     alert(`Abstention removed for ${candidateType}. You can now vote.`);
   }
 
-  const handleLogoutClick = () => {
-    if (!votingComplete) {
-      alert("Please complete your voting before logging out. Click SUBMIT to finish voting.");
-    } else {
-      setLogoutConfirmed(true);
-    }
-  }
-
   const getCookie = (name) => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -175,12 +167,7 @@ export default function VotingPage() {
   return (
     <div className="voting-page">
       
-        <img 
-          src={logout} 
-          alt="Logout" 
-          className="logout-button" 
-          onClick={handleLogoutClick} 
-        />
+
         {
           logoutConfirmed && (
             <>
@@ -192,6 +179,7 @@ export default function VotingPage() {
                 <div>
                   <button onClick={() => {
                       sessionStorage.removeItem("currentVotes"); // Clear votes on logout
+                      api.post("/api/logout/");
                       navigate('/');
                   }}>YES</button>
                   <button onClick={() => setLogoutConfirmed(false)}>NO</button>
@@ -211,7 +199,7 @@ export default function VotingPage() {
             src={backArrow} 
             alt="Back" 
             className="back-arrow" 
-            onClick={() => navigate(-1)} 
+            onClick={() => navigate('/voter-dashboard')} 
           />
 
 

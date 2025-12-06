@@ -111,7 +111,10 @@ export default function AdminDashboard() {
                 Log out from your account?
               </p>
               <div>
-                <button onClick={() => navigate('/')}>YES</button>
+                <button onClick={() => {
+                  api.post("/api/logout/");
+                  navigate('/')}}
+                  >YES</button>
                 <button onClick={() => setLogoutConfirmed(false)}>NO</button>
               </div>
             </div>

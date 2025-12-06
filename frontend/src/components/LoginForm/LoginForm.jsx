@@ -16,13 +16,29 @@ export default function LoginForm({ role }) {
         setError("");
 
         try {
-            console.log(email)
-            console.log(password)
+            console.log("Email:", email);
+            console.log("Password:", password);
+            
             const response = await api.post("/api/login/", { email, password });
+            
+            console.log("Login response:", response.data);
+            
+            // Debug: Check if cookies are set
+            console.log("All cookies after login:", document.cookie);
+            
+            // Check specifically for access_token
+            const hasAccessToken = document.cookie.includes('access_token');
+            console.log("Has access_token cookie?", hasAccessToken);
 
             localStorage.setItem('userRole', response.data.role);
-            navigate(response.data.redirect_url);
+            
+            // Small delay to ensure cookies are set before navigation
+            setTimeout(() => {
+                navigate(response.data.redirect_url);
+            }, 100);
+            
         } catch (error) {
+            console.error("Login error:", error);
             setError("Invalid credentials");
         }
     };
