@@ -32,12 +32,12 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState("");
 
   const handleButtonClick = () => {
-    fileInputRef.current.click(); // Opens the file explorer
+    fileInputRef.current.click();
   };
   
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
-    document.body.classList.remove("login-bg"); // optional
+    document.body.classList.remove("login-bg");
     return () => document.body.classList.remove("dashboard-bg");
   }, []);
 
@@ -53,10 +53,8 @@ export default function AdminDashboard() {
 
   const handleFileSelect = async (e) => {
     const selectedFile = e.target.files[0];
-    
     if (!selectedFile) return;
 
-    // Proceed directly to upload logic (No need to set state first)
     const formData = new FormData();
     formData.append('file', selectedFile);
 
@@ -68,28 +66,26 @@ export default function AdminDashboard() {
             body: formData 
         });
 
-        const data = await response.json();
-        
         if (response.ok) {
-            setMessage(data.message);
+            setMessage("Upload Successful! Downloading credentials...");
             
-            // Handle Credentials / Success
-            if (data.credentials && data.credentials.length > 0) {
-                console.table(data.credentials);
-                let credsString = "ACCOUNTS CREATED:\n\n";
-                data.credentials.forEach(user => {
-                    credsString += `Name: ${user.name}\nEmail: ${user.email}\nPass: ${user.password}\n\n`;
-                });
-                alert("Upload Success! Check console for full list.\n\n" + credsString);
-            } else if (data.errors && data.errors.length > 0) {
-                alert("Upload complete with skips. Check console.");
-                console.log(data.errors);
-            } else {
-                alert("All users created successfully!");
-            }
+            const blob = await response.blob();
+            
+            const url = window.URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "voter_credentials.csv"; 
+            document.body.appendChild(a); 
+            a.click(); 
+
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            
+            alert("Accounts created! The credentials file has been downloaded.");
         } else {
             setMessage("Upload failed.");
-            alert(data.error || "Upload failed");
+            alert("Server returned an error.");
         }
 
     } catch (error) {

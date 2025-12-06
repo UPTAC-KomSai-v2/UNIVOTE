@@ -11,6 +11,7 @@ import io
 import random
 import string
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponse
 
 # Create your views here.
 from rest_framework import status
@@ -753,17 +754,18 @@ def auditor_dashboard_view(request):
 @parser_classes([MultiPartParser, FormParser])
 def upload_voters_view(request):
     if 'file' not in request.FILES:
-        return Response({"error": "No file uploaded"}, status=400)
+        return HttpResponse("No file uploaded", status=400)
 
     file_obj = request.FILES['file']
     decoded_file = file_obj.read().decode('utf-8')
     io_string = io.StringIO(decoded_file)
     reader = csv.DictReader(io_string)
     
-    created_count = 0
-    errors = []
-    
-    generated_credentials = [] 
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="voter_credentials.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Email', 'Password', 'Status'])
 
     for row in reader:
         try:
@@ -774,7 +776,7 @@ def upload_voters_view(request):
             year_level = row.get('year_level', 1)
 
             if User.objects.filter(email=email).exists():
-                errors.append(f"Skipped {email}: Already exists")
+                writer.writerow([name, email, "N/A", "Skipped: Already Exists"])
                 continue
 
             plain_password = generate_password() 
@@ -793,22 +795,12 @@ def upload_voters_view(request):
                 year_level=int(year_level)
             )
             
-            generated_credentials.append({
-                "name": name,
-                "email": email,
-                "password": plain_password
-            })
-            
-            created_count += 1
+            writer.writerow([name, email, plain_password, "Created"])
 
         except Exception as e:
-            errors.append(f"Error on row {row}: {str(e)}")
+            writer.writerow([row.get('name', 'Unknown'), row.get('email', 'Unknown'), "N/A", f"Error: {str(e)}"])
 
-    return Response({
-        "message": f"Successfully created {created_count} voters.",
-        "errors": errors,
-        "credentials": generated_credentials
-    }, status=200)
+    return response
 
 def generate_password(length=10):
     upper = string.ascii_uppercase
@@ -826,6 +818,6 @@ def generate_password(length=10):
         password_chars.append(random.choice(all_chars))
         
     random.shuffle(password_chars)
-    
+
     return "".join(password_chars)
 
