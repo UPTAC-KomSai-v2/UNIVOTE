@@ -16,13 +16,13 @@ import PreviousResults from './pages/AdminDashboard/ViewPreviousResults/Previous
 import AuditorDashboard from './pages/AuditorDashboard/AuditorDashboard';
 
 function App() {
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/hello/')
-      .then(response => setMessage(response.data.message))
-      .catch(error => console.error(error));
-  }, []);  
+  // useEffect(() => {
+  //   axios.get('http://127.0.0.1:8000/api/hello/')
+  //     .then(response => setMessage(response.data.message))
+  //     .catch(error => console.error(error));
+  // }, []);  
 
   return(
     <Router>
