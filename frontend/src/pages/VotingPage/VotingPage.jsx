@@ -146,7 +146,7 @@ export default function VotingPage() {
     }
 
     try {
-        const response = await api.post("/voting-page/", {
+        const response = await api.post("/api/voting-page/", {
           candidates: selectedCandidates.length > 0 ? selectedCandidates : [],
           abstained_positions: abstainedPositions
         });
