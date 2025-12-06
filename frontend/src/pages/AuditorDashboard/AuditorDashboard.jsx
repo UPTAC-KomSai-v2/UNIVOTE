@@ -5,6 +5,7 @@ import CustomPieChart from "../../components/PieChart/CustomPieChart";
 import "./AuditorDashboard.css";
 import backArrow from '../../assets/back-button-white.png'
 import logout from '../../assets/logout.png'
+import api from "../../api";
 
 export default function AuditorDashboard() {
   const navigate = useNavigate();
@@ -44,18 +45,21 @@ export default function AuditorDashboard() {
   }, [year]);
 
   useEffect(() => {
-  // GET voter data
-    fetch(`http://localhost:8000/api/auditor-dashboard/`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchAuditorDashboard = async () => {
+      try {
+        const { data } = await api.get("/api/auditor-dashboard/");
         setVoterChartData(data.voter_results)
         setTotalVoters(data.total_voters)
         setTotalNumberOfVoters(data.total_number_of_voters)
         setChairpersonChartData(data.chairperson_results)
         setViceChairpersonChartData(data.vice_chairperson_results)
         setCouncilorChartData(data.councilor_results)
+      } catch (error) {
+        console.error("Error fetching auditor dashboard data:", error);
+      }
+    };
 
-      });
+    fetchAuditorDashboard()
   }, []);
 
   useEffect(() => {

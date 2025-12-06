@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../../components/Card/Card";
 import CandidateCard from "../../../components/CandidateCard/CandidateCard";
 import "./ManageCandidates.css";
-import backArrow from '../../../assets/back-button-white.png'
+import backArrow from '../../../assets/back-button-white.png';
+import api from "../../../api";
 
 export default function ManageCandidates() {
   const navigate = useNavigate();
@@ -34,8 +35,7 @@ export default function ManageCandidates() {
   // Fetch candidates from backend
   const fetchCandidates = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/manage-candidates/");
-      const data = await res.json();
+      const { data } = await api.get("/api/manage-candidates/");
       setChairpersons(data.chairpersons || []);
       setViceChairpersons(data.vice_chairpersons || []);
       setCouncilors(data.councilors || []);
@@ -59,41 +59,28 @@ export default function ManageCandidates() {
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@up.edu.ph`;
 
     try {
-      const response = await fetch("http://localhost:8000/api/manage-candidates/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          name: fullName,
-          position: position,
-          student_number: studentNumber,
-          alias: alias,
-          party: party,
-          description: description
-        })
+      const { data } = await api.post("/api/manage-candidates/", {
+        email: email,
+        name: fullName,
+        position: position,
+        student_number: studentNumber,
+        alias: alias,
+        party: party,
+        description: description
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Candidate added successfully!");
-        setFirstName("");
-        setLastName("");
-        setStudentNumber("");
-        setPosition("");
-        setAlias("");
-        setParty("");
-        setDescription("");
-        fetchCandidates(); // Refresh list
-      } else {
-        alert(data.error || "Failed to add candidate.");
-      }
-
+      alert("Candidate added successfully!");
+      setFirstName("");
+      setLastName("");
+      setStudentNumber("");
+      setPosition("");
+      setAlias("");
+      setParty("");
+      setDescription("");
+      fetchCandidates(); // Refresh list
     } catch (error) {
       console.error("Add candidate error:", error);
-      alert("An error occurred while adding candidate.");
+      alert(error.response?.data?.error || "An error occurred while adding candidate.");
     }
   };
 
@@ -102,29 +89,20 @@ export default function ManageCandidates() {
     if (!candidateToRemove) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/manage-candidates/${candidateToRemove.id}/`, {
-        method: "DELETE",
-      });
+      await api.delete(`/api/manage-candidates/${candidateToRemove.id}/`);
+      alert(`Candidate ${candidateToRemove.name} removed successfully!`);
 
-      if (response.ok) {
-        alert(`Candidate ${candidateToRemove.name} removed successfully!`);
-
-        // Remove from state
-        const { id, position } = candidateToRemove;
-        if (position === "Chairperson") {
-          setChairpersons(chairpersons.filter(c => c.id !== id));
-        } else if (position === "Vice Chairperson") {
-          setViceChairpersons(viceChairpersons.filter(c => c.id !== id));
-        } else if (position === "Councilor") {
-          setCouncilors(councilors.filter(c => c.id !== id));
-        }
-      } else {
-        const data = await response.json();
-        alert(data.error || "Failed to remove candidate.");
+      const { id, position } = candidateToRemove;
+      if (position === "Chairperson") {
+        setChairpersons(chairpersons.filter(c => c.id !== id));
+      } else if (position === "Vice Chairperson") {
+        setViceChairpersons(viceChairpersons.filter(c => c.id !== id));
+      } else if (position === "Councilor") {
+        setCouncilors(councilors.filter(c => c.id !== id));
       }
     } catch (error) {
       console.error("Remove candidate error:", error);
-      alert("An error occurred while removing the candidate.");
+      alert(error.response?.data?.error || "An error occurred while removing the candidate.");
     } finally {
       setIsSubmitted(false);
       setCandidateToRemove(null);

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../../components/Card/Card";
 import "./VoteReceipt.css";
 import backButton from '../../../assets/back-button-white.png'
+import api from "../../../api";
 
 export default function VoteReceipt() {
   const navigate = useNavigate();
@@ -15,14 +16,14 @@ export default function VoteReceipt() {
   }, []);
 
   useEffect(() => {
-    // GET voter data
-    fetch("http://localhost:8000/api/vote-receipt-page/")
-      .then(res => res.json())
-      .then(data => {
-        console.log(data); // Good for debugging
-        setReceipt(data);  // Save the ENTIRE response object
+    api.get("/api/vote-receipt-page/")
+      .then((res) => {
+        console.log(res.data);
+        setReceipt(res.data);
       })
-      .catch(err => console.error("Error fetching receipt:", err));
+      .catch((err) => {
+        console.error("Error fetching receipt:", err);
+      });
   }, []);
 
   // Format time to Philippine Time (UTC+8)

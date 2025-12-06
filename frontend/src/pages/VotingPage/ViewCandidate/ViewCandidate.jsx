@@ -5,6 +5,7 @@ import Card from "../../../components/Card/Card";
 import "./ViewCandidate.css";
 import backArrow from '../../../assets/back-button-white.png'
 import loi from '../../../assets/loi.jpg'
+import api from "../../../api";
 
 export default function ViewCandidate() {
   const navigate = useNavigate();
@@ -21,31 +22,26 @@ export default function ViewCandidate() {
   }, []);
 
   useEffect(() => {
-    // GET voter data
-    fetch("http://localhost:8000/api/voting-page/")
-      .then(res => res.json())
-      .then(data => {
-        setVoterID(data.voter_id);
+    api.get("/api/voting-page")
+      .then((res) => {
+        setVoterID(res.data.voter_id);
       })
-      .catch(err => console.error("Error fetching voter:", err));
+      .catch((err) => {
+        console.error("Error fetching voter:", err);
+      });
   }, []);
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8000/api/view-candidate/${id}/`)
+
+    api.get(`/api/view-candidate/${id}`)
       .then(res => {
-        if (!res.ok) {
-          throw new Error('Candidate not found');
-        }
-        return res.json();
-      })
-      .then(data => {
-        setCandidate(data.candidate);
+        setCandidate(res.data.candidate);
         setLoading(false);
       })
       .catch(err => {
         console.error("Error fetching candidate:", err);
-        setError(err.message);
+        setError(err.response?.data?.detail || "Candidate not found");
         setLoading(false);
       });
   }, [id]);

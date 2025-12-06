@@ -5,6 +5,7 @@ import CandidateCard from "../../components/CandidateCard/CandidateCard";
 import "./VotingPage.css";
 import backArrow from '../../assets/back-button-white.png'
 import logout from '../../assets/logout.png'
+import api from "../../api";
 
 export default function VotingPage() {
   const navigate = useNavigate();
@@ -47,15 +48,17 @@ export default function VotingPage() {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/voting-page/?position=${candidateType}`)
-      .then(res => res.json())
-      .then(data => {
+    api.get(`/voting-page/?position=${candidateType}`)
+      .then((res) => {
+        const data = res.data;
         setVoterID(data.voter_id);
         setCandidates(data.candidates);
-        
         if (data.max_votes) {
-            setCandidateNumChoice(data.max_votes);
+          setCandidateNumChoice(data.max_votes);
         }
+      })
+      .catch((err) => {
+        console.error("Error loading voting page:", err);
       });
   }, [candidateType]);
 
@@ -143,38 +146,28 @@ export default function VotingPage() {
     }
 
     try {
-        const response = await fetch("http://localhost:8000/api/voting-page/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ 
-              candidates: selectedCandidates.length > 0 ? selectedCandidates : [],
-              abstained_positions: abstainedPositions
-            }) 
+        const response = await api.post("/voting-page/", {
+          candidates: selectedCandidates.length > 0 ? selectedCandidates : [],
+          abstained_positions: abstainedPositions
         });
 
-        // Check for success
-        if (response.ok) {
-            setIsSubmitted(false); 
-            setVotingComplete(true);
-            setSubmissionConfirmed(true); 
-            sessionStorage.removeItem("currentVotes");
-        } else {
-            const errorData = await response.json();
-            
-            // Check if error is "already voted"
-            if (errorData.error && errorData.error.includes('You have already cast your votes!')) {
-                alert(errorData.error + "\n\nYou can now logout.");
-                setVotingComplete(true); // Allow logout
-            } else {
-                alert(errorData.error || "Error submitting votes.");
-            }
-            setIsSubmitted(false);
-        }
+        setIsSubmitted(false); 
+        setVotingComplete(true);
+        setSubmissionConfirmed(true); 
+        sessionStorage.removeItem("currentVotes");
+
     } catch (error) {
-        console.error("Network error:", error);
-        alert("Network error. Please try again.");
+        console.error("Submit error:", error);
+        
+        const errorMessage = error.response?.data?.error || "Error submitting votes.";
+
+        if (errorMessage.includes("already cast your votes")) {
+          alert(errorMessage + "\n\nYou can now logout.");
+          setVotingComplete(true);
+        } else {
+          alert(errorMessage);
+        }
+        
         setIsSubmitted(false);
     }
   };

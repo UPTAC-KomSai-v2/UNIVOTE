@@ -5,6 +5,7 @@ import CandidateCard from "../../components/CandidateCard/CandidateCard";
 import "./AdminDashboard.css";
 import backArrow from '../../assets/back-button-white.png'
 import logout from '../../assets/logout.png'
+import api from "../../api";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -42,13 +43,18 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/admin-dashboard/`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchDashboardData = async () => {
+      try {
+        const { data } = await api.get('/api/admin-dashboard/');
         setChairpersons(data.chairpersons);
         setViceChairpersons(data.vice_chairpersons);
         setCouncilors(data.councilors);
-      });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchDashboardData()
   }, []);
 
   const handleFileSelect = async (e) => {
@@ -61,39 +67,30 @@ export default function AdminDashboard() {
     try {
         setMessage("Uploading...");
         
-        const response = await fetch("http://localhost:8000/api/upload-voters/", {
-            method: "POST",
-            body: formData 
+        const response = await api.post("/api/upload-voters/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          responseType: "blob"
         });
 
-        if (response.ok) {
-            setMessage("Upload Successful! Downloading credentials...");
-            
-            const blob = await response.blob();
-            
-            const url = window.URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "voter_credentials.csv"; 
-            document.body.appendChild(a); 
-            a.click(); 
+        setMessage("Upload Successful! Downloading credentials...");
+        
+        const url = window.URL.createObjectURL(response.data)
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "voter_credentials.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
 
-            a.remove();
-            window.URL.revokeObjectURL(url);
-            
-            alert("Accounts created! The credentials file has been downloaded.");
-        } else {
-            setMessage("Upload failed.");
-            alert("Server returned an error.");
-        }
-
+        alert("Accounts created! The credentials file has been downloaded.");
     } catch (error) {
         console.error(error);
-        setMessage("Network Error");
+        setMessage("Upload failed.");
+        alert("Server returned an error.");
     }
-    
-    e.target.value = null; 
   };
 
   

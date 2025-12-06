@@ -5,6 +5,7 @@ import CustomPieChart from "../../../components/PieChart/CustomPieChart";
 import "./PreviousResults.css";
 import backArrow from '../../../assets/back-button-white.png'
 import logout from '../../../assets/logout.png'
+import api from "../../../api";
 
 export default function PreviousResults() {
   const navigate = useNavigate();
@@ -45,18 +46,22 @@ export default function PreviousResults() {
   }, [year]);
 
   useEffect(() => {
-  // GET voter data
-    fetch(`http://localhost:8000/api/view-previous-results/?year=${yearSelected}`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchPreviousResults = async () => {
+      try {
+        const { data } = await api.get(`/api/view-previous-results/?year=${yearSelected}`);
+
         setVoterChartData(data.voter_results)
         setTotalVoters(data.total_voters)
         setTotalNumberOfVoters(data.total_number_of_voters)
         setChairpersonChartData(data.chairperson_results)
         setViceChairpersonChartData(data.vice_chairperson_results)
         setCouncilorChartData(data.councilor_results)
-
-      });
+      } catch (error) {
+        console.error("Error fetching previous results:", error);
+      }
+    };
+    
+    fetchPreviousResults();
   }, [yearSelected]);
 
   useEffect(() => {

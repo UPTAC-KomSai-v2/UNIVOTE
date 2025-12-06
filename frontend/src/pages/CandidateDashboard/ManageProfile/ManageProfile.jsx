@@ -4,6 +4,7 @@ import Card from "../../../components/Card/Card";
 import "./ManageProfile.css";
 import backButton from '../../../assets/back-button-white.png'
 import loi from '../../../assets/loi.jpg'
+import api from "../../../api";
 
 export default function ManageProfile() {
   const navigate = useNavigate();
@@ -23,14 +24,20 @@ export default function ManageProfile() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/manage-profile-page/")
-      .then(res => res.json())
-      .then(data => {
-        setVoterID(data.voter_id)
+    const fetchProfile = async () => {
+      try {
+        const { data } = await api.get("/api/manage-profile-page/");
+
+        setVoterID(data.voter_id);
         if (data.profile && data.profile[0]) {
-            setProfile(data.profile[0]);
+          setProfile(data.profile[0]);
         }
-      });
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchProfile()
   }, []);
 
   const handleInputChange = (e) => {
@@ -43,24 +50,13 @@ export default function ManageProfile() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/manage-profile-page/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(profile)
-      });
+      const response = await api.post("/api/manage-profile-page/", profile);
 
-      if (response.ok) {
-        console.log("Profile saved!");
-        navigate('/candidate-dashboard'); 
-      } else {
-        alert("Failed to save profile. Check console for details.");
-      }
-
+      console.log("Profile saved!");
+      navigate('/candidate-dashboard');
     } catch (error) {
-      console.error("Network error:", error);
-      alert("Could not connect to server.");
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile.");
     }
   };
   
