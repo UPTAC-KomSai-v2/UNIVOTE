@@ -19,4 +19,6 @@ urlpatterns = [
     path('api/manage-candidates/<str:id>/', manage_candidates_view),  
     path('api/view-previous-results/', view_previous_results),
     path('api/auditor-dashboard/', auditor_dashboard_view),
+    path('api/auditor-dashboard/', auditor_dashboard_view),
+    path('api/upload-voters/', upload_voters_view),
 ]
