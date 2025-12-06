@@ -28,7 +28,6 @@ from django.middleware.csrf import get_token
 from django.contrib.auth.hashers import check_password
 import uuid
 from .models import User, Vote, Election, CandidateProfile, Position, VoterProfile, CandidateForPosition, TallyResult
-from .authentication import CookieJWTAuthentication 
 from django.http import JsonResponse
 
 @api_view(['GET'])
@@ -66,30 +65,14 @@ def login_view(request):
             'auditor': '/auditor-dashboard'
         }
         destination = role_dashboard_map.get(user.role, '/voter-dashboard')
-
-        response = Response({
+            
+        return Response({
             "message": "Login Successful",
             "role": user.role,
-            "redirect_url": destination
+            "redirect_url": destination,
+            "access_token": access_token,
+            "refresh_token": str(refresh)
         })
-
-        # Set HttpOnly Cookies
-        response.set_cookie(
-            key='access_token',
-            value=access_token,
-            httponly=True,
-            secure=False,
-            samesite='Lax'
-        )
-        response.set_cookie(
-            key='refresh_token',
-            value=str(refresh),
-            httponly=True,
-            secure=False,
-            samesite='Lax' 
-        )
-            
-        return response
         
     except User.DoesNotExist:
         return JsonResponse({"error": "Invalid Credentials"}, status=401)
@@ -97,8 +80,6 @@ def login_view(request):
 @api_view(['POST'])
 def logout_view(request):
     response = Response({"message": "Logged out successfully"})
-    response.delete_cookie('access_token')
-    response.delete_cookie('refresh_token')
     return response
 
 @api_view(['POST'])
@@ -333,7 +314,6 @@ def view_candidate_page_view(request, id):
         return Response({"error": "Internal Server Error"}, status=500)
     
 @api_view(['GET', 'POST'])
-@authentication_classes([CookieJWTAuthentication])
 @permission_classes([IsAuthenticated])
 def admin_dashboard_view(request):
     if request.method == 'GET':
