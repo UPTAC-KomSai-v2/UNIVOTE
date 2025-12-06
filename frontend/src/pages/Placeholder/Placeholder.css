@@ -31,6 +31,8 @@
 
 .error_404_message h2{
     font-size: 2rem;
+    text-shadow: 1px 1px 0 #4d0013, 2px 2px 0 #4d0013;
+    font-weight: 800;
     margin-bottom: 1rem;
 }
 
