@@ -50,12 +50,16 @@ function App() {
         <Route element={<RequireAuth allowedRoles={['Admin']} />}>
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/manage-candidates" element={<ManageCandidates />} />
-          <Route path="/view-previous-results" element={<PreviousResults />} />
         </Route>
 
         {/* AUDITOR Routes */}
         <Route element={<RequireAuth allowedRoles={['Auditor']} />}>
           <Route path="/auditor-dashboard" element={<AuditorDashboard />} />
+        </Route>
+
+        {/* SHARED Routes (Admin & Auditor) */}
+        <Route element={<RequireAuth allowedRoles={['Admin', 'Auditor']} />}>
+             <Route path="/view-previous-results" element={<PreviousResults />} />
         </Route>
 
         {/* Catch all for 404 */}

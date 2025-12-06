@@ -199,9 +199,12 @@ def voting_page_view(request):
             return Response({"error": str(e)}, status=500)
             
 @api_view(['GET', 'POST'])
+@authentication_classes([CookieJWTAuthentication])
+@permission_classes([IsAuthenticated])
 def manage_profile_page_view(request):
-    
-    target_email = "candidate@up.edu.ph" 
+    # Use the authenticated user instead of hardcoded email
+    current_user = request.user
+    target_email = current_user.email
     
     if request.method == 'GET':
         try:
@@ -296,6 +299,8 @@ def vote_receipt_page_view(request):
         return Response({"message": "Manage Profile Page"})
     
 @api_view(['GET'])
+@authentication_classes([CookieJWTAuthentication])
+@permission_classes([IsAuthenticated])
 def view_candidate_page_view(request, id):
     target_email = id 
 

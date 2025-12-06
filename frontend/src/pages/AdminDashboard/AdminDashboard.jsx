@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; // Added useRef
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../../components/Card/Card";
 import CandidateCard from "../../components/CandidateCard/CandidateCard";
@@ -9,7 +9,6 @@ import api from "../../api";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-//   const location = useLocation();
 
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
@@ -31,6 +30,7 @@ export default function AdminDashboard() {
   const fileInputRef = useRef(null);
 
   const [message, setMessage] = useState("");
+  const [dateMessage, setDateMessage] = useState(""); // New state for date validation messages
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
@@ -90,6 +90,55 @@ export default function AdminDashboard() {
         console.error(error);
         setMessage("Upload failed.");
         alert("Server returned an error.");
+    }
+  };
+
+  // Convert month name to number (0-11)
+  const getMonthNumber = (monthName) => {
+    return months.indexOf(monthName);
+  };
+
+  // Create Date object from month/day/year selections
+  const createDate = (month, day, year) => {
+    const monthNum = getMonthNumber(month);
+    return new Date(parseInt(year), monthNum, parseInt(day));
+  };
+
+  // Validate and publish dates
+  const handlePublishDate = async () => {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+
+    const startDate = createDate(startMonth, startDay, startYear);
+    const endDate = createDate(endMonth, endDay, endYear);
+
+    // Validation 1: Start date must be later than current date
+    if (startDate <= currentDate) {
+      setDateMessage("Error: Start date must be later than the current date.");
+      setTimeout(() => setDateMessage(""), 5000);
+      return;
+    }
+
+    // Validation 2: End date must be later than start date
+    if (endDate <= startDate) {
+      setDateMessage("Error: End date must be later than the start date.");
+      setTimeout(() => setDateMessage(""), 5000);
+      return;
+    }
+
+    // If validation passes, send to backend
+    try {
+      const response = await api.post("/api/publish-voting-period/", {
+        start_date: startDate.toISOString().split('T')[0], // Format: YYYY-MM-DD
+        end_date: endDate.toISOString().split('T')[0]
+      });
+
+      setDateMessage("Success: Voting period has been published!");
+      setTimeout(() => setDateMessage(""), 5000);
+    } catch (error) {
+      console.error("Error publishing dates:", error);
+      setDateMessage("Error: Failed to publish voting period.");
+      setTimeout(() => setDateMessage(""), 5000);
     }
   };
 
@@ -225,10 +274,24 @@ export default function AdminDashboard() {
                         </select>
                     </div>
                 </div>
+
+                {/* Date validation message */}
+                {dateMessage && (
+                    <p style={{
+                        marginTop: '10px',
+                        fontSize: '0.9rem',
+                        color: dateMessage.startsWith('Success') ? '#4CAF50' : '#f44336',
+                        fontWeight: 'bold'
+                    }}>
+                        {dateMessage}
+                    </p>
+                )}
             </div>
             
             <div className="admin-buttons">
-              <button className="publish-date">Publish Date</button>
+              <button className="publish-date" onClick={handlePublishDate}>
+                Publish Date
+              </button>
               <button className="manage-candidates-button" onClick={() => navigate('/manage-candidates')}>
                   Manage Candidates
               </button>
