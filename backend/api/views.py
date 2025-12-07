@@ -392,7 +392,6 @@ def view_candidate_page_view(request, id):
         return Response({"error": "Internal Server Error"}, status=500)
     
 @api_view(['GET', 'POST'])
-@authentication_classes([CookieJWTAuthentication])
 @permission_classes([IsAuthenticated])
 def admin_dashboard_view(request):
     if request.method == 'GET':
