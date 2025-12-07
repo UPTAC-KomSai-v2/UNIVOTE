@@ -88,7 +88,11 @@ export default function ManageProfile() {
         });
       } else {
         // Just update text fields
-        const response = await api.post("/api/manage-profile-page/", profile);
+        const response = await api.post("/api/manage-profile-page/", profile, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
 
       console.log("Profile saved!");
