@@ -105,12 +105,6 @@ export default function AuditorDashboard() {
           title="UniVote"
           description="University-wide Student Council Election Management System"
         >
-          <img 
-            src={backArrow} 
-            alt="Back" 
-            className="back-arrow" 
-            onClick={() => navigate(-1)} 
-          />
 
           <div className="candidateButtons">
             <button onClick={() => {navigate('/auditor-dashboard/?year=2025')}}>

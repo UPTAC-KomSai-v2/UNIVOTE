@@ -471,15 +471,21 @@ def manage_candidates_view(request, id=None):
         data = request.data
         email = data.get("email")
         name = data.get("name")
-        course = data.get("course", "N/A")
+        course = data.get("course")
         student_number = data.get("student_number")
         position_name = data.get("position")
         alias = data.get("alias", "")
         party = data.get("party", "")
         description = data.get("description", "")
 
-        if not email or not name or not position_name:
-            return Response({"error": "Email, name, and position are required."}, status=status.HTTP_400_BAD_REQUEST)
+        if not email:
+            return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not name:
+            return Response({"error": "name is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not position_name:
+            return Response({"error": "position is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # Get the 2025 election
@@ -491,12 +497,15 @@ def manage_candidates_view(request, id=None):
 
         try:
             with transaction.atomic():
-                # Create User if not exists
+                plain_password = generate_password() 
+
+                print(f"Generated password for {email}: {plain_password}")
+
                 user, created = User.objects.get_or_create(
                     email=email,
                     defaults={
                         "name": name,
-                        "password": "defaultpassword",
+                        "password": make_password(plain_password),
                         "role": "candidate"
                     }
                 )
@@ -504,10 +513,10 @@ def manage_candidates_view(request, id=None):
                 # Create VoterProfile if not exists
                 if not VoterProfile.objects.filter(email=user).exists():
                     VoterProfile.objects.create(
-                        email=user,
-                        student_number=student_number or "N/A",
-                        course= course,
-                        year_level=1
+                        email = user,
+                        student_number = student_number,
+                        course = course,
+                        year_level = 1
                     )
 
                 # Create or get CandidateProfile
