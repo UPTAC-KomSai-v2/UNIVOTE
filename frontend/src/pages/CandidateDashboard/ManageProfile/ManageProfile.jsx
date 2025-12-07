@@ -139,8 +139,6 @@ export default function ManageProfile() {
           
           <img className="candidate-image-single" src={imagePreview} alt="Letter of Intent" />
 
-          <button className="edit-pfp-button" onClick={handleEditProfilePicture}>Edit Profile Picture</button>
-
           <div className="profile-details">
             <h1>{profile.name}</h1>
 
