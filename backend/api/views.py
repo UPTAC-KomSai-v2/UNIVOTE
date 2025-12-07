@@ -122,27 +122,74 @@ def voting_page_view(request):
     except VoterProfile.DoesNotExist:
         voter_uuid = "No Profile"
 
+    # 1. Get Election
     election = Election.objects.filter(is_active=True).first()
     
     if not election:
         return Response({"error": "No active election found."}, status=404)
 
+    # 2. Calculate Open Status
     now = timezone.now()
-    
+    is_open = False # Default to closed
+    status_msg = ""
+
     if now < election.start_datetime:
-        status_msg = f"Election starts on {election.start_datetime.strftime('%B %d, %Y at %I:%M %p')}."
-        if request.method == 'POST':
-            return Response({"error": "Voting has not started yet."}, status=400)
-    
+        # Convert to local time for the message so users see 8:00 AM, not UTC time
+        local_start = timezone.localtime(election.start_datetime)
+        status_msg = f"Election starts on {local_start.strftime('%B %d, %Y at %I:%M %p')}."
     elif now > election.end_datetime:
-        # Election is over
         status_msg = "Election has ended."
-        if request.method == 'POST':
-            return Response({"error": "Voting period has ended."}, status=400)
     else:
+        is_open = True # <--- THIS IS THE KEY VARIABLE
         status_msg = "Voting is open."
 
-    if request.method == 'GET':
+    # 3. Handle POST Blocking
+    if request.method == 'POST':
+        # Block request if election is closed
+        if not is_open:
+             return Response({"error": status_msg}, status=400)
+
+        idempotency_key = request.data.get('idempotency_key') 
+        if not idempotency_key:
+             idempotency_key = str(uuid.uuid4()) 
+
+        if Vote.objects.filter(idempotency_key=idempotency_key).exists():
+             return Response({"message": "Vote already processed."}, status=200)
+
+        try:
+            user = User.objects.get(email=current_user_email)
+            
+            with transaction.atomic():
+                if Vote.objects.filter(voter_email=user).exists():
+                     return Response({"error": "You have already cast your votes!"}, status=400)
+
+                selected_candidate_ids = request.data.get('candidates', []) 
+                
+                # Check for empty submission (if not abstaining)
+                # (Optional logic depending on your requirements)
+
+                for cand_email in selected_candidate_ids:
+                    candidate = CandidateProfile.objects.get(email=cand_email)
+                    link = CandidateForPosition.objects.filter(candidate_email=candidate).first()
+                    
+                    if link:
+                        Vote.objects.create(
+                            election=election,
+                            voter_email=user,
+                            position=link.position,
+                            candidate_email=candidate,
+                            encrypted_vote="encrypted_dummy_string",
+                            idempotency_key=idempotency_key, 
+                        )
+
+            return Response({"message": "Votes submitted successfully!"}, status=200)
+
+        except Exception as e:
+            print(f"Error submitting vote: {e}")
+            return Response({"error": str(e)}, status=500)
+
+    # 4. Handle GET Request
+    elif request.method == 'GET':
         requested_position_name = request.GET.get('position', 'Chairperson')
         candidates_data = []
         max_votes_allowed = 1
@@ -178,49 +225,15 @@ def voting_page_view(request):
 
         except Exception as e:
             print(f"Error fetching candidates: {e}")
+
+        # --- THIS IS WHAT WAS MISSING ---
         return Response({
             "voter_id": voter_uuid,
             "max_votes": max_votes_allowed,
-            "candidates": candidates_data
+            "candidates": candidates_data,
+            "is_open": is_open,        # <--- Sending True/False to Frontend
+            "election_status": status_msg
         })
-    elif request.method == 'POST':
-        idempotency_key = request.data.get('idempotency_key') 
-        
-        if not idempotency_key:
-             idempotency_key = str(uuid.uuid4()) 
-
-        if Vote.objects.filter(idempotency_key=idempotency_key).exists():
-             return Response({"message": "Vote already processed."}, status=200)
-
-        try:
-            user = User.objects.get(email=current_user_email)
-            
-            with transaction.atomic():
-                if Vote.objects.filter(voter_email=user).exists():
-                     return Response({"error": "You have already cast your votes!"}, status=400)
-
-                selected_candidate_ids = request.data.get('candidates', []) 
-                election = Election.objects.first()
-
-                for cand_email in selected_candidate_ids:
-                    candidate = CandidateProfile.objects.get(email=cand_email)
-                    link = CandidateForPosition.objects.filter(candidate_email=candidate).first()
-                    
-                    if link:
-                        Vote.objects.create(
-                            election=election,
-                            voter_email=user,
-                            position=link.position,
-                            candidate_email=candidate,
-                            encrypted_vote="encrypted_dummy_string",
-                            idempotency_key=idempotency_key, 
-                        )
-
-            return Response({"message": "Votes submitted successfully!"}, status=200)
-
-        except Exception as e:
-            print(f"Error submitting vote: {e}")
-            return Response({"error": str(e)}, status=500)
             
 @api_view(['GET', 'POST'])
 @authentication_classes([CookieJWTAuthentication])
@@ -895,45 +908,48 @@ from django.utils import timezone # Make sure this is imported
 @permission_classes([IsAuthenticated])
 def check_voter_status(request):
     try:
-        # 1. Get User Object
         email_str = request.user.email 
         try:
             user_obj = User.objects.get(email=email_str)
         except User.DoesNotExist:
              return Response({"has_voted": False, "is_open": False, "message": "User not found"})
 
-        # 2. Check Voting Status
         has_voted = Vote.objects.filter(voter_email=user_obj).exists()
         
-        # 3. Check Election Status
-        now = timezone.now()
+        # 1. Get the Raw UTC 'Now'
+        now_utc = timezone.now()
+        
+        # 2. Convert 'Now' to Local Time (Asia/Manila)
+        now_local = timezone.localtime(now_utc)
+
         election = Election.objects.filter(is_active=True).first()
         
         is_open = False
         message = ""
-        election_data = None # New variable to hold details
+        election_data = None
 
         if not election:
             message = "No active election."
         else:
-            # --- CRITICAL FIX FOR TIMEZONE ---
-            # Convert the UTC database time to your settings.py TIME_ZONE (Asia/Manila)
-            local_start = timezone.localtime(election.start_datetime)
-            local_end = timezone.localtime(election.end_datetime)
+            # 3. Convert Election Dates to Local Time
+            start_local = timezone.localtime(election.start_datetime)
+            end_local = timezone.localtime(election.end_datetime)
 
-            # Pass these details to the frontend
             election_data = {
                 "title": election.title,
-                "start": local_start, 
-                "end": local_end
+                "start": start_local, 
+                "end": end_local
             }
 
-            if now < election.start_datetime:
-                # Format the LOCAL time, not the UTC time
-                start_str = local_start.strftime('%B %d, %Y at %I:%M %p')
+            # 4. Compare Local vs Local
+            # This ensures 9:00 AM Manila is compared against 6:00 AM Manila
+            if now_local < start_local:
+                start_str = start_local.strftime('%B %d, %Y at %I:%M %p')
                 message = f"Election has not started yet (Starts: {start_str})."
-            elif now > election.end_datetime:
+            
+            elif now_local > end_local:
                 message = "Election has ended."
+            
             else:
                 is_open = True
                 message = "Voting is open."
@@ -942,10 +958,11 @@ def check_voter_status(request):
             "has_voted": has_voted,
             "is_open": is_open,
             "message": message,
-            "election": election_data # <--- Now the frontend has the raw dates too
+            "election": election_data 
         })
 
     except Exception as e:
+        print(f"Error checking status: {e}") # Check your terminal for this print if it fails
         return Response({"error": str(e)}, status=500)
     
 @api_view(['POST'])
