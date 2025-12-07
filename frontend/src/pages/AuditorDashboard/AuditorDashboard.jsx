@@ -92,7 +92,11 @@ export default function AuditorDashboard() {
                   Log out from your account?
                 </p>
                 <div>
-                  <button onClick={() => navigate('/')}>YES</button>
+                  <button onClick={() => {
+                    api.post("/api/logout/");
+                    localStorage.removeItem("userRole");
+                    navigate('/');
+                    }}>YES</button>
                   <button onClick={() => setLogoutConfirmed(false)}>NO</button>
                 </div>
               </div>
