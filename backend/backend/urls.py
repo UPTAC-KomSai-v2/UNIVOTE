@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/auditor-dashboard/', auditor_dashboard_view),
     path('api/upload-voters/', upload_voters_view),
     path('api/check-status/', check_voter_status),
+    path('api/publish-voting-period/', publish_voting_period),
 ]

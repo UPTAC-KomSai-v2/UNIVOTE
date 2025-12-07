@@ -49,6 +49,19 @@ export default function AdminDashboard() {
         setChairpersons(data.chairpersons);
         setViceChairpersons(data.vice_chairpersons);
         setCouncilors(data.councilors);
+
+        if (data.election_dates) {
+            const startDate = new Date(data.election_dates.start);
+            const endDate = new Date(data.election_dates.end);
+
+            setStartMonth(months[startDate.getMonth()]); // 0 -> 'Jan'
+            setStartDay(startDate.getDate().toString());
+            setStartYear(startDate.getFullYear().toString());
+
+            setEndMonth(months[endDate.getMonth()]);
+            setEndDay(endDate.getDate().toString());
+            setEndYear(endDate.getFullYear().toString());
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -104,6 +117,13 @@ export default function AdminDashboard() {
     return new Date(parseInt(year), monthNum, parseInt(day));
   };
 
+  const formatDateLocal = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Validate and publish dates
   const handlePublishDate = async () => {
     const currentDate = new Date();
@@ -129,8 +149,8 @@ export default function AdminDashboard() {
     // If validation passes, send to backend
     try {
       const response = await api.post("/api/publish-voting-period/", {
-        start_date: startDate.toISOString().split('T')[0], // Format: YYYY-MM-DD
-        end_date: endDate.toISOString().split('T')[0]
+        start_date: formatDateLocal(startDate), 
+        end_date: formatDateLocal(endDate)
       });
 
       setDateMessage("Success: Voting period has been published!");

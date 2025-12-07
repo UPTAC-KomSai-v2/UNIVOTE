@@ -6,6 +6,7 @@ from django.db import transaction
 from django.db.models import Count, Q
 import uuid
 
+from datetime import datetime
 import csv
 import io
 import random
@@ -394,6 +395,14 @@ def admin_dashboard_view(request):
             positions = Position.objects.filter(election=election).select_related('election')
         
         response_data = {}
+
+        local_start = timezone.localtime(election.start_datetime)
+        local_end = timezone.localtime(election.end_datetime)
+
+        response_data['election_dates'] = {
+            'start': local_start.isoformat(), # e.g. "2025-09-01T08:00:00+08:00"
+            'end': local_end.isoformat()
+        }
 
         for pos in positions:
             candidates_links = CandidateForPosition.objects.filter(position=pos).select_related('candidate_email', 'candidate_email__email')
@@ -937,5 +946,55 @@ def check_voter_status(request):
         })
 
     except Exception as e:
+        return Response({"error": str(e)}, status=500)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def publish_voting_period(request):
+    try:
+        # 1. Get Dates from Frontend (Expected format: YYYY-MM-DD)
+        start_str = request.data.get('start_date') 
+        end_str = request.data.get('end_date')
+
+        if not start_str or not end_str:
+            return Response({"error": "Start date and End date are required."}, status=400)
+
+        # 2. Get the specific election (2025)
+        # Adjust filter if you want to edit other elections
+        election = Election.objects.filter(title__icontains='2025').first()
+        
+        if not election:
+            return Response({"error": "Election not found"}, status=404)
+
+        # 3. Parse strings into naive datetime objects
+        start_d = datetime.strptime(start_str, "%Y-%m-%d") 
+        end_d = datetime.strptime(end_str, "%Y-%m-%d")
+
+        # 4. Set Specific Times
+        # Start: 6:00 AM
+        start_dt = start_d.replace(hour=6, minute=0, second=0, microsecond=0)
+        
+        # End: 11:59 PM (23:59)
+        end_dt = end_d.replace(hour=23, minute=59, second=0, microsecond=0)
+
+        # 5. Make them Timezone Aware (Critical for Django)
+        # This attaches 'Asia/Manila' info so the database saves it correctly
+        election.start_datetime = timezone.make_aware(start_dt)
+        election.end_datetime = timezone.make_aware(end_dt)
+        
+        # 6. Activate and Save
+        election.is_active = True
+        election.save()
+
+        return Response({
+            "message": "Voting period published successfully!",
+            "start": election.start_datetime,
+            "end": election.end_datetime
+        })
+
+    except ValueError:
+        return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+    except Exception as e:
+        print(f"Error publishing dates: {e}")
         return Response({"error": str(e)}, status=500)
 
