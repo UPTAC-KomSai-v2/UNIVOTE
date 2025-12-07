@@ -187,11 +187,6 @@ export default function VotingPage() {
   
   return (
     <div className="voting-page">
-        {!isOpen && (
-           <div style={{ backgroundColor: '#ff6b6b', color: 'white', padding: '10px', textAlign: 'center' }}>
-               WARNING: {statusMessage}
-           </div>
-       )}
         {
           logoutConfirmed && (
             <>
