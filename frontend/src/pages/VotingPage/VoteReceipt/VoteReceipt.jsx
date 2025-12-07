@@ -30,6 +30,20 @@ export default function VoteReceipt() {
       });
   }, []);
 
+  useEffect(() => {
+      window.history.pushState(null, null, window.location.pathname);
+  
+      const handleBackButton = (event) => {
+        window.history.pushState(null, null, window.location.pathname);
+        
+        setLogoutConfirmed(true);
+      };
+      window.addEventListener('popstate', handleBackButton);
+      return () => {
+        window.removeEventListener('popstate', handleBackButton);
+      };
+    }, []);
+
   // Format time function (kept same as yours)
   const formatTime = (timeString) => {
     if (!timeString) return 'N/A';

@@ -40,6 +40,20 @@ export default function VoterDashboard() {
     checkStatus();
   }, []);
 
+  useEffect(() => {
+      window.history.pushState(null, null, window.location.pathname);
+  
+      const handleBackButton = (event) => {
+        window.history.pushState(null, null, window.location.pathname);
+        
+        setLogoutConfirmed(true);
+      };
+      window.addEventListener('popstate', handleBackButton);
+      return () => {
+        window.removeEventListener('popstate', handleBackButton);
+      };
+    }, []);
+
   return (
     <div className="voter-dashboard">
       <img 
