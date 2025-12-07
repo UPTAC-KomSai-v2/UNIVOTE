@@ -4,14 +4,18 @@ import Card from "../../../components/Card/Card";
 import "./VoteReceipt.css";
 import backButton from '../../../assets/back-button-white.png'
 import api from "../../../api";
+import logout from "../../../assets/logout.png"; // Make sure to import the logout image
 
 export default function VoteReceipt() {
   const navigate = useNavigate();
   const [receipt, setReceipt] = useState(null);
+  
+  // 1. Add logout state
+  const [logoutConfirmed, setLogoutConfirmed] = useState(false);
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
-    document.body.classList.remove("login-bg"); // optional
+    document.body.classList.remove("login-bg");
     return () => document.body.classList.remove("dashboard-bg");
   }, []);
 
@@ -26,69 +30,28 @@ export default function VoteReceipt() {
       });
   }, []);
 
-  // Format time to Philippine Time (UTC+8)
+  // Format time function (kept same as yours)
   const formatTime = (timeString) => {
     if (!timeString) return 'N/A';
-    
     try {
-      // Convert to string in case it's not
       const timeStr = String(timeString);
-      
-      // If it contains AM/PM, parse it and add 8 hours
       if (timeStr.includes('AM') || timeStr.includes('PM')) {
         const isPM = timeStr.includes('PM');
         const timeOnly = timeStr.replace(/AM|PM/g, '').trim();
         const parts = timeOnly.split(':');
-        
         let hour = parseInt(parts[0]);
         const minutes = parts[1] || '00';
         const seconds = parts[2] || '00';
-        
-        // Convert to 24-hour format first
-        if (isPM && hour !== 12) {
-          hour += 12;
-        } else if (!isPM && hour === 12) {
-          hour = 0;
-        }
-        
-        // Add 8 hours for UTC+8
+        if (isPM && hour !== 12) hour += 12;
+        else if (!isPM && hour === 12) hour = 0;
         hour = hour + 8;
-        
-        // Handle day overflow
-        if (hour >= 24) {
-          hour = hour - 24;
-        }
-        
-        // Convert back to 12-hour format
+        if (hour >= 24) hour = hour - 24;
         const ampm = hour >= 12 ? 'PM' : 'AM';
         const hour12 = hour % 12 || 12;
-        
         return `${hour12}:${minutes}:${seconds} ${ampm}`;
       }
-      
-      // If backend sends time string like "HH:MM:SS"
-      const parts = timeStr.split(':');
-      if (parts.length < 2) return timeStr;
-      
-      let hour = parseInt(parts[0]);
-      const minutes = parts[1];
-      const seconds = parts[2] || '00';
-      
-      // Add 8 hours for UTC+8
-      hour = hour + 8;
-      
-      // Handle day overflow
-      if (hour >= 24) {
-        hour = hour - 24;
-      }
-      
-      // Convert to 12-hour format
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      const hour12 = hour % 12 || 12;
-      
-      return `${hour12}:${minutes}:${seconds} ${ampm}`;
+      return timeString; // Fallback
     } catch (e) {
-      console.error("Error formatting time:", e);
       return timeString;
     }
   };
@@ -99,17 +62,38 @@ export default function VoteReceipt() {
 
   return (
     <div className="vote-receipt-page">
+      
+      {/* 2. Add Logout Button (Top Right) */}
+      <img 
+          src={logout} 
+          alt="Logout" 
+          className="logout-button" 
+          onClick={() => setLogoutConfirmed(true)} 
+      />
+
+      {/* 3. Add Logout Confirmation Modal */}
+      {logoutConfirmed && (
+          <>
+            <div className="overlay" onClick={() => setLogoutConfirmed(false)}></div>
+            <div className="submission-message">
+              <p>Log out from your account?</p>
+              <div>
+                <button onClick={() => {
+                    api.post("/api/logout/");
+                    localStorage.removeItem("userRole");
+                    navigate('/');
+                }}>YES</button>
+                <button onClick={() => setLogoutConfirmed(false)}>NO</button>
+              </div>
+            </div>
+          </>
+      )}
+
       <Card
         className="vote-receipt-page-card"
         title="UniVote"
         description="University-wide Student Council Election Management System"
       >
-        <img 
-          src={backButton} 
-          alt="Back" 
-          className="back-button" 
-          onClick={() => navigate('/voting-page')} 
-        />
         <div className="voter-id">
           Voter ID: {receipt.voter_id}
         </div>

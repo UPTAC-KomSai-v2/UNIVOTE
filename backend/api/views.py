@@ -274,7 +274,7 @@ def manage_profile_page_view(request):
     
 @api_view(['GET', 'POST'])
 def vote_receipt_page_view(request):
-    current_user_email = "voter1@up.edu.ph"
+    current_user_email = request.user.email
 
     if request.method == 'GET':
         try:
@@ -850,4 +850,15 @@ def generate_password(length=10):
     random.shuffle(password_chars)
 
     return "".join(password_chars)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_voter_status(request):
+    try:
+        current_user_email = request.user.email
+        # Check if ANY vote exists for this user
+        has_voted = Vote.objects.filter(voter_email=current_user_email).exists()
+        return Response({"has_voted": has_voted})
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 

@@ -63,6 +63,20 @@ export default function VotingPage() {
       });
   }, [candidateType]);
 
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.pathname);
+
+    const handleBackButton = (event) => {
+      window.history.pushState(null, null, window.location.pathname);
+      
+      setLogoutConfirmed(true);
+    };
+    window.addEventListener('popstate', handleBackButton);
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
+  }, []);
+
   const handleSelect = (candidateID) => {
     if (abstainedPositions.includes(candidateType)) {
       alert(`You have abstained from voting for ${candidateType}. Remove abstention to vote.`);
@@ -146,18 +160,10 @@ export default function VotingPage() {
           idempotency_key: idempotencyKey
         });
 
-        alert("Vote Submitted Successfully! You will now be logged out.");
-
+        setIsSubmitted(false);
+        setVotingComplete(true);
+        setSubmissionConfirmed(true);
         sessionStorage.removeItem("currentVotes");
-        localStorage.removeItem("userRole"); 
-
-        try {
-            await api.post("/api/logout/");
-        } catch (logoutError) {
-            console.error("Logout failed but redirecting anyway", logoutError);
-        }
-
-        navigate('/');
 
     } catch (error) {
         console.error("Submit error:", error);
