@@ -274,15 +274,18 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('=========================================='))
 
     def _create_candidates(self, cand_data, year, return_profiles=False):
-        """Helper method to create candidates"""
+        """Helper method to create candidates AND their voter profiles"""
         profiles = {}
         for email, name, party, alias, pos in cand_data:
+            # 1. Create User
             u = User.objects.create(
                 email=email,
                 name=name,
                 password=make_password("password123"),
-                role="candidate"
+                role="candidate" # They are candidates, but can also act as voters
             )
+
+            # 2. Create Candidate Profile
             cp = CandidateProfile.objects.create(
                 email=u,
                 party=party,
@@ -290,7 +293,21 @@ class Command(BaseCommand):
                 bio=f"Vote for {alias}! Candidate for {year}",
                 is_verified=True
             )
+            
+            # 3. Create Voter Profile (THIS IS THE NEW PART)
+            # Assign a random student number to make it realistic
+            # Use 202X-9xxxx to distinguish them from regular voters
+            VoterProfile.objects.create(
+                email=u,
+                student_number=f"{year}-9{str(random.randint(0,9999)).zfill(4)}", 
+                course="Candidate Course",
+                year_level=4
+            )
+
+            # 4. Link to Position
             CandidateForPosition.objects.create(position=pos, candidate_email=cp)
+            
+            # 5. Add Update
             CandidateUpdate.objects.create(
                 candidate_email=cp,
                 content=f"[{year}] Campaign update from {alias}: Rally at AS Steps!",
@@ -298,7 +315,7 @@ class Command(BaseCommand):
             )
             profiles[email] = cp
         
-        self.stdout.write(self.style.SUCCESS(f'Created {len(cand_data)} Candidates for {year}'))
+        self.stdout.write(self.style.SUCCESS(f'Created {len(cand_data)} Candidates (and Voter Profiles) for {year}'))
         return profiles if return_profiles else None
 
     def _simulate_votes_for_election(self, election, voters, positions, vote_time):
