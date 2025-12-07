@@ -29,8 +29,8 @@ function App() {
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        {/* <Route path="/" element={<LandingPage />} /> */}
+        <Route path="/" element={<LoginPage />} />
 
         {/* VOTER Routes */}
         <Route element={<RequireAuth allowedRoles={['Voter', 'Candidate']} />}>

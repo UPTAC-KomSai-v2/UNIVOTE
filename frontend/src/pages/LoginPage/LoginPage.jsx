@@ -19,13 +19,6 @@ export default function LoginPage() {
   
   return (
     <div className="login-page">
-        <img 
-            src={backButton} 
-            alt="Back" 
-            className="back-button" 
-            onClick={() => navigate('/')} 
-          />
-
         <Card
           title="UniVote"
           description="University-wide Student Council Election Management System"
