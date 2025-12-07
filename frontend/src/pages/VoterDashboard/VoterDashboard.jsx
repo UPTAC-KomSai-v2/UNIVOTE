@@ -11,7 +11,9 @@ export default function VoterDashboard() {
   const navigate = useNavigate();
   const [logoutConfirmed, setLogoutConfirmed] = useState(false);
   const [hasVoted, setHasVoted] = useState(false); // New State
-  const [loading, setLoading] = useState(true);    // Loading State
+  const [loading, setLoading] = useState(true);
+  const [isElectionOpen, setIsElectionOpen] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
     document.body.classList.add("dashboard-bg");
@@ -26,11 +28,10 @@ export default function VoterDashboard() {
         console.log("Vote Status:", data); // Debugging: Check what the server says
         
         // Ensure we strictly set boolean
-        if (data.has_voted === true) {
-            setHasVoted(true);
-        } else {
-            setHasVoted(false);
-        }
+        setHasVoted(data.has_voted);
+        setIsElectionOpen(data.is_open);
+        setStatusMessage(data.message);
+
       } catch (error) {
         console.error("Error checking status:", error);
       } finally {
@@ -39,6 +40,14 @@ export default function VoterDashboard() {
     };
     checkStatus();
   }, []);
+
+  const handleVoteClick = () => {
+      if (!isElectionOpen) {
+          alert(statusMessage); // Show the specific reason (Not started vs Ended)
+          return;
+      }
+      navigate('/voting-page');
+  };
 
   useEffect(() => {
       window.history.pushState(null, null, window.location.pathname);
@@ -97,10 +106,26 @@ export default function VoterDashboard() {
               View Receipt
             </button>
         ) : (
-            <button className="voter-vote-button" onClick={() => navigate('/voting-page')}>
-              <img src={thumbsUp} alt="Vote" />
-              Vote
-            </button>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <button 
+                    className="voter-vote-button" 
+                    onClick={handleVoteClick}
+                    style={{ 
+                        opacity: isElectionOpen ? 1 : 0.6, 
+                        cursor: isElectionOpen ? 'pointer' : 'not-allowed' 
+                    }}
+                >
+                  <img src={thumbsUp} alt="Vote" />
+                  Vote
+                </button>
+                
+                {/* Optional: Show status text below button if closed */}
+                {!isElectionOpen && (
+                    <p style={{color: 'red', marginTop: '10px', fontSize: '0.9rem'}}>
+                        {statusMessage}
+                    </p>
+                )}
+            </div>
         )}
       </div>
 

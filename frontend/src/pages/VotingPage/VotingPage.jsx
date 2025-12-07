@@ -30,6 +30,8 @@ export default function VotingPage() {
   const [logoutConfirmed, setLogoutConfirmed] = useState(false);
   const [votingComplete, setVotingComplete] = useState(false);
   const [abstainedPositions, setAbstainedPositions] = useState([]);
+  const [isOpen, setIsOpen] = useState(true);
+  const [statusMessage, setStatusMessage] = useState("");
 
   const [selectedCandidates, setSelectedCandidates] = useState(() => {
     const saved = sessionStorage.getItem("currentVotes");
@@ -54,6 +56,8 @@ export default function VotingPage() {
         const data = res.data;
         setVoterID(data.voter_id);
         setCandidates(data.candidates);
+        setIsOpen(res.data.is_open);
+        setStatusMessage(res.data.election_status);
         if (data.max_votes) {
           setCandidateNumChoice(data.max_votes);
         }
@@ -183,8 +187,11 @@ export default function VotingPage() {
   
   return (
     <div className="voting-page">
-      
-
+        {!isOpen && (
+           <div style={{ backgroundColor: '#ff6b6b', color: 'white', padding: '10px', textAlign: 'center' }}>
+               WARNING: {statusMessage}
+           </div>
+       )}
         {
           logoutConfirmed && (
             <>
@@ -254,8 +261,13 @@ export default function VotingPage() {
               </button>
             )}
             
-            <button className="submit-button" onClick={() => setIsSubmitted(true)}>
-              SUBMIT
+            <button 
+                className="submit-button" 
+                onClick={() => setIsSubmitted(true)}
+                disabled={!isOpen}
+                style={{ opacity: isOpen ? 1 : 0.5, cursor: isOpen ? 'pointer' : 'not-allowed' }}
+            >
+                SUBMIT
             </button>
 
           </div>

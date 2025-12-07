@@ -121,6 +121,26 @@ def voting_page_view(request):
     except VoterProfile.DoesNotExist:
         voter_uuid = "No Profile"
 
+    election = Election.objects.filter(is_active=True).first()
+    
+    if not election:
+        return Response({"error": "No active election found."}, status=404)
+
+    now = timezone.now()
+    
+    if now < election.start_datetime:
+        status_msg = f"Election starts on {election.start_datetime.strftime('%B %d, %Y at %I:%M %p')}."
+        if request.method == 'POST':
+            return Response({"error": "Voting has not started yet."}, status=400)
+    
+    elif now > election.end_datetime:
+        # Election is over
+        status_msg = "Election has ended."
+        if request.method == 'POST':
+            return Response({"error": "Voting period has ended."}, status=400)
+    else:
+        status_msg = "Voting is open."
+
     if request.method == 'GET':
         requested_position_name = request.GET.get('position', 'Chairperson')
         candidates_data = []
@@ -860,14 +880,62 @@ def generate_password(length=10):
 
     return "".join(password_chars)
 
+from django.utils import timezone # Make sure this is imported
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def check_voter_status(request):
     try:
-        current_user_email = request.user.email
-        # Check if ANY vote exists for this user
-        has_voted = Vote.objects.filter(voter_email=current_user_email).exists()
-        return Response({"has_voted": has_voted})
+        # 1. Get User Object
+        email_str = request.user.email 
+        try:
+            user_obj = User.objects.get(email=email_str)
+        except User.DoesNotExist:
+             return Response({"has_voted": False, "is_open": False, "message": "User not found"})
+
+        # 2. Check Voting Status
+        has_voted = Vote.objects.filter(voter_email=user_obj).exists()
+        
+        # 3. Check Election Status
+        now = timezone.now()
+        election = Election.objects.filter(is_active=True).first()
+        
+        is_open = False
+        message = ""
+        election_data = None # New variable to hold details
+
+        if not election:
+            message = "No active election."
+        else:
+            # --- CRITICAL FIX FOR TIMEZONE ---
+            # Convert the UTC database time to your settings.py TIME_ZONE (Asia/Manila)
+            local_start = timezone.localtime(election.start_datetime)
+            local_end = timezone.localtime(election.end_datetime)
+
+            # Pass these details to the frontend
+            election_data = {
+                "title": election.title,
+                "start": local_start, 
+                "end": local_end
+            }
+
+            if now < election.start_datetime:
+                # Format the LOCAL time, not the UTC time
+                start_str = local_start.strftime('%B %d, %Y at %I:%M %p')
+                message = f"Election has not started yet (Starts: {start_str})."
+            elif now > election.end_datetime:
+                message = "Election has ended."
+            else:
+                is_open = True
+                message = "Voting is open."
+            
+        return Response({
+            "has_voted": has_voted,
+            "is_open": is_open,
+            "message": message,
+            "election": election_data # <--- Now the frontend has the raw dates too
+        })
+
     except Exception as e:
         return Response({"error": str(e)}, status=500)
 
