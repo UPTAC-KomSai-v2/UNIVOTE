@@ -195,7 +195,11 @@ def voting_page_view(request):
         max_votes_allowed = 1
 
         try:
-            position_obj = Position.objects.filter(name__iexact=requested_position_name).first()
+            position_obj = Position.objects.filter(
+                name__iexact=requested_position_name, 
+                election=election 
+            ).first()
+            
             if position_obj:
                 max_votes_allowed = position_obj.max_winners
                 candidate_links = CandidateForPosition.objects.filter(position=position_obj).select_related(
