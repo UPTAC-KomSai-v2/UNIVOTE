@@ -33,7 +33,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
 
         {/* VOTER Routes */}
-        <Route element={<RequireAuth allowedRoles={['Voter']} />}>
+        <Route element={<RequireAuth allowedRoles={['Voter', 'Candidate']} />}>
           <Route path="/voter-dashboard" element={<VoterDashboard />} />
           <Route path="/voting-page" element={<VotingPage />} />
           <Route path="/vote-receipt-page" element={<VoteReceipt />} />
