@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import LoginPage from './pages/LoginPage/LoginPage';
 import Placeholder from './pages/Placeholder/Placeholder';
+import Unauthorized from './pages/Placeholder/Unauthorized';
 import LandingPage from './pages/LandingPage/LandingPage';
 import VoterDashboard from './pages/VoterDashboard/VoterDashboard';
 import VotingPage from './pages/VotingPage/VotingPage';
@@ -62,8 +63,11 @@ function App() {
              <Route path="/view-previous-results" element={<PreviousResults />} />
         </Route>
 
-        {/* Catch all for 404 */}
+        {/* Catch all for 404*/}
         <Route path="*" element={<Placeholder />} />  
+
+        {/* Catch Unauthorized*/}
+        <Route path="/unauthorized" element={<Unauthorized />} />  
 
       </Routes>
     </Router>
