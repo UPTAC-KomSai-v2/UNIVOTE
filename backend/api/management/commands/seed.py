@@ -47,6 +47,13 @@ class Command(BaseCommand):
             role="admin"
         )
 
+        auditor = User.objects.create(
+            email="auditor@up.edu.ph",
+            name="Auditor User",
+            password=make_password("auditor123"),
+            role="auditor"
+        )
+
         # ==========================================
         # 3. CREATE HISTORICAL ELECTIONS
         # ==========================================
