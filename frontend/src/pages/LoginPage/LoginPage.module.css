@@ -1,0 +1,16 @@
+.loginPage {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    padding-left: 200px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .loginPage {
+        padding-left: 20px;
+        padding-right: 20px;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,290 @@
+.root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.sectionHeading {
+    margin: 0 0 14px;
+    font-size: clamp(17px, 1.45vw, 21px);
+    font-weight: 800;
+    color: #5c1028;
+    text-align: center;
+}
+
+.degreeSection {
+    min-width: 0;
+}
+
+/* Outer white frame for each major block (degree vs positions) */
+.majorPanel {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px 24px 26px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.09);
+    border: 1px solid rgba(92, 16, 40, 0.07);
+    min-width: 0;
+}
+
+.degreeGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.chartCard {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid #e8e4e8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.statsCard {
+    background: #faf8fa;
+    border-radius: 14px;
+    padding: 20px 22px 22px;
+    border: 1px solid #ebe6eb;
+    min-width: 0;
+}
+
+.bigStatLabel {
+    margin: 0;
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #5c1028;
+}
+
+.bigStatValue {
+    margin: 6px 0 18px;
+    font-size: clamp(15px, 1.25vw, 18px);
+    font-weight: 600;
+    color: #444;
+}
+
+.pctMuted {
+    font-weight: 600;
+    color: #666;
+}
+
+.subHeading {
+    margin: 0 0 12px;
+    font-size: clamp(15px, 1.15vw, 18px);
+    font-weight: 800;
+    color: #5c1028;
+}
+
+.tableScroll {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: min(440px, 52vh);
+    margin: 0 -4px;
+    padding: 0 4px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Degree breakdown: vertical scroll only; program column wraps — no horizontal bar */
+.degreeTableScroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: min(440px, 52vh);
+    margin: 0 -4px;
+    padding: 0 4px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.degreeTableScroll table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.degreeTableScroll .dataTable th {
+    white-space: normal;
+    line-height: 1.25;
+    hyphens: auto;
+}
+
+.degreeTableScroll .dataTable td:first-child {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.degreeTableScroll .dataTable td:nth-child(n + 2) {
+    white-space: nowrap;
+}
+
+/* Give the program column room; numbers stay compact */
+.degreeTableScroll .dataTable th:first-child,
+.degreeTableScroll .dataTable td:first-child {
+    width: 42%;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.dataTable th {
+    text-align: left;
+    font-weight: 700;
+    color: #5c1028;
+    padding: 11px 14px 11px 0;
+    border-bottom: 2px solid #d4ccd0;
+    white-space: nowrap;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.dataTable td {
+    padding: 11px 14px 11px 0;
+    border-bottom: 1px solid #ebe8eb;
+    color: #333;
+    vertical-align: top;
+}
+
+.dataTable tbody tr:hover td {
+    background: rgba(137, 20, 55, 0.04);
+}
+
+.dataTable td:first-child {
+    font-weight: 600;
+    color: #3d1524;
+}
+
+.dataTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Numeric columns — degree table */
+.dataTable.degreeTable th:nth-child(n + 2),
+.dataTable.degreeTable td:nth-child(n + 2) {
+    text-align: right;
+    padding-left: 12px;
+}
+
+/* Numeric columns — position table */
+.dataTable.positionTable th:nth-child(n + 2),
+.dataTable.positionTable td:nth-child(n + 2) {
+    text-align: right;
+    padding-left: 12px;
+}
+
+.muted {
+    margin: 14px 0 0;
+    font-size: 13px;
+    color: #555;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.candidateSections {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.positionsStack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+}
+
+.positionSection {
+    min-width: 0;
+}
+
+.positionCard {
+    background: #faf8fa;
+    border-radius: 14px;
+    padding: 18px 20px 22px;
+    border: 1px solid #e5dfe5;
+    min-width: 0;
+}
+
+.positionTitle {
+    margin: 0 0 16px;
+    text-align: center;
+    font-size: clamp(15px, 1.2vw, 19px);
+    font-weight: 800;
+    color: #5c1028;
+}
+
+.positionBody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.positionStatsWrap {
+    min-width: 0;
+    padding-top: 4px;
+}
+
+.yearHint {
+    margin-top: 4px;
+}
+
+.yearHint code {
+    font-size: 0.92em;
+    background: rgba(137, 20, 55, 0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.centerNote {
+    margin: 0;
+    font-style: italic;
+    color: #6b1a32;
+}
+
+.errorNote {
+    margin: 0;
+    font-weight: 700;
+    color: #7f1d1d;
+}
+
+@media only screen and (max-width: 900px) {
+    .degreeGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .positionBody {
+        grid-template-columns: 1fr;
+    }
+
+    .tableScroll,
+    .degreeTableScroll {
+        max-height: none;
+    }
+}
+
+@media print {
+    .yearHint {
+        display: none;
+    }
+
+    .majorPanel {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+
+    .tableScroll,
+    .degreeTableScroll {
+        max-height: none;
+        overflow: visible;
+    }
+}

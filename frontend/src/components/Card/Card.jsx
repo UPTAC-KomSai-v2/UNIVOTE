@@ -1,13 +1,13 @@
 import React from "react";
-import './Card.css';
+import styles from './Card.module.css';
 import upSeal from "../../assets/UP-Seal.png"
 
-export default function Card({title, description, children, className}){
+export default function Card({ title, description, children, className }) {
     return (
-        <div className={`card ${className || ''}`}>
-            <div className="logo">
+        <div className={`${styles.card} ${className || ''}`}>
+            <div className={styles.logo}>
                 <img src={upSeal} alt="UP Seal" />
-                <div className="logo-text">
+                <div className={styles.logoText}>
                     <p>
                         University of the Philippines
                     </p>
@@ -16,9 +16,9 @@ export default function Card({title, description, children, className}){
                     </p>
                 </div>
             </div>
-            <div className="card-content">
-                <div className="card-title">{title}</div>
-                <div className="card-description">{description}</div>
+            <div className={styles.cardContent}>
+                <div className={styles.cardTitle}>{title}</div>
+                <div className={styles.cardDescription}>{description}</div>
                 {children}
             </div>
         </div>

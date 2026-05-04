@@ -1,0 +1,142 @@
+.logoutButton {
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    z-index: 10;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.logoutButton:hover {
+    transform: scale(1.1);
+    background: #ffffff;
+}
+
+@media only screen and (max-width: 600px) {
+    .logoutButton {
+        width: 38px;
+        height: 38px;
+        padding: 7px;
+        right: 0.6rem;
+        top: 0.6rem;
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.submissionMessage {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 90%;
+    max-width: 500px;
+    height: auto;
+    min-height: 200px;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    background-color: #ffffff;
+    color: #891437;
+    border-radius: 12px;
+    font-weight: bold;
+
+    z-index: 2;
+    animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.submissionMessage button {
+    margin-top: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #2C2C2C;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.submissionMessage button:hover {
+    background-color: #a8204a;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 7px 16px rgba(0, 0, 0, 0.45);
+}
+
+.submissionMessage button:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.submissionMessage button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.submissionMessage > div {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    width: 90%;
+    margin-top: 3rem;
+}
+
+.submissionMessage > p:first-of-type {
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 0;
+}
+
+.confirmModalError {
+    margin: 0.75rem 0 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.35);
+    color: #991b1b;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}

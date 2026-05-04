@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from "../../api";
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import api from '../../api'
+import styles from './LoginForm.module.css'
 
-import './LoginForm.css';
-
-// 1. Accept the 'role' prop here
-export default function LoginForm({ role }) {
+function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -16,53 +15,82 @@ export default function LoginForm({ role }) {
         setError("");
 
         try {
-            console.log("Email:", email);
-            console.log("Password:", password);
-            
-            const response = await api.post("/api/login/", { email, password });
-            
-            console.log("Login response:", response.data);
-            
-            // Debug: Check if cookies are set
-            console.log("All cookies after login:", document.cookie);
-            
-            // Check specifically for access_token
-            const hasAccessToken = document.cookie.includes('access_token');
-            console.log("Has access_token cookie?", hasAccessToken);
+            const res = await api.post("/api/login/", {
+                email,
+                password
+            })
 
-            localStorage.setItem('userRole', response.data.role);
-            
-            // Small delay to ensure cookies are set before navigation
-            setTimeout(() => {
-                navigate(response.data.redirect_url);
-            }, 100);
-            
+            const data = res.data
+
+            localStorage.setItem("token", data.access)
+            localStorage.setItem("refresh", data.refresh)
+
+            switch (data.role) {
+                case "admin":
+                    navigate("/admin-dashboard")
+                    break;
+                case "auditor":
+                    navigate("/auditor-dashboard")
+                    break;
+                case "candidate":
+                    navigate("/candidate-dashboard")
+                    break;
+                case "voter":
+                    navigate("/voter-dashboard")
+                    break;
+                default:
+                    navigate("/unauthorized");
+            }
         } catch (error) {
             console.error("Login error:", error);
-            setError("Invalid credentials");
+
+            if (!error.response) {
+                setError(
+                    "Cannot reach the server. Please check your connection and try again."
+                );
+                return;
+            }
+
+            const status = error.response.status;
+            if (status === 401 || status === 400) {
+                setError("Invalid email or password.");
+            } else if (status >= 500) {
+                setError("Server error. Please try again in a moment.");
+            } else {
+                setError("Login failed. Please try again.");
+            }
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit}>
             <div>
-                <input type="text" placeholder='UP Mail'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                />
+                <input type="text" placeholder='UP Mail' value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div>
-                <input type="password" placeholder='Password' 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                <input
+                    type={showPassword ? "text" : "password"}
+                    className={styles.passwordInput}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                    spellCheck={false}
                 />
             </div>
-
-            <button>LOGIN</button>
-            {error && <p style={{color: "white"}}>{error}</p>}
-
+            <label className={styles.showPasswordRow}>
+                <input
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                />
+                Show password
+            </label>
+            <button type="submit" className={styles.submitButton}>LOGIN</button>
+            {error && <p className={styles.errorMessage}>{error}</p>}
         </form>
     );
 }
+
+export default LoginForm

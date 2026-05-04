@@ -1,0 +1,135 @@
+/* Charts sit on the same surface as .contentBox (#f2dede); no nested panel fill */
+.chartWrap {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: #6b1a32;
+}
+
+.chartTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 14px;
+    letter-spacing: 0.03em;
+    color: #891437;
+}
+
+.chartSubtitle {
+    margin: -6px 0 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: rgba(107, 26, 50, 0.88);
+    max-width: 52rem;
+}
+
+.apathyTooltipNote {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    font-size: 12px;
+    color: #444;
+}
+
+.chartViewport {
+    width: 100%;
+    min-width: 0;
+    height: 420px;
+}
+
+.chartViewportLine {
+    width: 100%;
+    min-width: 0;
+    height: 500px;
+}
+
+.message {
+    padding: 12px 4px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #6b1a32;
+}
+
+.barTooltip,
+.lineTooltip {
+    background: #fff;
+    border: 1px solid rgba(137, 20, 55, 0.2);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #222;
+    font-size: 13px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.barTooltip strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #891437;
+}
+
+.lineTooltipTitle {
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e8e8e8;
+    color: #891437;
+}
+
+.lineTooltipRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.lineTooltipDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legendHost {
+    margin-top: 12px;
+    padding-left: 4px;
+}
+
+.legendList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legendRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #6b1a32;
+}
+
+.legendStroke {
+    width: 28px;
+    height: 3px;
+    border-radius: 2px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.legendStroke::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: inherit;
+}

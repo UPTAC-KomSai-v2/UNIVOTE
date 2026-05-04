@@ -1,0 +1,389 @@
+.wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+}
+
+.subTabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.subTab {
+    padding: 10px 18px;
+    border-radius: 22px;
+    border: none;
+    background: #2b2b2b;
+    color: #fff;
+    font-weight: 700;
+    font-size: clamp(11px, 0.95vw, 13px);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.subTab:hover {
+    background: #3d3d3d;
+    transform: translateY(-1px);
+}
+
+.subTabActive {
+    background: #ffb81c;
+    color: #2b2b2b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+.subTabActive:hover {
+    background: #ffc645;
+    color: #2b2b2b;
+}
+
+.legendRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 600;
+    color: #5c1028;
+}
+
+.legendItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legendDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legendDotNormal {
+    background: rgba(137, 20, 55, 0.55);
+}
+
+.legendDotFlag {
+    background: #dc2626;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px 18px;
+}
+
+.filterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.filterLabel {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6b1a32;
+}
+
+.dateInput,
+.periodSelect {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(107, 26, 50, 0.35);
+    background: #fff;
+    color: #222;
+    font-family: inherit;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.periodSelect {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23891437' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.checkboxRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 2px;
+}
+
+.checkboxRow input {
+    width: 18px;
+    height: 18px;
+    accent-color: #ffb81c;
+    cursor: pointer;
+}
+
+.checkboxRow span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #5c1028;
+    cursor: pointer;
+    user-select: none;
+}
+
+.fpLegend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 600;
+    color: #5c1028;
+}
+
+.evidenceNote {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(107, 26, 50, 0.2);
+    font-size: clamp(12px, 0.98vw, 14px);
+    line-height: 1.55;
+    color: #3f1726;
+}
+
+.insightsPanel {
+    margin: 0;
+    padding: 14px 16px 14px 18px;
+    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 184, 28, 0.14) 0%,
+        rgba(137, 20, 55, 0.06) 100%
+    );
+    border: 1px solid rgba(107, 26, 50, 0.22);
+    border-left: 4px solid #ffb81c;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.insightsTitle {
+    margin: 0 0 10px;
+    font-size: clamp(11px, 0.95vw, 13px);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6b1a32;
+}
+
+.insightsList {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: clamp(12px, 0.98vw, 14px);
+    line-height: 1.5;
+    color: #3f1726;
+}
+
+.insightsList li {
+    padding-left: 2px;
+}
+
+.insightsList strong {
+    color: #5c1028;
+}
+
+.fpSectionTitle {
+    margin: 0 0 10px;
+    font-size: clamp(13px, 1.05vw, 15px);
+    font-weight: 800;
+    color: #6b1a32;
+    letter-spacing: 0.02em;
+}
+
+.fpSectionSpaced {
+    margin-top: 22px;
+}
+
+.fpDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #dc2626;
+    flex-shrink: 0;
+}
+
+.alertBanner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    border: 1px solid rgba(254, 202, 202, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.alertIcon {
+    flex-shrink: 0;
+    font-size: 22px;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.alertBannerTextCol {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.alertText {
+    margin: 0;
+    font-size: clamp(13px, 1.05vw, 16px);
+    font-weight: 800;
+    color: #fecaca;
+    letter-spacing: 0.02em;
+}
+
+.velocityContextNote {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(107, 26, 50, 0.06);
+    border: 1px solid rgba(107, 26, 50, 0.14);
+    font-size: clamp(12px, 0.98vw, 14px);
+    line-height: 1.45;
+    color: #5c1028;
+}
+
+.chartCard {
+    background: #fff;
+    border-radius: 18px;
+    padding: 18px 14px 14px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(107, 26, 50, 0.12);
+    min-height: 380px;
+}
+
+.chartFootnote {
+    margin: 12px 4px 0;
+    font-size: clamp(11px, 0.92vw, 13px);
+    color: #64748b;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.45;
+}
+
+.deviceCard {
+    background: #fff;
+    border-radius: 18px;
+    padding: 18px 14px 14px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(107, 26, 50, 0.12);
+    min-height: 200px;
+}
+
+.deviceTableWrap {
+    overflow-x: auto;
+}
+
+.deviceTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(12px, 1vw, 14px);
+}
+
+.deviceTable thead th {
+    background: #891437;
+    color: #ffb81c;
+    font-weight: 700;
+    text-align: left;
+    padding: 12px 14px;
+}
+
+.deviceTable thead th:first-child {
+    border-radius: 10px 0 0 0;
+}
+
+.deviceTable thead th:last-child {
+    border-radius: 0 10px 0 0;
+}
+
+.deviceTable tbody tr:nth-child(even) {
+    background: rgba(242, 222, 222, 0.45);
+}
+
+.deviceTable tbody tr:nth-child(odd) {
+    background: #fff;
+}
+
+.deviceTable td {
+    padding: 11px 14px;
+    color: #334155;
+    border-bottom: 1px solid rgba(107, 26, 50, 0.12);
+}
+
+.deviceIdCell {
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+}
+
+.statusCell {
+    font-weight: 700;
+    color: #dc2626;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.loadingText,
+.errorText {
+    margin: 0;
+    padding: 24px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.errorText {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.emptyScatter {
+    margin: 0;
+    padding: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    font-style: italic;
+}
+
+.axisLabel {
+    fill: #475569;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media print {
+    .subTabs,
+    .filters,
+    .legendRow,
+    .fpLegend {
+        display: none !important;
+    }
+
+    .chartCard,
+    .deviceCard {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}

@@ -1,0 +1,92 @@
+.form {
+    margin-top: 5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form input {
+    padding: 0.7rem;
+    margin: 0.4rem;
+    width: 90%;
+    border-radius: 5px;
+}
+
+/* Match placeholder tone on both fields (password uses -webkit-text-fill-color for typed text) */
+.form input::placeholder {
+    color: rgba(0, 0, 0, 0.54);
+    opacity: 1;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.54);
+}
+
+.form .passwordInput {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    -webkit-text-fill-color: #1a1a1a;
+    caret-color: #1a1a1a;
+}
+
+.form .passwordInput::placeholder {
+    color: rgba(0, 0, 0, 0.54);
+    opacity: 1;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.54);
+}
+
+.form .passwordInput:-webkit-autofill,
+.form .passwordInput:-webkit-autofill:hover,
+.form .passwordInput:-webkit-autofill:focus,
+.form .passwordInput:-webkit-autofill:active {
+    -webkit-text-fill-color: #1a1a1a !important;
+    caret-color: #1a1a1a;
+    box-shadow: inset 0 0 0 1000px #ffffff !important;
+}
+
+.showPasswordRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+    margin: 0.15rem auto 0.35rem;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    cursor: pointer;
+    user-select: none;
+    text-align: left;
+}
+
+.showPasswordRow input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: #ffb81c;
+    cursor: pointer;
+}
+
+.submitButton {
+    background-color: #2C2C2C;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    border: none;
+    padding: 1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #891437;
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+.errorMessage {
+    color: white;
+    margin-top: 0.5rem;
+}

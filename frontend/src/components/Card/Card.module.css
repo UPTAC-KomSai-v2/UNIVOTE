@@ -1,0 +1,75 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+
+    background-color: #891437;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 450px;
+    min-width: 0;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+
+.cardContent {
+    padding: 2rem;
+}
+
+.cardTitle {
+    margin-top: clamp(2rem, 12cqw, 5rem);
+    text-shadow: 3px 3px 0 #4d0013, 4px 4px 0 #4d0013;
+    /* vw fallback when container query units are unsupported */
+    font-size: clamp(2rem, 9vw, 6rem);
+    font-size: clamp(2rem, 11cqw + 1.25rem, 6rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow-wrap: normal;
+}
+
+.cardDescription {
+    color: #ffffff;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.logo {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.logo img {
+    width: 80px;
+}
+
+.logoText {
+    padding-left: 0.5rem;
+    text-align: left;
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.logoText p {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+@media only screen and (max-width: 1024px) {
+    .cardTitle {
+        margin-top: clamp(1.5rem, 10cqw, 2rem);
+        font-size: clamp(2rem, 9vw, 4rem);
+        font-size: clamp(2rem, 11cqw + 1rem, 4rem);
+    }
+}

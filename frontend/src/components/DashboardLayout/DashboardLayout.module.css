@@ -1,0 +1,270 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    padding: 1rem;
+    gap: 16px;
+    box-sizing: border-box;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+}
+
+.votingPageCard {
+    flex: 0 0 clamp(260px, 30%, 420px);
+    width: 100%;
+    min-width: 260px;
+    max-width: 420px;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+    height: calc(100vh - 2rem);
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #c7758f #4d1525;
+}
+
+/* Match admin candidate panel: maroon-track pill thumb + arrows (WebKit) */
+.votingPageCard::-webkit-scrollbar {
+    width: 14px;
+}
+
+.votingPageCard::-webkit-scrollbar-track {
+    background: #4d1525;
+    border-radius: 10px;
+    margin: 4px 0;
+}
+
+.votingPageCard::-webkit-scrollbar-thumb {
+    background: #c7758f;
+    border-radius: 999px;
+    border: 3px solid #4d1525;
+    background-clip: padding-box;
+    min-height: 36px;
+}
+
+.votingPageCard::-webkit-scrollbar-thumb:hover {
+    background: #ddb0bf;
+}
+
+.votingPageCard::-webkit-scrollbar-corner {
+    background: #4d1525;
+}
+
+.votingPageCard::-webkit-scrollbar-button:single-button {
+    display: block;
+    height: 14px;
+    width: 14px;
+    background-color: #4d1525;
+}
+
+.votingPageCard::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-radius: 8px 8px 2px 2px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23f2dede' d='M5 0 10 6H0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center 5px;
+}
+
+.votingPageCard::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-radius: 2px 2px 8px 8px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23f2dede' d='M5 6 10 0H0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center 3px;
+}
+
+.votingPageCard::-webkit-scrollbar-button:single-button:active {
+    filter: brightness(1.12);
+}
+
+.menu button:global(.abstainActive) {
+    background: #f2dede;
+    color: #2b2b2b;
+    font-weight: 700;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.menu button:global(.abstainActive):hover {
+    background: #ffffff;
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.menu button {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: none;
+    background: #2b2b2b;
+    color: white;
+    cursor: pointer;
+    font-size: clamp(12px, 1vw, 14px);
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s, transform 0.15s;
+}
+
+.menu button:hover {
+    background: #3d3d3d;
+    transform: translateY(-1px);
+}
+
+.menu button:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.menu button:disabled:hover {
+    background: #2b2b2b;
+    transform: none;
+}
+
+.menu button:global(.active) {
+    background: #f2dede;
+    color: #2b2b2b;
+    font-weight: bold;
+}
+
+.menu button:global(.active):hover {
+    background: #e8c8c8;
+}
+
+.menu button:global(.uploadCsv) {
+    margin-top: 6px;
+    background: #FFB81C;
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.menu button:global(.uploadCsv):hover {
+    background: #ffc645;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(0, 0, 0, 0.45);
+}
+
+.menu button:global(.uploadCsv):active {
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.menu button:global(.uploadCsv) svg {
+    flex-shrink: 0;
+}
+
+.menu button:global(.submitVote) {
+    margin-top: 4px;
+    background: #ffb81c;
+    color: #4a1508;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.menu button:global(.submitVote):hover:not(:disabled) {
+    background: #ffc645;
+    transform: translateY(-2px);
+}
+
+.menu button:global(.submitVote):disabled {
+    background: #3d3d3d;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+    opacity: 0.75;
+    transform: none;
+    box-shadow: none;
+}
+
+.mainContent {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    /* clip avoids horizontal bleed without breaking position:sticky descendants */
+    overflow-x: clip;
+    min-height: calc(100vh - 2rem);
+    background: #891437;
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .votingPageCard {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 100%;
+        padding: 24px 18px;
+        position: static;
+        top: auto;
+        align-self: stretch;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .menu {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+        margin-top: 1rem;
+    }
+
+    .mainContent {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: 28px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .container {
+        padding: 0.5rem;
+        gap: 10px;
+    }
+
+    .votingPageCard {
+        padding: 18px 12px;
+    }
+
+    .menu {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 0.75rem;
+    }
+
+    .menu button {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .mainContent {
+        padding: 18px;
+        border-radius: 10px;
+    }
+}

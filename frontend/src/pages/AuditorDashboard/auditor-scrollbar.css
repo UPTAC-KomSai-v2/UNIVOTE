@@ -1,0 +1,83 @@
+/**
+ * Auditor main-content scrollbars only (.auditor-scrollbar).
+ * Lighter track/thumb than sidebar — fits pink panels (#faf8fa / #f2dede family).
+ */
+
+.auditor-scrollbar {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #c4879a #e8d2da;
+}
+
+.auditor-scrollbar::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-track {
+    background: #e8d2da;
+    border-radius: 10px;
+    margin: 4px 0;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-thumb {
+    background: #d49caf;
+    border-radius: 999px;
+    border: 3px solid #e8d2da;
+    background-clip: padding-box;
+    min-height: 36px;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #e8bdcb;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-corner {
+    background: #e8d2da;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-button:single-button {
+    display: block;
+    height: 14px;
+    width: 14px;
+    background-color: #e8d2da;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-radius: 8px 8px 2px 2px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%235c1028' d='M5 0 10 6H0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center 5px;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-radius: 2px 2px 8px 8px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%235c1028' d='M5 6 10 0H0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center 3px;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    border-radius: 8px 2px 2px 8px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='10' viewBox='0 0 6 10'%3E%3Cpath fill='%235c1028' d='M0 5 6 0v10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 5px center;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-button:single-button:horizontal:increment {
+    border-radius: 2px 8px 8px 2px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='10' viewBox='0 0 6 10'%3E%3Cpath fill='%235c1028' d='M6 5 0 0v10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 3px center;
+}
+
+.auditor-scrollbar::-webkit-scrollbar-button:single-button:active {
+    filter: brightness(1.05);
+}
+
+@media print {
+    .auditor-scrollbar {
+        scrollbar-width: auto;
+        scrollbar-color: auto auto;
+    }
+}
